@@ -1,7 +1,7 @@
 import json
 import numpy as np
 import pytest
-from scriptshield.artifacts.vector_io import save_vectors, load_vectors, vector_checksum
+from scriptshield.artifacts.vector_io import save_vectors, load_vectors
 from scriptshield.evaluation.labels import classify_refusal, REFUSAL, COMPLIANCE, UNKNOWN, INVALID
 from scriptshield.evaluation.aggregate import aggregate, compare_arms, gate_decision
 

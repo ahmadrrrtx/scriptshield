@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from scriptshield.data.schema import load_corpus, load_records, validate_corpus
+from scriptshield.data.schema import load_records, validate_corpus
 from scriptshield.config import load_yaml
 p = ROOT / load_yaml(ROOT / "configs/data.yaml")["corpus"]
 if not p.exists():

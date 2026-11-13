@@ -16,7 +16,7 @@ from pathlib import Path
 
 import jsonschema
 
-from ..config import ALL_FORMS, SAFETY_LABELS, SPLITS
+from ..config import ALL_FORMS, SAFETY_LABELS
 
 SCHEMA_PATH = Path(__file__).resolve().parents[3] / "data" / "schemas" / "prompt.schema.json"
 

@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from scriptshield.data.schema import load_corpus, load_records
+from scriptshield.data.schema import load_corpus
 
 OUT = ROOT / "data/reviewer_pack"
 OUT.mkdir(parents=True, exist_ok=True)

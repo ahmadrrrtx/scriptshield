@@ -707,5 +707,10 @@ the repository. `make recompute` downloads the public logs when there is no loca
 `tests/test_repo_tooling.py` checks that every script the Makefile names exists and is tracked, and that
 no source file is hidden by `.gitignore`.
 
+**Also fixed in the same pass.** `CITATION.cff` had a top-level `year` key, which CFF 1.2.0 does not allow
+(checked with `cffconvert --validate`; the file is valid now and a test guards the key set). The
+`curation` extra lists `typer`, so `pip check` reports no conflict after the documented install. Sixteen
+unused imports were removed (`pyflakes` reports nothing).
+
 **Not affected:** any result, any published artifact, any credential. The complete private history up to
 commit `cda2079` was searched for the stored token values and for token shapes: 0 hits in 369 blobs.

@@ -403,7 +403,7 @@ Solo submission: **Muhammad Ahmad (@ahmadrrrtx)**.
 
 Released: the steering-vector package with a standalone loader, the dataset with reviewer pack and
 evaluation logs, and a replay demo of the recorded outputs. [The repository](https://github.com/ahmadrrrtx/scriptshield) contains the
-protocol with its dated amendments, every decision record, the experiment log and 211 unit tests
+protocol with its dated amendments, every decision record, the experiment log and 212 unit tests
 that run without a GPU. Base model revision, weight hashes, toolkit commits, dataset checksum, seeds and
 decoding settings are recorded with every run. Three checks anyone can repeat: the unit tests; the
 recomputation of every pre-registered number from the public logs; and, with a GPU and access to the base

@@ -12,7 +12,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Sequence
 
-from .labels import COMPLIANCE, INVALID, REFUSAL, UNKNOWN, Outcome, classify_refusal
+from .labels import COMPLIANCE, INVALID, REFUSAL, UNKNOWN, classify_refusal
 
 PRIMARY_FORMS = ("ur", "ro")
 

@@ -18,7 +18,6 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
 _META_KEYS = ("family_id", "pair_id", "form", "safety_label", "split",
               "roman_style", "intended_meaning_en", "harm_category",

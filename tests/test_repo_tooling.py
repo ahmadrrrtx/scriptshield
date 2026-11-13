@@ -82,3 +82,22 @@ def test_response_scan_says_not_run_when_there_are_no_raw_responses(tmp_path):
                        capture_output=True, text=True)
     assert r.returncode == 2, r.stdout + r.stderr
     assert "NOT RUN" in r.stdout and "clean" not in r.stdout
+
+
+CFF_1_2_KEYS = {"abstract", "authors", "cff-version", "commit", "contact", "date-released", "doi", "identifiers",
+                "keywords", "license", "license-url", "message", "preferred-citation", "references", "repository",
+                "repository-artifact", "repository-code", "title", "type", "url", "version"}
+
+
+def test_citation_file_is_valid_cff_1_2():
+    """GitHub shows "Cite this repository" only for a valid file; the schema allows no other top-level key."""
+    import yaml
+    c = yaml.safe_load((ROOT / "CITATION.cff").read_text(encoding="utf-8"))
+    assert c["cff-version"] == "1.2.0"
+    assert {"message", "title", "authors"} <= set(c), "required keys"
+    assert not set(c) - CFF_1_2_KEYS, f"keys that CFF 1.2.0 does not allow: {sorted(set(c) - CFF_1_2_KEYS)}"
+    assert c["type"] in {"software", "dataset"}
+    assert all({"family-names", "given-names"} <= set(a) or "name" in a for a in c["authors"])
+    links = __import__("json").loads((ROOT / "configs/public_links.json").read_text(encoding="utf-8"))
+    assert c["repository-code"] == links["github_repo"] == c["url"]
+    assert c["repository-artifact"] == links["hf_dataset"]["url"]

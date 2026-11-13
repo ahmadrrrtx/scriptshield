@@ -81,7 +81,7 @@ pip install -e ".[dev]"                 # numpy, pyyaml, jsonschema, pytest
 pip install --no-deps \
   "git+https://github.com/Lexsi-Labs/AuditKIT@71316da345784ff220d5ed59337441a59ab31526" \
   "git+https://github.com/Lexsi-Labs/CuratorKIT@dd9e835301fcddc74a37501d9e207a5a060d209f"
-pip install -e ".[curation]"            # pydantic and tqdm, which CuratorKIT's curation stage imports
+pip install -e ".[curation]"            # pydantic, tqdm and typer, which CuratorKIT needs for its curation stage
 ```
 
 ### 2. Run the unit tests

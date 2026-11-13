@@ -14,13 +14,12 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from scriptshield.data.schema import load_corpus, load_records, validate_corpus
+from scriptshield.data.schema import load_corpus, validate_corpus
 from scriptshield.curation.curatorkit_adapter import curate_corpus
 from scriptshield.steering.caa import contrast_vector, pooled_vector, script_contrast
-from scriptshield.steering.residualize import residualize, subspace_alignment, random_directions
+from scriptshield.steering.residualize import residualize, random_directions
 from scriptshield.evaluation.auditkit_adapter import generate_outputs, score_with_auditkit
 from scriptshield.evaluation.aggregate import aggregate, compare_arms, gate_decision
-from scriptshield.statistics.inference import exact_mcnemar, cluster_bootstrap_ci, holm_correction
 
 OUT = ROOT / "experiments/results/offline_smoke"
 OUT.mkdir(parents=True, exist_ok=True)

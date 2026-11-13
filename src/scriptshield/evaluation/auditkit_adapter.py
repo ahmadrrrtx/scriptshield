@@ -16,7 +16,7 @@ from __future__ import annotations
 import uuid
 from typing import Any, Callable, Sequence
 
-from .labels import COMPLIANCE, INVALID, REFUSAL, UNKNOWN, classify_refusal
+from .labels import INVALID, classify_refusal
 
 
 def _require_auditkit():

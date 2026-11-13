@@ -1,6 +1,6 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `356c20a0f5fa8ba5d73799707d4ea7578f6df540`.
+This public repository is a snapshot of a private working repository at commit `010d6d5d6109affe0f52ebd15336376b110207d9`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
@@ -21,6 +21,7 @@ are not needed to follow the study.
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+010d6d5d6109affe0f52ebd15336376b110207d9  2026-11-13T09:58:58Z  Valid CITATION.cff, clean pip check after the documented install, unused imports removed
 356c20a0f5fa8ba5d73799707d4ea7578f6df540  2026-11-13T09:53:09Z  Track the secret scanner, make the Makefile work in a fresh clone, D-036
 cda2079149c3375e82cf097f5d28bce2a7271365  2026-11-13T09:43:23Z  Docs: link the Lexsi toolkits and the models in the README and the write-up
 f97bcbd65d5028d18a836b484db3b3e876114823  2026-11-13T09:38:14Z  Internal: record publication (2026-11-13), submission form values, updated blockers and status board

@@ -114,7 +114,7 @@ the public snapshot:
 | numpy / PyYAML / jsonschema / pytest | 2.5.4 / 6.0.3 / 4.26.0 / 9.2.0 | `pip install -e ".[dev]"` |
 | AuditKIT | 1.1.3 @ `71316da345784ff220d5ed59337441a59ab31526` | `pip install --no-deps git+https://github.com/Lexsi-Labs/AuditKIT@…` |
 | CuratorKIT | 0.1.21 @ `dd9e835301fcddc74a37501d9e207a5a060d209f` | `pip install --no-deps git+https://github.com/Lexsi-Labs/CuratorKIT@…` |
-| pydantic / tqdm | 2.14.3 / 4.70.1 | `pip install -e ".[curation]"` (imported by CuratorKIT's curation stage) |
+| pydantic / tqdm / typer | 2.14.3 / 4.70.1 / 0.29.1 | `pip install -e ".[curation]"` (pydantic and tqdm are imported by CuratorKIT's curation stage; typer is its declared CLI dependency) |
 
 Results: the unit tests pass (those that need AuditKIT are skipped without it, those that need a git checkout
 are skipped in a plain copy); `scripts/run_curation.py` sends 576 records through CuratorKIT and gets 576 back

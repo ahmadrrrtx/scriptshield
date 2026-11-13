@@ -5,7 +5,7 @@ import json, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from scriptshield.data.schema import load_corpus, load_records, validate_corpus
+from scriptshield.data.schema import load_corpus, validate_corpus
 from scriptshield.curation.curatorkit_adapter import curate_corpus
 
 def main() -> int:

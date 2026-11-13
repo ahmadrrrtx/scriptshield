@@ -7,10 +7,10 @@ authors:
     given-names: "Muhammad"
     alias: "ahmadrrrtx"
 date-released: 2026-11-13
-year: 2026
 license: MIT
+url: "https://github.com/ahmadrrrtx/scriptshield"
 repository-code: "https://github.com/ahmadrrrtx/scriptshield"
-url: "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman"
+repository-artifact: "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman"
 keywords:
   - ai-safety
   - refusal
