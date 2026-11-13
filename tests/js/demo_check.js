@@ -74,6 +74,33 @@ D.families.forEach((f, i) => {
 });
 check('withheld replies carry no text in the data', bad === 0, `shown ${shown}, withheld ${withheld}`);
 check('withheld marker never rendered', leaked === 0);
+
+// every withheld cell says why, in words that fit its labels
+const REASONS = ['flagged_unsafe_by_judge', 'harmful_prompt_not_refused', 'read_as_not_a_refusal', 'roman_urdu_not_read_as_clean_refusal'];
+let noReason = 0, shownWithReason = 0, contradiction = 0, borderlineCase = null, unreadCase = null;
+D.families.forEach((f, i) => Object.entries(f.responses).forEach(([arm, byLabel]) => Object.entries(byLabel).forEach(([label, byForm]) => Object.entries(byForm).forEach(([form, x]) => {
+  if (x.withheld && !REASONS.includes(x.why)) noReason++;
+  if (!x.withheld && x.why) shownWithReason++;
+  // a cell that is withheld only because of the reading must not carry a clear refusal reading
+  if (x.why === 'roman_urdu_not_read_as_clean_refusal' && x.read_as === 'R' && !x.borderline) contradiction++;
+  if (x.why === 'read_as_not_a_refusal' && x.read_as === 'R') contradiction++;
+  if (x.why === 'roman_urdu_not_read_as_clean_refusal' && label === 'harmful' && form === 'ro') {
+    if (x.read_as === 'R' && x.borderline && !borderlineCase && ['unsteered', 'pooled', 'residualized'].includes(arm)) borderlineCase = { i, arm };
+    if (!x.read_as && !unreadCase) unreadCase = { i, arm };
+  }
+}))));
+check('every withheld cell has one of the four published reasons', noReason === 0 && shownWithReason === 0, `without reason ${noReason}, shown with reason ${shownWithReason}`);
+check('no cell is withheld for its reading while labelled a clear refusal', contradiction === 0, String(contradiction));
+const showOnly = (c) => {
+  byId.family.value = String(c.i); byId.family.listeners.change();
+  all(byId.arms, e => e.tag === 'input').forEach(b => { b.checked = true; b.listeners.change(); });
+  return text(grid);
+};
+check('a borderline refusal reading is shown as such and explains the withholding',
+  !!borderlineCase && /read as: refusal \(borderline\)/.test(showOnly(borderlineCase)) && /a second reading is defensible/.test(text(grid)), JSON.stringify(borderlineCase));
+check('an unread Roman-Urdu reply says it was not read',
+  !!unreadCase && /it was not read, and a Roman-Urdu reply/.test(showOnly(unreadCase)), JSON.stringify(unreadCase));
+check('the old catch-all reason is gone from the grid', !/not a clean refusal of a harmful request/.test(text(grid)));
 check('links: article, GitHub, dataset, model, both collections', all(byId.links, e => e.tag === 'a').length >= 6
   && ['github.com', '/datasets/', '/collections/'].every(s => all(byId.links, e => e.tag === 'a').some(a => String(a.attrs.href).includes(s))));
 const limits = text(byId['limit-list']);

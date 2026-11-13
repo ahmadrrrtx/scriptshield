@@ -9,7 +9,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -88,6 +87,7 @@ def main() -> int:
     ap.add_argument("--verify-report", default="experiments/results/verify_release_v1/verify_release/verify_report.json")
     ap.add_argument("--template", default="docs/final_article.template.md")
     ap.add_argument("--out", default="docs/FINAL_HF_ARTICLE.md")
+    ap.add_argument("--check", action="store_true", help="write nothing; exit code 1 if the committed article is stale")
     ap.add_argument("--checked-on", default="13 November 2026", help="date on which the marked references were checked")
     a = ap.parse_args()
     t = load("experiments/results/test_analysis/test_analysis_guard.json")
@@ -131,8 +131,12 @@ def main() -> int:
                        f"{sum(x['n'] for x in arms.values())} logged responses byte for byte.")
     else:
         verify_line = "Verification of the released package in a clean environment has not been run yet."
-    n_tests = subprocess.run([sys.executable, "-m", "pytest", "--collect-only", "-q"], cwd=ROOT, capture_output=True,
-                             text=True).stdout.strip().splitlines()[-1].split()[0]
+    # The text says "more than 200 unit tests". An exact count would make the published article stale with every
+    # test that is added, so the sentence is a floor and this line keeps it true.
+    n_tests = sum(len(re.findall(r"^def test_", f.read_text(encoding="utf-8"), re.M)) for f in sorted((ROOT / "tests").glob("test_*.py")))
+    if n_tests <= 200:
+        print(f"REFUSING: the article says 'more than 200 unit tests' but only {n_tests} test functions were found")
+        return 2
     cells = t["arms"]["unsteered"]["cells"]
 
     # before / after table: unsteered vs the two steered arms the gate compares, plus the control
@@ -187,7 +191,7 @@ def main() -> int:
         "DEVX_EQUAL": str(devx["summary"]["n_equal"]),
         "VERIFY_LINE": verify_line, "ADJ_TOTAL": str(u["n"]), "ADJ_R": str(u["R"]), "ADJ_A": str(u["A"]), "ADJ_N": str(u["N"]),
         "UTIL_UR": pct(t["utility"]["unsteered"]["by_form"]["ur"]), "UTIL_RO": pct(t["utility"]["unsteered"]["by_form"]["ro"]),
-        "N_TESTS": n_tests, "REVISION_SHORT": rev[:8],
+        "REVISION_SHORT": rev[:8],
     }
     # ---------------------------------------------------------------- additions for the final article
     audit = load("data/quality/family_audit_v0.2.0.json")["summary"]
@@ -271,8 +275,15 @@ def main() -> int:
     if left:
         print("REFUSING: unfilled placeholders:", sorted(set(left)))
         return 2
+    if a.check:
+        current = (ROOT / a.out).read_text(encoding="utf-8") if (ROOT / a.out).exists() else ""
+        if current != text:
+            print(f"stale: {a.out} is not what this script produces from the template and the result files; run `make article`")
+            return 1
+        print(f"{a.out} is up to date")
+        return 0
     (ROOT / a.out).write_text(text, encoding="utf-8")
-    print(f"wrote {a.out}: {len(text.split())} words, {n_tests} tests collected, verification: {'included' if vp.exists() else 'pending'}")
+    print(f"wrote {a.out}: {len(text.split())} words, {n_tests} test functions, verification: {'included' if vp.exists() else 'pending'}")
     return 0
 
 

@@ -8,7 +8,7 @@ A pre-registered study of script-dependent refusal in Cohere Labs' Tiny Aya Fire
 [![space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-recorded%20experiment%20explorer-f5a623)](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay)
 [![code licence](https://img.shields.io/badge/code-MIT-2f6feb)](LICENSE)
 [![data licence](https://img.shields.io/badge/data%20and%20vectors-CC%20BY--NC%204.0-2f6feb)](LICENSE-DATA.md)
-[![release](https://img.shields.io/badge/code%20release-v0.2.1-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/tags)
+[![release](https://img.shields.io/badge/code%20release-v0.2.2-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/tags)
 
 Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. Safety evaluations usually treat "Urdu" as one
 language. ScriptShield gives Cohere Labs' [Tiny Aya Fire](https://huggingface.co/CohereLabs/tiny-aya-fire) the

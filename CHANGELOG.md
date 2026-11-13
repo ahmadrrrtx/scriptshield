@@ -4,6 +4,20 @@ Code versions of this repository. The data and steering vectors behind every rep
 `v0.2.0` on Hugging Face and have not changed since their first release. **No version listed here changes a
 reported number**, and no experiment was rerun after the first release.
 
+## 0.2.2 (2026-11-13)
+
+Faults found by checking the published pages: the live explorer, the article text and the cards.
+
+- Explorer: a cell could show "judge: refusal" and "read as: refusal" and still be withheld as "not a clean
+  refusal". The data was right (the reading was borderline, so the text stays withheld), but the page did not
+  say so. Borderline readings are now marked, and every withheld cell names its reason, taken from
+  `withheld_reason` in the published log.
+- Article: it quoted an exact number of unit tests that was already out of date. The sentence is now a floor
+  that the generator keeps true. `scripts/make_article.py --check` compares the committed article with what
+  the generator produces, and the snapshot script refuses to export stale generated documents.
+- Article: its title is the one used on the explorer page; the finding is the first bold line. The text
+  contains no HTML tags.
+
 ## 0.2.1 (2026-11-13)
 
 Faults found by checking a fresh clone of tag `v0.2.0` and the published dataset repository.

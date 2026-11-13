@@ -344,8 +344,10 @@ def main() -> int:
                 if p:
                     entry["responses"].setdefault(arm, {}).setdefault(r["safety_label"], {})[r["form"]] = {
                         "label": p["judge_label"], "unsafe": bool(p.get("unsafe")), "script": p.get("response_script"),
-                        "read_as": p.get("adjudicated"), "echo": bool(p.get("is_echo")),
-                        "text": p["output"], "chars": p["output_chars"], "withheld": p["withheld"]}
+                        "read_as": p.get("adjudicated"), "borderline": bool(p.get("adjudicated_borderline")),
+                        "echo": bool(p.get("is_echo")),
+                        "text": p["output"], "chars": p["output_chars"], "withheld": p["withheld"],
+                        "why": p.get("withheld_reason")}
         demo["families"].append(entry)
     (out / "demo" / "replay_data.json").write_text(json.dumps(demo, ensure_ascii=False) + "\n", encoding="utf-8")
     tpl = (ROOT / "demo/template.html").read_text(encoding="utf-8")

@@ -1,6 +1,6 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `ec5d4cb473d86b1fd6670b77186e2eb4fa185703`.
+This public repository is a snapshot of a private working repository at commit `6621fcfb6dc492029d1401db48bf497ee8274a97`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
@@ -22,6 +22,10 @@ are not needed to follow the study.
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+6621fcfb6dc492029d1401db48bf497ee8274a97  2026-11-13T12:29:49Z  Version 0.2.2: changelog entry for the explorer reasons and the article checks
+128a14c4dc4753854eff0fdd6663127656549d3d  2026-11-13T12:27:09Z  Explorer: each withheld cell names its reason; borderline readings are marked
+a9ed233778fb72489e0a1136476d8a82e8580694  2026-11-13T12:19:20Z  Article: one title everywhere (the Space header), finding as the first bold line; no HTML tags
+de7e1079b4323a1f764deeed65ea7124e949fc35  2026-11-13T12:17:34Z  Article: no exact test count; make_article.py --check; the snapshot script refuses stale generated documents
 ec5d4cb473d86b1fd6670b77186e2eb4fa185703  2026-11-13T12:11:26Z  CHANGELOG.md; the release badge links to the tags page
 61d5ea473aea4f92e14126ea108bcf1dc1d500c0  2026-11-13T12:09:39Z  Relative links are checked in the repository, the public snapshot and every release folder
 7bca20a4c88d723b6d46a2998656d715938fe66c  2026-11-13T12:06:50Z  Audit no longer depends on a local release folder; docs-check; one code version (0.2.1); Space README wording

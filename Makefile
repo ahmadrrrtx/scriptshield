@@ -9,6 +9,7 @@
 #     make review      import the reviewer's answers, then refresh the audit and the robustness checks
 #     make figures     redraw the figures (needs matplotlib: pip install -e ".[figures]")
 #     make docs-check  the committed audit and robustness documents are what the scripts produce
+#                      (with a local release folder it also checks the article)
 #
 #   With the raw outputs of a GPU run under experiments/results/ (they are not published, see README):
 #     make analysis report article package scan
@@ -53,7 +54,7 @@ demo-check:
 # the committed generated documents are what the scripts produce (works in a fresh clone)
 docs-check:
 	python3 scripts/audit_dataset.py --check
-	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/robustness_checks.py --check; \
+	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/robustness_checks.py --check && python3 scripts/make_article.py --check; \
 	  else python3 scripts/robustness_checks.py --download --check; fi
 snapshot:
 	bash scripts/make_public_snapshot.sh

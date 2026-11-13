@@ -113,3 +113,22 @@ def test_public_logs_reproduce_the_published_analysis_when_a_release_is_built():
     res = m.recompute(m.read_jsonl(logs / "test_judged_public.jsonl"), m.read_jsonl(logs / "test_margins.jsonl"),
                       {u["id"]: u["answer"] for u in load_utility(ROOT)})
     assert m.differences(res, {k: v for k, v in ANALYSIS.items() if k not in m.WRAPPER_KEYS}) == []
+
+
+def test_committed_article_is_what_the_generator_produces_when_a_release_is_built():
+    """Needs release/ and the verification report (not in git). The public snapshot script runs the same check, so a
+    stale article cannot be published. Found when the article still quoted an old number of unit tests."""
+    import subprocess
+    import sys
+    if not (ROOT / "release/hf_dataset/eval_logs/test_judged_public.jsonl").exists() \
+            or not (ROOT / "experiments/results/verify_release_v1/verify_release/verify_report.json").exists():
+        pytest.skip("no local release folder")
+    out = subprocess.run([sys.executable, str(ROOT / "scripts/make_article.py"), "--check"], capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0, out.stdout[-300:] + out.stderr[-300:]
+
+
+def test_article_has_no_number_that_changes_with_housekeeping():
+    """An exact count of unit tests made the published article stale each time a test was added."""
+    template = (ROOT / "docs/final_article.template.md").read_text(encoding="utf-8")
+    assert "{{N_TESTS}}" not in template
+    assert "more than 200 unit tests" in template

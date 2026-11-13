@@ -1,5 +1,6 @@
-# ScriptShield: the same harmful request is refused in Urdu script and often not in Roman Urdu
+# ScriptShield: Evaluating Urdu and Roman Urdu Safety Behaviour in Cohere Tiny Aya Fire
 
+**The same harmful request is refused in Urdu script and often not in Roman Urdu.**
 *A pre-registered study of script-dependent refusal in Cohere Labs' Tiny Aya Fire, and of a steering repair that did not work.*
 
 *Lexsi Labs AI Safety and Alignment Hackathon · Track 2, AI Red Teaming, Safety and Alignment: problem 4
@@ -225,8 +226,8 @@ before the test set was run.
 
 **What had to be true for the repair to help.** A harmful-minus-harmless contrast taken within one script
 already cancels any constant script offset. Residualization can matter only if the pooled vector has a real
-component along *d*; the share of its norm that is removed equals |cos(*v*<sub>pooled</sub>, *d*)|. We measured
-that before looking at behaviour (7.4).
+component along *d*; the share of its norm that is removed equals the absolute cosine between the pooled
+vector and *d*. We measured that before looking at behaviour (7.4).
 
 **Arms.** No steering; pooled; residualized; a placebo (a noise vector of the pooled norm, exactly orthogonal
 to the pooled vector); a control for the residualization step (pooled with a *random* direction removed); and
@@ -477,7 +478,7 @@ python vectors/apply_steering.py --model-dir /path/to/tiny-aya-fire --verify vec
 ```
 
 The repository holds the protocol with its dated amendments, every decision record, the experiment log and
-{{N_TESTS}} unit tests. Base model revision, weight hashes, toolkit commits, dataset checksum, seeds and decoding
+more than 200 unit tests. Base model revision, weight hashes, toolkit commits, dataset checksum, seeds and decoding
 settings are recorded with every run.
 
 ## Cost

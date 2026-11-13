@@ -152,8 +152,8 @@
     <div class="panel"><h3>How to read the labels</h3>
       <ul class="clean small">
         <li><b>judge</b>: the label of the automatic guard model, fixed before the experiment. It is unreliable for Roman-Urdu replies.</li>
-        <li><b>read as</b>: an LLM agent read the Roman-Urdu replies of four arms one by one, with the arm hidden. Not a human annotation.</li>
-        <li><b>withheld</b>: the reply to a harmful request is not shown unless it is a clean refusal. Its label, length and hash are published.</li>
+        <li><b>read as</b>: an LLM agent read the Roman-Urdu replies of four arms one by one, with the arm hidden. Not a human annotation. &ldquo;Borderline&rdquo; means a second reading is defensible.</li>
+        <li><b>withheld</b>: the reply to a harmful request is not shown unless it is a clean refusal. Every signal against it counts: an unsafe flag, a judge label other than refusal, or a reading other than a clear refusal. Each withheld cell names its reason. Its label, length and hash are published.</li>
       </ul></div>
   </div>
   <div class="links" id="links" style="margin-top:14px"></div>
@@ -186,6 +186,19 @@
     return m[1] + ' \u00d7 10' + (m[2] === '-' ? '\u207b' : '') + m[3].split('').map(function (d) { return sup[d]; }).join('');
   }
   function armName(a) { return ARM[a] || a; }
+  // Why a reply is not shown. The reasons are the values of `withheld_reason` in the published log.
+  var WHY = {
+    flagged_unsafe_by_judge: 'the automatic judge flagged it as unsafe',
+    harmful_prompt_not_refused: 'the automatic judge did not label it a refusal',
+    read_as_not_a_refusal: 'on reading, it is not a refusal'
+  };
+  function whyWithheld(x) {
+    if (x.why === 'roman_urdu_not_read_as_clean_refusal') {
+      return x.read_as ? 'it was read as a refusal, but a second reading is defensible'
+        : 'it was not read, and a Roman-Urdu reply to a harmful request is shown only if its exact text was read as a clear refusal';
+    }
+    return WHY[x.why] || 'it is not a clean refusal of a harmful request';
+  }
   function row(parent, name, k, n, cls, mark) {
     var r = el('div', 'row'); r.appendChild(el('div', 'name', name));
     var t = el('div', 'track'), f = el('div', 'fill ' + cls); f.style.width = (100 * k / n) + '%'; t.appendChild(f);
@@ -280,11 +293,11 @@
         var x = (((f.responses[arm] || {})[state.label]) || {})[fm[0]];
         if (!x) { c.appendChild(el('span', 'muted small', 'not run')); G.appendChild(c); return; }
         c.appendChild(el('span', 'chip ' + x.label, 'judge: ' + x.label));
-        if (x.read_as) c.appendChild(el('span', 'chip plain', 'read as: ' + ({R: 'refusal', A: 'goes along', N: 'neither'}[x.read_as] || x.read_as)));
+        if (x.read_as) c.appendChild(el('span', 'chip plain', 'read as: ' + ({R: 'refusal', A: 'goes along', N: 'neither'}[x.read_as] || x.read_as) + (x.borderline ? ' (borderline)' : '')));
         if (x.echo) c.appendChild(el('span', 'chip plain', 'repeats the prompt'));
         if (x.unsafe) c.appendChild(el('span', 'chip flag', 'judge flag: unsafe'));
         if (x.script && x.script !== 'empty') c.appendChild(el('span', 'chip plain', 'written in ' + (WRITTEN[x.script] || x.script)));
-        if (x.withheld) c.appendChild(el('div', 'withheld', 'Reply withheld (' + x.chars + ' characters): not a clean refusal of a harmful request.'));
+        if (x.withheld) c.appendChild(el('div', 'withheld', 'Reply withheld (' + x.chars + ' characters): ' + whyWithheld(x) + '.'));
         else { var t = el('div', 'resp', x.text); t.dir = 'auto'; c.appendChild(t); }
         G.appendChild(c);
       });
