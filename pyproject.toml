@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scriptshield"
-version = "0.1.0"
+version = "0.2.0"
 description = "Script-dependent refusal in Tiny Aya Fire for Urdu and Roman Urdu: dataset, steering vectors and a pre-registered study"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,6 +25,8 @@ dev = ["pytest>=7.0"]
 curation = ["pydantic>=2", "tqdm>=4", "typer>=0.12"]
 # downloading the public logs (scripts/recompute_from_public.py --download) and publishing
 hub = ["huggingface_hub>=0.30"]
+# redrawing the figures of the write-up (scripts/make_figures.py)
+figures = ["matplotlib>=3.7"]
 # GPU stages only; SafeTune is installed from its repository at the pinned commit (see README)
 remote = ["torch>=2.7", "transformers>=5.15,<6"]
 

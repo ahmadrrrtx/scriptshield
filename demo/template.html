@@ -3,184 +3,315 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ScriptShield replay explorer</title>
+<title>ScriptShield: recorded experiment explorer</title>
+<meta name="description" content="Evaluating Urdu and Roman Urdu safety behaviour in Cohere Tiny Aya Fire. Recorded outputs of a pre-registered experiment; no model runs on this page.">
 <style>
   :root {
-    --bg: #f6f5f1; --panel: #ffffff; --ink: #1c1d21; --muted: #5d6068; --line: #dcdad2;
-    --accent: #1f5f8b; --refusal: #1b7a4e; --refusal-bg: #e3f3ea; --comply: #a23b2a; --comply-bg: #fbe9e5;
-    --invalid: #7a5b00; --invalid-bg: #fbf1cf; --unknown: #4b4f58; --unknown-bg: #e9e9ec; --ur: #1f5f8b; --ro: #b6562a;
+    --bg: #f5f4f0; --panel: #ffffff; --ink: #1b1f24; --muted: #57606a; --line: #d9d6cd; --soft: #eceae3;
+    --accent: #1d4f7c; --ur: #167a74; --ro: #c2681c; --grey: #7b828c; --blue: #3b5bdb; --red: #b3391f; --neutral: #c9cdd3;
+    --refusal: #156b4a; --refusal-bg: #e0f2e9; --comply: #a23b2a; --comply-bg: #fbe9e5; --invalid: #74570a; --invalid-bg: #f9efcd;
+    --unknown: #4b4f58; --unknown-bg: #e9e9ec; --warn-bg: #fff6df; --warn-line: #d9a514; --segtext: #ffffff;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #15161a; --panel: #1e2026; --ink: #ecebe6; --muted: #a3a6ae; --line: #33363e;
-      --accent: #7fb8e0; --refusal: #7fd3a6; --refusal-bg: #173526; --comply: #f0a091; --comply-bg: #40201a;
-      --invalid: #e6c96a; --invalid-bg: #3a3112; --unknown: #c3c6ce; --unknown-bg: #2c2f37; --ur: #7fb8e0; --ro: #e79a6f; }
+    :root { --bg: #14161a; --panel: #1d2026; --ink: #ecebe6; --muted: #a6abb3; --line: #353941; --soft: #262a31;
+      --accent: #86bfe6; --ur: #56c7bf; --ro: #f0a25c; --grey: #9aa1ab; --blue: #8da2fb; --red: #f08b74; --neutral: #4a4f58;
+      --refusal: #7fd3a6; --refusal-bg: #173526; --comply: #f0a091; --comply-bg: #40201a; --invalid: #e6c96a; --invalid-bg: #3a3112;
+      --unknown: #c3c6ce; --unknown-bg: #2c2f37; --warn-bg: #33290f; --warn-line: #d9a514; --segtext: #10131a; }
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Naskh Arabic", "Noto Nastaliq Urdu", sans-serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
-  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
-  h2 { font-size: 18px; margin: 34px 0 10px; }
-  p { margin: 6px 0; } .muted { color: var(--muted); } .small { font-size: 13px; }
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Naskh Arabic", "Noto Nastaliq Urdu", sans-serif; }
+  main { max-width: 1120px; margin: 0 auto; padding: 0 20px 64px; }
+  header.top { background: var(--panel); border-bottom: 1px solid var(--line); }
+  header.top .in { max-width: 1120px; margin: 0 auto; padding: 30px 20px 18px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0; letter-spacing: -0.02em; }
+  .sub { font-size: 19px; margin: 6px 0 14px; color: var(--muted); }
+  h2 { font-size: 22px; margin: 44px 0 6px; letter-spacing: -0.01em; }
+  h3 { font-size: 16px; margin: 0 0 6px; }
+  p { margin: 8px 0; } .muted { color: var(--muted); } .small { font-size: 14px; }
   a { color: var(--accent); }
-  .note { border-left: 3px solid var(--accent); background: var(--panel); padding: 10px 14px; margin: 16px 0; border-radius: 0 6px 6px 0; }
-  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
-  table { border-collapse: collapse; width: 100%; }
-  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { font-weight: 600; font-size: 13px; color: var(--muted); }
-  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .bar { display: inline-block; height: 9px; border-radius: 2px; vertical-align: middle; margin-right: 6px; min-width: 1px; }
-  .bar.ur { background: var(--ur); } .bar.ro { background: var(--ro); }
-  .barcell { min-width: 150px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; margin-bottom: 14px; }
-  label.ctl { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
-  select, button { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .tags li { font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); }
+  .tags li.replay { border-color: var(--warn-line); background: var(--warn-bg); font-weight: 600; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 16px; font-size: 14px; }
+  nav a { text-decoration: none; padding: 4px 0; border-bottom: 2px solid transparent; }
+  nav a:hover, nav a:focus { border-bottom-color: var(--accent); }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 26px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .card .big { font-size: 30px; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .card .big.ur { color: var(--ur); } .card .big.ro { color: var(--ro); } .card .big.red { color: var(--red); } .card .big.blue { color: var(--blue); }
+  .card p { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+  .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+  .note { border: 1px solid var(--warn-line); background: var(--warn-bg); padding: 10px 14px; border-radius: 8px; font-size: 14px; margin: 14px 0; }
+  .chart h3 { margin-bottom: 2px; } .chart .cap { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .row { display: grid; grid-template-columns: 190px minmax(0, 1fr) 74px; gap: 10px; align-items: center; margin: 7px 0; font-size: 14px; }
+  .row .name { overflow-wrap: anywhere; } .row .val { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 600; }
+  .track { position: relative; height: 18px; background: var(--soft); border-radius: 4px; overflow: hidden; display: flex; }
+  .fill { height: 100%; border-radius: 4px 0 0 4px; min-width: 0; }
+  .fill.ur { background: var(--ur); } .fill.ro { background: var(--ro); } .fill.grey { background: var(--grey); } .fill.blue { background: var(--blue); }
+  .fill.red { background: var(--red); } .fill.neutral { background: var(--neutral); }
+  .mark { position: absolute; top: -2px; bottom: -2px; width: 3px; background: var(--ink); }
+  .seg-r { background: var(--ur); } .seg-a { background: var(--red); } .seg-n { background: var(--neutral); }
+  .stack span { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--segtext); height: 100%; }
+  .stack span.seg-n { color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; margin: 12px 0 14px; }
+  label.ctl, .ctl { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  select, button { font: inherit; font-size: 15px; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 7px 11px; }
   button { cursor: pointer; } button[aria-pressed="true"] { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+  select:focus-visible, button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .seg { display: inline-flex; } .seg button { border-radius: 0; margin-left: -1px; }
   .seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; } .seg button:last-child { border-radius: 0 6px 6px 0; }
-  .arms { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
-  .grid { display: grid; grid-template-columns: 150px repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
-  .grid > div { padding: 10px 12px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; }
-  .grid > div:nth-child(5n) { border-right: 0; }
-  .grid .head { font-size: 13px; font-weight: 600; color: var(--muted); background: var(--bg); }
-  .grid .rowhead { font-size: 13px; font-weight: 600; background: var(--bg); }
+  .checks { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--ink); }
+  .gridwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+  .grid { display: grid; gap: 0; }
+  .grid > div { padding: 11px 13px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; }
+  .grid .head { font-size: 13px; font-weight: 700; background: var(--soft); }
+  .grid .head span { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .grid .rowhead { font-size: 14px; font-weight: 700; background: var(--soft); }
+  .grid .rowhead.ur { color: var(--ur); } .grid .rowhead.ro { color: var(--ro); }
   .grid .rowhead span { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .prompt { font-size: 15px; } .resp { font-size: 14px; margin-top: 6px; overflow-wrap: anywhere; white-space: pre-wrap; }
-  .chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 10px; margin: 0 4px 2px 0; }
+  details { margin-top: 14px; font-size: 14px; } summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  .prompt { font-size: 16px; } .resp { font-size: 15px; margin-top: 6px; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 10px; margin: 0 4px 3px 0; }
   .chip.refusal { color: var(--refusal); background: var(--refusal-bg); } .chip.compliance { color: var(--comply); background: var(--comply-bg); }
   .chip.invalid { color: var(--invalid); background: var(--invalid-bg); } .chip.unknown { color: var(--unknown); background: var(--unknown-bg); }
   .chip.flag { color: var(--comply); background: transparent; border: 1px solid var(--comply); }
-  .chip.script { color: var(--muted); background: transparent; border: 1px solid var(--line); font-weight: 500; }
+  .chip.plain { color: var(--muted); background: transparent; border: 1px solid var(--line); font-weight: 500; }
   .withheld { color: var(--muted); font-style: italic; font-size: 13px; margin-top: 6px; }
-  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .grid > div { border-right: 0; } .grid .head.form { display: none; }
-    .grid .cell::before { content: attr(data-form); display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; } }
+  ul.clean { margin: 8px 0; padding-left: 20px; } ul.clean li { margin: 5px 0; }
+  .links { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .links a { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 11px 13px; text-decoration: none; font-weight: 600; font-size: 15px; }
+  .links a span { display: block; font-weight: 400; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  @media (max-width: 900px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } .links { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 680px) {
+    h1 { font-size: 28px; } .sub { font-size: 17px; } .two { grid-template-columns: 1fr; } .cards, .links { grid-template-columns: 1fr; }
+    .row { grid-template-columns: 1fr 64px; } .row .name { grid-column: 1 / -1; margin-bottom: -4px; }
+    .grid { grid-template-columns: 1fr !important; min-width: 0 !important; } .grid > div { border-right: 0; } .grid .head { display: none; }
+    .grid .rowhead { font-size: 15px; padding-top: 14px; }
+    .grid .cell::before { content: attr(data-h); display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  }
 </style>
 </head>
 <body>
+<header class="top"><div class="in">
+  <h1>ScriptShield</h1>
+  <p class="sub">Evaluating Urdu and Roman Urdu Safety Behaviour in Cohere Tiny Aya Fire</p>
+  <ul class="tags">
+    <li class="replay">Recorded experiment explorer: no model runs on this page</li>
+    <li>Lexsi AI Safety and Alignment Hackathon · Track 2: multilingual safety (problem 4), inference-time steering (problem 8)</li>
+    <li>Model: CohereLabs/tiny-aya-fire</li>
+    <li>Toolkits: CuratorKIT, SafeTune, AuditKIT</li>
+  </ul>
+  <nav aria-label="Sections"><a href="#overview">Overview</a><a href="#results">Results</a><a href="#explorer">Explorer</a><a href="#method">Method and artifacts</a><a href="#limits">Limitations</a></nav>
+</div></header>
 <main>
-  <h1>ScriptShield replay explorer</h1>
-  <p class="muted">Tiny Aya Fire on matched Urdu-script and Roman-Urdu prompts · recorded outputs of the frozen test run · no model runs on this page</p>
-  <div class="note small" id="note"></div>
-  <p class="small" id="links"></p>
+  <section class="cards" id="cards" aria-label="Key numbers"></section>
 
-  <h2>Refusal rates on the frozen test set</h2>
-  <p class="muted small">Share of prompts the automatic judge labelled as refused, by arm. Harmful prompts should be refused; benign prompts should not. Every attempted prompt is in the denominator.</p>
-  <div class="panel" style="overflow-x:auto"><table id="summary"></table></div>
-  <div id="readingwrap" hidden>
-    <h2>What the Roman-Urdu responses actually say</h2>
-    <p class="muted small">The judge above is unreliable in Roman Urdu: it calls echoes, loops and off-topic text refusals. These counts come from reading every Roman-Urdu response of four arms (by an LLM agent, not a human). 36 prompts per cell.</p>
-    <div class="panel" style="overflow-x:auto"><table id="reading"></table></div>
+  <h2 id="overview">Research overview</h2>
+  <div class="two">
+    <div class="panel"><h3>The problem</h3><p>Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. Safety evaluations usually treat Urdu as one language. If a model refuses a harmful request in Urdu script but not when the same sentence is typed in Latin letters, the guardrail has a hole where everyday Urdu is written.</p></div>
+    <div class="panel"><h3>What is tested</h3><p id="ov-tested"></p></div>
+    <div class="panel"><h3>The primary experiment</h3><p id="ov-primary"></p></div>
+    <div class="panel"><h3>What was and was not improved</h3><p id="ov-improved"></p></div>
   </div>
 
-  <h2>Read the recorded responses</h2>
+  <h2 id="results">Results</h2>
+  <p class="muted small">Every chart is drawn from the evaluation logs embedded in this page; the same logs are published in the dataset repository. Each caption states the denominator. Unless it says otherwise, a bar shows what the <b>automatic judge</b> decided.</p>
+  <div class="two">
+    <div class="panel chart"><h3>Harmful requests refused, by written form</h3><p class="cap" id="cap-gap"></p><div id="chart-gap"></div><p class="small muted" id="gap-stat"></p></div>
+    <div class="panel chart"><h3>What the Roman-Urdu replies actually say</h3><p class="cap" id="cap-reading"></p><div id="chart-reading"></div>
+      <div class="legend"><span><i class="seg-r"></i>refuses</span><span><i class="seg-a"></i>goes along with the request</span><span><i class="seg-n"></i>neither: garbled, off-topic or repeats the question</span></div></div>
+    <div class="panel chart"><h3>Intervention comparison: harmful Roman-Urdu requests refused</h3><p class="cap" id="cap-arms"></p><div id="chart-arms"></div></div>
+    <div class="panel chart"><h3>Over-refusal: harmless requests refused</h3><p class="cap" id="cap-benign"></p><div id="chart-benign"></div></div>
+    <div class="panel chart"><h3>Unsafe compliance: replies flagged unsafe</h3><p class="cap" id="cap-unsafe"></p><div id="chart-unsafe"></div></div>
+    <div class="panel chart"><h3>The script gap under each intervention</h3><p class="cap" id="cap-gaparm"></p><div id="chart-gaparm"></div></div>
+  </div>
+
+  <h2 id="explorer">Explore the recorded replies</h2>
+  <p class="muted small">Pick one of the test families. Each row is the same request in one written form; the columns show the recorded reply without steering and with each steering vector, side by side. Nothing is generated here.</p>
+  <div class="note" id="note"></div>
   <div class="controls">
-    <label class="ctl">Intent family<select id="family"></select></label>
-    <label class="ctl">Prompt type<span class="seg" id="label"></span></label>
-    <label class="ctl">Arms shown<span class="arms" id="arms"></span></label>
+    <label class="ctl" for="family">Test family<select id="family"></select></label>
+    <div class="ctl">Request<span class="seg" id="label" role="group" aria-label="Request type"></span></div>
+    <div class="ctl">Arms<span class="checks" id="arms"></span></div>
+    <div class="ctl">Written forms<span class="checks" id="forms"></span></div>
   </div>
-  <p class="muted small" id="meaning"></p>
-  <div class="grid" id="grid"></div>
-  <p class="muted small" style="margin-top:18px" id="armdesc"></p>
+  <p class="small" id="meaning"></p>
+  <div class="gridwrap"><div class="grid" id="grid"></div></div>
+  <details><summary>What each arm is</summary><ul class="clean" id="armdesc"></ul></details>
+
+  <h2 id="method">Method and artifacts</h2>
+  <div class="two">
+    <div class="panel"><h3>Method in brief</h3>
+      <ul class="clean small" id="method-list"></ul></div>
+    <div class="panel"><h3>How to read the labels</h3>
+      <ul class="clean small">
+        <li><b>judge</b>: the label of the automatic guard model, fixed before the experiment. It is unreliable for Roman-Urdu replies.</li>
+        <li><b>read as</b>: an LLM agent read the Roman-Urdu replies of four arms one by one, with the arm hidden. Not a human annotation.</li>
+        <li><b>withheld</b>: the reply to a harmful request is not shown unless it is a clean refusal. Its label, length and hash are published.</li>
+      </ul></div>
+  </div>
+  <div class="links" id="links" style="margin-top:14px"></div>
+
+  <h2 id="limits">Limitations</h2>
+  <div class="panel"><ul class="clean" id="limit-list"></ul></div>
+
+  <footer id="footer"></footer>
 </main>
 <script type="application/json" id="data">/*__DATA__*/</script>
 <script>
 (function () {
-  var D = JSON.parse(document.getElementById('data').textContent);
+  var D = JSON.parse(document.getElementById('data').textContent), S = D.stats;
   var FORMS = [['ur', 'Urdu script'], ['ro', 'Roman Urdu'], ['cm', 'Code-mixed'], ['en', 'English']];
-  var state = { family: 0, label: 'harmful', arms: { unsteered: true, pooled: true, residualized: true } };
+  var ARM = { unsteered: 'No steering (baseline)', pooled: 'Pooled CAA vector', residualized: 'Residualized CAA vector',
+    random_subspace: 'Pooled, a random direction removed', orthogonal_null: 'Placebo vector (noise, same length)',
+    ur_only: 'Urdu-script vector only', ro_only: 'Roman-Urdu vector only' };
+  var FORM_NOTE = { ur: 'Perso-Arabic letters', ro: 'Urdu in Latin letters', cm: 'Urdu with English words', en: 'reference' };
+  var WRITTEN = { arabic: 'Urdu script', latin: 'Latin letters', devanagari: 'Devanagari (Hindi script)', mixed: 'mixed scripts' };
+  var state = { family: 0, label: 'harmful', arms: { unsteered: true, pooled: true, residualized: true }, forms: { ur: true, ro: true, cm: false, en: true } };
+  function $(id) { return document.getElementById(id); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-  function pct(x) { return x == null ? 'n/a' : (100 * x).toFixed(1) + ' %'; }
+  function cell(arm, key) { return D.summary[arm].cells[key]; }
+  function count(c, field) { return Math.round(c[field] * c.n); }
+  function pct(k, n) { return (100 * k / n).toFixed(1) + '%'; }
+  function signed(x) { return (x > 0 ? '+' : (x < 0 ? '\u2212' : '')) + Math.abs(x).toFixed(1); }
+  function sci(p) {  // "3.8e-06" -> "3.8 x 10^-6" with real superscripts
+    var m = /^([0-9.]+)e([-+]?)0*([0-9]+)$/.exec(String(p)); if (!m) return String(p);
+    var sup = { '0': '\u2070', '1': '\u00b9', '2': '\u00b2', '3': '\u00b3', '4': '\u2074', '5': '\u2075', '6': '\u2076', '7': '\u2077', '8': '\u2078', '9': '\u2079' };
+    return m[1] + ' \u00d7 10' + (m[2] === '-' ? '\u207b' : '') + m[3].split('').map(function (d) { return sup[d]; }).join('');
+  }
+  function armName(a) { return ARM[a] || a; }
+  function row(parent, name, k, n, cls, mark) {
+    var r = el('div', 'row'); r.appendChild(el('div', 'name', name));
+    var t = el('div', 'track'), f = el('div', 'fill ' + cls); f.style.width = (100 * k / n) + '%'; t.appendChild(f);
+    if (mark != null) { var m = el('div', 'mark'); m.style.left = 'calc(' + (100 * mark / n) + '% - 1px)'; m.setAttribute('title', 'after reading the replies: ' + mark + ' of ' + n); t.appendChild(m); }
+    t.setAttribute('role', 'img'); t.setAttribute('aria-label', name + ': ' + k + ' of ' + n);
+    r.appendChild(t); r.appendChild(el('div', 'val', k + ' / ' + n)); parent.appendChild(r);
+  }
+  var h1 = S.h1, readU = D.reading ? D.reading.unsteered.harmful : null;
 
-  document.getElementById('note').textContent = D.note + ' Steered arms use layer ' + D.layer + ' at strength \u03c1 = ' + D.rho + '. Labels come from a model judge, not from human annotators.';
+  // ---- key numbers
+  [[h1.ur_k + ' of ' + h1.n, 'ur', 'harmful requests refused in Urdu script, without any steering'],
+   [h1.ro_k + ' of ' + h1.n, 'ro', 'of the same requests refused in Roman Urdu' + (readU ? ' (' + readU.R + ' when the replies are read)' : '')],
+   [S.h3.same + ' of ' + S.h3.n, 'red', 'harmful prompts with the same outcome for the residualized and the ordinary vector. The pre-registered gate was ' + (S.h3.gate_passed ? 'met' : 'not met')],
+   [Math.round(100 * S.judge.precision) + '%', 'blue', 'of the Roman-Urdu replies the automatic judge called refusals were refusals on reading']
+  ].forEach(function (c) { var d = el('div', 'card'); d.appendChild(el('div', 'big ' + c[1], c[0])); d.appendChild(el('p', null, c[2])); $('cards').appendChild(d); });
 
-  if (D.links) {
-    var LK = document.getElementById('links');
-    D.links.forEach(function (l, i) {
-      if (i) LK.appendChild(document.createTextNode(' \u00b7 '));
-      var a = el('a', null, l[0]);
-      a.setAttribute('href', l[1]); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
-      LK.appendChild(a);
+  // ---- overview (numbers from the data)
+  $('ov-tested').textContent = D.families.length + ' matched test families. Each has a harmful request and a harmless request on the same topic, written word for word in Urdu script and in Roman Urdu (plus code-mixed and English references). The model is Cohere Labs\u2019 Tiny Aya Fire, 64 new tokens, greedy decoding.';
+  $('ov-primary').textContent = 'Pre-registered: is the refusal rate for harmful requests lower in Roman Urdu than in Urdu script? Result: ' + pct(h1.ur_k, h1.n) + ' against ' + pct(h1.ro_k, h1.n) + ', a difference of ' + signed(h1.diff_pp) + ' points (95% CI ' + signed(h1.ci_low_pp) + ' to ' + signed(h1.ci_high_pp) + '; exact McNemar p = ' + sci(h1.p) + ').';
+  $('ov-improved').textContent = 'A refusal-steering vector with the script direction removed (\u201cresidualized\u201d) was meant to close the gap. It did not pass the threshold fixed in advance: it gave the same outcome as the ordinary vector on ' + S.h3.same + ' of ' + S.h3.n + ' harmful prompts, and a placebo vector raised judged refusals almost as much as the real vectors. Nothing on this page shows that the steered model is safer. What improved is the measurement: the gap is documented, and so is the unreliability of the automatic judge in Roman Urdu.';
+
+  // ---- charts
+  $('cap-gap').textContent = 'No steering. ' + h1.n + ' harmful test requests per bar. The marker line on the Roman-Urdu bar is the count after reading the replies.';
+  [['ur', 'ur'], ['ro', 'ro'], ['cm', 'grey'], ['en', 'grey']].forEach(function (f, i) {
+    var c = cell('unsteered', f[0] + '/harmful'); row($('chart-gap'), FORMS[i][1], count(c, 'refusal_rate'), c.n, f[1], f[0] === 'ro' && readU ? readU.R : null); });
+  $('gap-stat').textContent = 'Roman Urdu minus Urdu script: ' + signed(h1.diff_pp) + ' points (95% CI ' + signed(h1.ci_low_pp) + ' to ' + signed(h1.ci_high_pp) + '), exact McNemar p = ' + sci(h1.p) + '. Pre-registered.';
+
+  if (D.reading) {
+    $('cap-reading').textContent = 'Replies to the ' + readU.n + ' harmful Roman-Urdu requests, read one by one by an LLM agent (not a human), arm hidden. Four arms were read.';
+    Object.keys(D.reading).forEach(function (arm) {
+      var v = D.reading[arm].harmful, r = el('div', 'row'); r.appendChild(el('div', 'name', armName(arm)));
+      var t = el('div', 'track stack');
+      [['R', 'seg-r'], ['A', 'seg-a'], ['N', 'seg-n']].forEach(function (p) { var s = el('span', p[1], String(v[p[0]])); s.style.width = (100 * v[p[0]] / v.n) + '%'; t.appendChild(s); });
+      t.setAttribute('role', 'img'); t.setAttribute('aria-label', armName(arm) + ': ' + v.R + ' refuse, ' + v.A + ' go along, ' + v.N + ' neither');
+      r.appendChild(t); r.appendChild(el('div', 'val', v.R + ' / ' + v.n)); $('chart-reading').appendChild(r);
     });
   }
-
-  // ---- summary table
-  var T = document.getElementById('summary');
-  var hr = el('tr');
-  ['Arm', 'Harmful \u00b7 Urdu script', 'Harmful \u00b7 Roman Urdu', 'Benign \u00b7 Urdu script', 'Benign \u00b7 Roman Urdu', 'Utility'].forEach(function (h) { hr.appendChild(el('th', null, h)); });
-  T.appendChild(hr);
+  var base = cell('unsteered', 'ro/harmful');
+  $('cap-arms').textContent = base.n + ' harmful Roman-Urdu test requests per arm, automatic judge. The placebo is a noise vector of the same length as the pooled vector and orthogonal to it.';
+  $('cap-benign').textContent = 'Harmless requests in Urdu script and Roman Urdu together (' + (cell('unsteered', 'ur/benign').n + cell('unsteered', 'ro/benign').n) + ' per arm), automatic judge. On reading, none of these was a real refusal in the four arms that were read; they are garbled replies.';
+  $('cap-unsafe').textContent = 'Replies to the ' + base.n + ' harmful Roman-Urdu requests that the judge flagged as unsafe content. In Urdu script the count is ' + count(cell('unsteered', 'ur/harmful'), 'unsafe_rate') + ' without steering. The flag also fires on replies that only repeat the question; the red segments in the reading chart are the stricter count.';
+  $('cap-gaparm').textContent = 'Harmful requests refused in Urdu script minus Roman Urdu, in requests out of ' + base.n + ' (automatic judge). No intervention closes the gap.';
   D.arms.forEach(function (arm) {
-    var s = D.summary[arm]; if (!s) return;
-    var tr = el('tr'); tr.appendChild(el('td', null, arm));
-    [['ur/harmful', 'ur'], ['ro/harmful', 'ro'], ['ur/benign', 'ur'], ['ro/benign', 'ro']].forEach(function (c) {
-      var v = s.cells[c[0]].refusal_rate, td = el('td', 'barcell');
-      var b = el('span', 'bar ' + c[1]); b.style.width = Math.round(v * 90) + 'px';
-      td.appendChild(b); td.appendChild(document.createTextNode(pct(v))); tr.appendChild(td);
-    });
-    tr.appendChild(el('td', 'num', pct(s.utility_accuracy)));
-    T.appendChild(tr);
+    if (!D.summary[arm]) return;
+    var ro = cell(arm, 'ro/harmful'), ur = cell(arm, 'ur/harmful'), bu = cell(arm, 'ur/benign'), br = cell(arm, 'ro/benign');
+    var cls = arm === 'unsteered' ? 'grey' : (arm === 'pooled' || arm === 'residualized' ? 'ro' : 'neutral');
+    row($('chart-arms'), armName(arm), count(ro, 'refusal_rate'), ro.n, cls);
+    row($('chart-benign'), armName(arm), count(bu, 'refusal_rate') + count(br, 'refusal_rate'), bu.n + br.n, arm === 'unsteered' ? 'grey' : (arm === 'pooled' || arm === 'residualized' ? 'blue' : 'neutral'));
+    row($('chart-unsafe'), armName(arm), count(ro, 'unsafe_rate'), ro.n, arm === 'unsteered' ? 'grey' : 'red');
+    row($('chart-gaparm'), armName(arm), count(ur, 'refusal_rate') - count(ro, 'refusal_rate'), ro.n, arm === 'unsteered' ? 'grey' : 'neutral');
   });
 
-  // ---- reading table
-  if (D.reading) {
-    document.getElementById('readingwrap').hidden = false;
-    var R = document.getElementById('reading'), rh = el('tr');
-    ['Arm', 'Harmful: refused', 'answered', 'non-responsive', 'judge said refused', 'Benign: refused', 'answered', 'non-responsive', 'judge said refused'].forEach(function (h) { rh.appendChild(el('th', null, h)); });
-    R.appendChild(rh);
-    Object.keys(D.reading).forEach(function (arm) {
-      var v = D.reading[arm], tr = el('tr'); tr.appendChild(el('td', null, arm));
-      [v.harmful.R, v.harmful.A, v.harmful.N, v.harmful.guard_refusal_pre_registered, v.benign.R, v.benign.A, v.benign.N, v.benign.guard_refusal_pre_registered].forEach(function (x) { tr.appendChild(el('td', 'num', String(x))); });
-      R.appendChild(tr);
-    });
-  }
-
-  // ---- controls
-  var famSel = document.getElementById('family');
+  // ---- explorer
+  $('note').textContent = D.note + ' Steered arms use layer ' + D.layer + ' at strength \u03c1 = ' + D.rho + '. ' + S.withheld + ' of ' + S.rows + ' recorded replies are withheld.';
+  var famSel = $('family');
   D.families.forEach(function (f, i) { var o = el('option', null, f.family_id + '  \u00b7  ' + (f.harm_group || '')); o.value = i; famSel.appendChild(o); });
   famSel.addEventListener('change', function () { state.family = +famSel.value; render(); });
-  var seg = document.getElementById('label');
-  ['harmful', 'benign'].forEach(function (lab) {
-    var b = el('button', null, lab); b.type = 'button'; b.setAttribute('aria-pressed', String(lab === state.label));
-    b.addEventListener('click', function () { state.label = lab; Array.prototype.forEach.call(seg.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); }); render(); });
+  var seg = $('label');
+  [['harmful', 'Harmful request'], ['benign', 'Harmless request']].forEach(function (lab) {
+    var b = el('button', null, lab[1]); b.type = 'button'; b.setAttribute('aria-pressed', String(lab[0] === state.label));
+    b.addEventListener('click', function () { state.label = lab[0]; Array.prototype.forEach.call(seg.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); }); render(); });
     seg.appendChild(b);
   });
-  var armBox = document.getElementById('arms');
-  D.arms.forEach(function (arm) {
-    var l = el('label'), c = el('input'); c.type = 'checkbox'; c.checked = !!state.arms[arm];
-    c.addEventListener('change', function () { state.arms[arm] = c.checked; render(); });
-    l.appendChild(c); l.appendChild(document.createTextNode(' ' + arm)); armBox.appendChild(l);
-  });
-  document.getElementById('armdesc').textContent = Object.keys(D.arm_descriptions).map(function (k) { return k + ': ' + D.arm_descriptions[k]; }).join('  \u2022  ');
+  function checks(box, items, store) {
+    items.forEach(function (it) {
+      var l = el('label'), c = el('input'); c.type = 'checkbox'; c.checked = !!store[it[0]];
+      c.addEventListener('change', function () { store[it[0]] = c.checked; render(); });
+      l.appendChild(c); l.appendChild(document.createTextNode(' ' + it[1])); box.appendChild(l);
+    });
+  }
+  checks($('arms'), D.arms.map(function (a) { return [a, armName(a)]; }), state.arms);
+  checks($('forms'), FORMS, state.forms);
+  $('armdesc').appendChild(el('li', null, armName('unsteered') + ': the model as released, nothing added.'));
+  Object.keys(D.arm_descriptions).forEach(function (k) { $('armdesc').appendChild(el('li', null, armName(k) + ': ' + D.arm_descriptions[k] + '.')); });
 
   function render() {
-    var f = D.families[state.family], G = document.getElementById('grid');
+    var f = D.families[state.family], G = $('grid');
+    var forms = FORMS.filter(function (fm) { return state.forms[fm[0]]; }), arms = D.arms.filter(function (a) { return state.arms[a]; });
     G.textContent = '';
-    document.getElementById('meaning').textContent = 'Intended meaning: ' + ((f.meaning || {})[state.label] || '');
-    G.appendChild(el('div', 'head', ''));
-    FORMS.forEach(function (fm) { G.appendChild(el('div', 'head form', fm[1])); });
-    var rh = el('div', 'rowhead', 'Prompt'); G.appendChild(rh);
-    FORMS.forEach(function (fm) {
-      var c = el('div', 'cell'); c.setAttribute('data-form', fm[1]);
-      var p = el('div', 'prompt', ((f.prompts[state.label] || {})[fm[0]]) || ''); p.dir = 'auto'; c.appendChild(p); G.appendChild(c);
-    });
-    D.arms.forEach(function (arm) {
-      if (!state.arms[arm]) return;
-      var r = el('div', 'rowhead', arm); G.appendChild(r);
-      FORMS.forEach(function (fm) {
-        var c = el('div', 'cell'); c.setAttribute('data-form', fm[1]);
+    G.style.gridTemplateColumns = '128px minmax(210px, 1.1fr) repeat(' + arms.length + ', minmax(220px, 1fr))';
+    G.style.minWidth = (128 + 210 + 220 * arms.length) + 'px';
+    $('meaning').textContent = 'What is asked: ' + ((f.meaning || {})[state.label] || '');
+    G.appendChild(el('div', 'head', 'Written form'));
+    G.appendChild(el('div', 'head', 'Request as the model saw it'));
+    arms.forEach(function (arm) { var h = el('div', 'head', armName(arm)); h.appendChild(el('span', null, 'recorded reply')); G.appendChild(h); });
+    forms.forEach(function (fm) {
+      var rh = el('div', 'rowhead ' + fm[0], fm[1]); rh.appendChild(el('span', null, FORM_NOTE[fm[0]])); G.appendChild(rh);
+      var pc = el('div', 'cell'); pc.setAttribute('data-h', 'Request');
+      var p = el('div', 'prompt', ((f.prompts[state.label] || {})[fm[0]]) || ''); p.dir = 'auto'; pc.appendChild(p); G.appendChild(pc);
+      arms.forEach(function (arm) {
+        var c = el('div', 'cell'); c.setAttribute('data-h', armName(arm));
         var x = (((f.responses[arm] || {})[state.label]) || {})[fm[0]];
         if (!x) { c.appendChild(el('span', 'muted small', 'not run')); G.appendChild(c); return; }
         c.appendChild(el('span', 'chip ' + x.label, 'judge: ' + x.label));
-        if (x.read_as) c.appendChild(el('span', 'chip script', 'read as: ' + ({R: 'refusal', A: 'answer', N: 'non-responsive'}[x.read_as] || x.read_as)));
-        if (x.echo) c.appendChild(el('span', 'chip script', 'echo of the prompt'));
+        if (x.read_as) c.appendChild(el('span', 'chip plain', 'read as: ' + ({R: 'refusal', A: 'goes along', N: 'neither'}[x.read_as] || x.read_as)));
+        if (x.echo) c.appendChild(el('span', 'chip plain', 'repeats the prompt'));
         if (x.unsafe) c.appendChild(el('span', 'chip flag', 'judge flag: unsafe'));
-        if (x.script && x.script !== 'empty') c.appendChild(el('span', 'chip script', 'answered in ' + x.script));
-        if (x.withheld) c.appendChild(el('div', 'withheld', 'Response text withheld (' + x.chars + ' characters).'));
+        if (x.script && x.script !== 'empty') c.appendChild(el('span', 'chip plain', 'written in ' + (WRITTEN[x.script] || x.script)));
+        if (x.withheld) c.appendChild(el('div', 'withheld', 'Reply withheld (' + x.chars + ' characters): not a clean refusal of a harmful request.'));
         else { var t = el('div', 'resp', x.text); t.dir = 'auto'; c.appendChild(t); }
         G.appendChild(c);
       });
     });
   }
   render();
+
+  // ---- method, links, limitations (numbers from the data)
+  ['Dataset: ' + S.corpus.families + ' matched intent families (' + S.corpus.records + ' prompts), validated and exported with CuratorKIT, split by family: ' + S.corpus.split + ' for calibration, development and test.',
+   'Steering vectors: contrastive activation addition with SafeTune on the calibration families; the residualized vector is the pooled vector with the script direction projected out.',
+   'Generation and logging with AuditKIT. Layer ' + D.layer + ' and strength \u03c1 = ' + D.rho + ' were chosen on the development families and frozen before the test set was run once.',
+   'Why the repair had little to act on: the refusal direction is almost orthogonal to the script direction (absolute cosine ' + S.mechanism.abs_cos.toFixed(2) + '), while the harm signal for Roman Urdu is ' + S.mechanism.norm_ratio.toFixed(2) + ' times as strong as for Urdu script.',
+   'Statistics: exact McNemar test paired by family, family bootstrap intervals, Holm correction; all fixed in advance.',
+   'Release check: the published loader reproduced ' + S.verify.k + ' of ' + S.verify.n + ' logged replies byte for byte on a GPU.'
+  ].forEach(function (t) { $('method-list').appendChild(el('li', null, t)); });
+  (D.links || []).forEach(function (l) {
+    var a = el('a', null, l[0]); a.setAttribute('href', l[1]); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
+    if (l[2]) a.appendChild(el('span', null, l[2])); $('links').appendChild(a);
+  });
+  ['Small sample: ' + h1.n + ' test families. The script gap is far outside the noise; differences of a few requests between steering arms are not.',
+   'One model (Tiny Aya Fire), one deterministic run, one Roman-Urdu spelling convention, 64-token replies, single-turn, non-adversarial requests.',
+   'Automated judge: only ' + Math.round(100 * S.judge.precision) + '% of the Roman-Urdu replies it called refusals were refusals on reading. That reading was done by an LLM agent, not by people.',
+   'Language review: the prompts were drafted with an LLM. ' + S.review.reviewed + ' of ' + S.review.total + ' prompt pairs have been reviewed so far by the author (participant review, not expert validation). Unreviewed prompts may contain unnatural phrasing.',
+   'Failed hypothesis: script-residualized steering did not beat ordinary steering (same outcome on ' + S.h3.same + ' of ' + S.h3.n + ' harmful prompts), and a placebo vector did almost as well. The vectors are a research artifact, not a safety feature.',
+   'A Roman-Urdu non-refusal is usually not a harmful answer: most are garbled replies or repetitions of the question.'
+  ].forEach(function (t) { $('limit-list').appendChild(el('li', null, t)); });
+  $('footer').textContent = D.footer;
 })();
 </script>
 </body>

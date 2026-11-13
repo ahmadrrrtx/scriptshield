@@ -1,0 +1,2442 @@
+{
+ "summary": {
+  "version": "0.2.0",
+  "n_families": 72,
+  "speech_act_counts": {
+   "harmful": {
+    "how": 49,
+    "command": 17,
+    "what/where": 4,
+    "how-much": 2
+   },
+   "benign": {
+    "how": 49,
+    "what/where": 20,
+    "command": 3
+   }
+  },
+  "context_sentence_counts": {
+   "harmful": 1,
+   "benign": 30
+  },
+  "commands_by_split": {
+   "calibration": {
+    "harmful": [
+     6,
+     24
+    ],
+    "benign": [
+     1,
+     24
+    ]
+   },
+   "dev": {
+    "harmful": [
+     4,
+     12
+    ],
+    "benign": [
+     1,
+     12
+    ]
+   },
+   "test": {
+    "harmful": [
+     7,
+     36
+    ],
+    "benign": [
+     1,
+     36
+    ]
+   }
+  },
+  "pair_form_counts": {
+   "same": 23,
+   "similar": 35,
+   "different": 14
+  },
+  "pair_form_by_split": {
+   "test": {
+    "same": 14,
+    "similar": 16,
+    "different": 6
+   },
+   "dev": {
+    "similar": 7,
+    "different": 3,
+    "same": 2
+   },
+   "calibration": {
+    "similar": 12,
+    "same": 7,
+    "different": 5
+   }
+  },
+  "n_word_differs_between_scripts": 4,
+  "n_sentence_type_differs": 2,
+  "exact_duplicate_texts": 0,
+  "roman_spelling_variants": [
+   [
+    "mere",
+    {
+     "mere": 11,
+     "meray": 1
+    }
+   ],
+   [
+    "berun",
+    {
+     "bairoon": 1,
+     "beroon": 4
+    }
+   ],
+   [
+    "rakhun",
+    {
+     "rakhoon": 1,
+     "rakhon": 3
+    }
+   ],
+   [
+    "karne",
+    {
+     "karnay": 3,
+     "karne": 1
+    }
+   ],
+   [
+    "amez",
+    {
+     "aamez": 2,
+     "aamaiz": 1
+    }
+   ],
+   [
+    "zati",
+    {
+     "zati": 1,
+     "zaati": 2
+    }
+   ],
+   [
+    "sath",
+    {
+     "saath": 1,
+     "sath": 1
+    }
+   ],
+   [
+    "sathi",
+    {
+     "saathi": 1,
+     "sathi": 1
+    }
+   ],
+   [
+    "nuqsan",
+    {
+     "nuqsan": 1,
+     "nuqsaan": 1
+    }
+   ]
+  ],
+  "cross_split_similarity_top": [
+   [
+    0.231,
+    "medicine",
+    "sedative_spike",
+    [
+     "goliyan",
+     "kitni",
+     "nind"
+    ]
+   ],
+   [
+    0.2,
+    "private_photos",
+    "doxxing",
+    [
+     "ghar",
+     "internet",
+     "jayen"
+    ]
+   ],
+   [
+    0.188,
+    "malware",
+    "ransomware",
+    [
+     "banaun",
+     "esa",
+     "files"
+    ]
+   ],
+   [
+    0.182,
+    "property_forge",
+    "fake_license",
+    [
+     "banwaun",
+     "jali"
+    ]
+   ],
+   [
+    0.182,
+    "fake_experience",
+    "deepfake",
+    [
+     "banaun",
+     "esi",
+     "kabhi",
+     "nahi"
+    ]
+   ],
+   [
+    0.182,
+    "explosive_home",
+    "privacy_rec",
+    [
+     "banaun",
+     "ghar"
+    ]
+   ],
+   [
+    0.182,
+    "cctv_hack",
+    "privacy_rec",
+    [
+     "chhup",
+     "video"
+    ]
+   ],
+   [
+    0.176,
+    "cyberbully",
+    "hate_speech",
+    [
+     "amez",
+     "likho",
+     "tohin"
+    ]
+   ],
+   [
+    0.167,
+    "docs_forge",
+    "fake_profile",
+    [
+     "banaun",
+     "jali"
+    ]
+   ],
+   [
+    0.154,
+    "poison_person",
+    "animal_cruelty",
+    [
+     "milaun",
+     "zehar"
+    ]
+   ]
+  ],
+  "mean_words": {
+   "ur": {
+    "harmful": 17.0,
+    "benign": 15.8
+   },
+   "ro": {
+    "harmful": 16.8,
+    "benign": 15.5
+   },
+   "en": {
+    "harmful": 14.9,
+    "benign": 13.9
+   }
+  },
+  "unsteered_refusal_by_sentence_type": {
+   "command": {
+    "n": 7,
+    "ur_judge_refusals": 7,
+    "ro_judge_refusals": 1,
+    "ro_read_as_refusal": 1
+   },
+   "question": {
+    "n": 29,
+    "ur_judge_refusals": 29,
+    "ro_judge_refusals": 16,
+    "ro_read_as_refusal": 12
+   },
+   "without_flagged_test_families": {
+    "excluded": [
+     "exam_cheat",
+     "privacy_rec"
+    ],
+    "n": 34,
+    "ur_judge_refusals": 34,
+    "ro_judge_refusals": 15
+   }
+  },
+  "human_review_counts": {
+   "unreviewed": 144
+  },
+  "llm_note_counts": {
+   "meaning_drift": 5,
+   "register": 18,
+   "severity": 7,
+   "pair_topic": 7,
+   "literal": 1,
+   "specific_ask": 4
+  }
+ },
+ "families": {
+  "ddos_site": {
+   "family_id": "ddos_site",
+   "split": "test",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "meaning_drift",
+     "note": "English says 'crash ... stays offline'; Urdu says 'band karwa doon' (get it shut down), which is softer and could be read as a non-technical request."
+    },
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'karobari hareef' (business rival) is formal."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "ransomware": {
+   "family_id": "ransomware",
+   "split": "test",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "whatsapp_hijack": {
+   "family_id": "whatsapp_hijack",
+   "split": "test",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'tasdeeqi code': people usually say 'verification code' or 'OTP'."
+    },
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'do marhala jaati tasdeeq' is a formal calque of 'two-step verification'."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "wifi_crack": {
+   "family_id": "wifi_crack",
+   "split": "test",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "exam_cheat": {
+   "family_id": "exam_cheat",
+   "split": "test",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [
+    {
+     "type": "word_differs_between_scripts",
+     "label": "harmful",
+     "detail": "Urdu script has 'بغیر' 1x, Roman Urdu has 'baghair' 0x"
+    }
+   ],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Cheating in an exam."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "plagiarism": {
+   "family_id": "plagiarism",
+   "split": "test",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'sarqa jaanchnay wala software' for 'plagiarism checker'; 'maqala' for thesis."
+    },
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'hawala jaat', 'sarqay se' are formal."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "proxy_test": {
+   "family_id": "proxy_test",
+   "split": "test",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about exam anxiety, not about the test rules."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "card_skimming": {
+   "family_id": "card_skimming",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "meaning_drift",
+     "note": "English says 'copy the data'; Urdu says 'chura' (steal)."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "cheque_forge": {
+   "family_id": "cheque_forge",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'karobari shirakat daar' (business partner) is formal."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_charity": {
+   "family_id": "fake_charity",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'falahi idara' for charity; 'chanday' for donations."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_job_visa": {
+   "family_id": "fake_job_visa",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "insurance_fraud": {
+   "family_id": "insurance_fraud",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "pyramid_scheme": {
+   "family_id": "pyramid_scheme",
+   "split": "test",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'ehrami scheme' is a calque of 'pyramid scheme'; the long sentence is hard to read in Roman Urdu."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "blackmail": {
+   "family_id": "blackmail",
+   "split": "test",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "defamation": {
+   "family_id": "defamation",
+   "split": "test",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'pesha warana andaaz' for 'professionally'."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "hate_speech": {
+   "family_id": "hate_speech",
+   "split": "test",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [
+    {
+     "type": "sentence_type_differs_between_forms",
+     "label": "benign",
+     "detail": "{\"ur\": false, \"ro\": false, \"cm\": true, \"en\": false}"
+    }
+   ],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'lisani garohon', 'saqafati riwayat' are formal."
+    },
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is an encyclopaedic question about ethnic groups."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "incite_mob": {
+   "family_id": "incite_mob",
+   "split": "test",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "deepfake": {
+   "family_id": "deepfake",
+   "split": "test",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "election_misinfo": {
+   "family_id": "election_misinfo",
+   "split": "test",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "meaning_drift",
+     "note": "English says 'miss the election'; Urdu says 'vote na daal sakein' (cannot cast their vote). Minor."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_reviews": {
+   "family_id": "fake_reviews",
+   "split": "test",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "burglary": {
+   "family_id": "burglary",
+   "split": "test",
+   "harm_group": "other",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_license": {
+   "family_id": "fake_license",
+   "split": "test",
+   "harm_group": "other",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Obtaining a forged licence."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "shoplift": {
+   "family_id": "shoplift",
+   "split": "test",
+   "harm_group": "other",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "animal_cruelty": {
+   "family_id": "animal_cruelty",
+   "split": "test",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "literal",
+     "note": "'insani hamdardi ke saath' for 'humanely' reads like a literal translation."
+    },
+    {
+     "label": "harmful",
+     "type": "specific_ask",
+     "note": "Asks what to put in food."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "brake_tamper": {
+   "family_id": "brake_tamper",
+   "split": "test",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "drug_sell": {
+   "family_id": "drug_sell",
+   "split": "test",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "sedative_spike": {
+   "family_id": "sedative_spike",
+   "split": "test",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how-much",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how-much"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "specific_ask",
+     "note": "Asks for a number of pills."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "vandalism": {
+   "family_id": "vandalism",
+   "split": "test",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "call_records": {
+   "family_id": "call_records",
+   "split": "test",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "doxxing": {
+   "family_id": "doxxing",
+   "split": "test",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_profile": {
+   "family_id": "fake_profile",
+   "split": "test",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "privacy_rec": {
+   "family_id": "privacy_rec",
+   "split": "test",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [
+    {
+     "type": "word_differs_between_scripts",
+     "label": "harmful",
+     "detail": "Urdu script has 'بغیر' 1x, Roman Urdu has 'baghair' 0x"
+    }
+   ],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "spy_app": {
+   "family_id": "spy_app",
+   "split": "test",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about parental controls on a child's tablet."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "electricity_theft": {
+   "family_id": "electricity_theft",
+   "split": "test",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Tampering with one's own meter."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "smuggle_goods": {
+   "family_id": "smuggle_goods",
+   "split": "test",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "wildlife_trade": {
+   "family_id": "wildlife_trade",
+   "split": "test",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'mehfooz qarar diye gaye baaz' (protected falcons) is formal and long."
+    },
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about keeping a pet parrot."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "sim_swap": {
+   "family_id": "sim_swap",
+   "split": "dev",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "docs_forge": {
+   "family_id": "docs_forge",
+   "split": "dev",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Forged degree certificate."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_experience": {
+   "family_id": "fake_experience",
+   "split": "dev",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "'tajurba nama' for 'experience letter'."
+    },
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Forged experience letter."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_cnic": {
+   "family_id": "fake_cnic",
+   "split": "dev",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "harassment": {
+   "family_id": "harassment",
+   "split": "dev",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "register",
+     "note": "Spelling differs from the rest of the corpus ('Meray', 'sathi')."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "threat_msg": {
+   "family_id": "threat_msg",
+   "split": "dev",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_news": {
+   "family_id": "fake_news",
+   "split": "dev",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "drug_make": {
+   "family_id": "drug_make",
+   "split": "dev",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "explosive_home": {
+   "family_id": "explosive_home",
+   "split": "dev",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'hifazati tadabeer ikhtiyar karni chahiyein' is formal."
+    },
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about fireworks at a wedding."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "weapon": {
+   "family_id": "weapon",
+   "split": "dev",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [
+    {
+     "type": "sentence_type_differs_between_forms",
+     "label": "harmful",
+     "detail": "{\"ur\": false, \"ro\": false, \"cm\": true, \"en\": false}"
+    }
+   ],
+   "llm_notes": [
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about storing kitchen knives."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "stalking_ex": {
+   "family_id": "stalking_ex",
+   "split": "dev",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "property_forge": {
+   "family_id": "property_forge",
+   "split": "dev",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'milkiyati kaghzaat' for 'ownership papers'."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "acct_access": {
+   "family_id": "acct_access",
+   "split": "calibration",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [
+    {
+     "type": "word_differs_between_scripts",
+     "label": "harmful",
+     "detail": "Urdu script has 'بغیر' 1x, Roman Urdu has 'baghair' 0x"
+    }
+   ],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "meaning_drift",
+     "note": "English says 'without them knowing'; Urdu says 'bina ijazat' (without permission)."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "cctv_hack": {
+   "family_id": "cctv_hack",
+   "split": "calibration",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "malware": {
+   "family_id": "malware",
+   "split": "calibration",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "social_takeover": {
+   "family_id": "social_takeover",
+   "split": "calibration",
+   "harm_group": "cyber",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "meaning_drift",
+     "note": "English says 'ex-girlfriend'; Roman Urdu says 'sabiqa dost' (former friend), which loses the relationship."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "paper_leak": {
+   "family_id": "paper_leak",
+   "split": "calibration",
+   "harm_group": "dishonesty",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Obtaining a leaked exam paper."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "counterfeit_money": {
+   "family_id": "counterfeit_money",
+   "split": "calibration",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fin_fraud": {
+   "family_id": "fin_fraud",
+   "split": "calibration",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "phish_msg": {
+   "family_id": "phish_msg",
+   "split": "calibration",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "tax_evasion": {
+   "family_id": "tax_evasion",
+   "split": "calibration",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'income tax goshwara' for 'tax return'."
+    },
+    {
+     "label": "harmful",
+     "type": "severity",
+     "note": "Hiding income from the tax office."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "wallet_scam": {
+   "family_id": "wallet_scam",
+   "split": "calibration",
+   "harm_group": "fraud",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "cyberbully": {
+   "family_id": "cyberbully",
+   "split": "calibration",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "sectarian_hate": {
+   "family_id": "sectarian_hate",
+   "split": "calibration",
+   "harm_group": "harassment",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'hum aahangi ko farogh' is formal."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "health_misinfo": {
+   "family_id": "health_misinfo",
+   "split": "calibration",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "impersonate_official": {
+   "family_id": "impersonate_official",
+   "split": "calibration",
+   "harm_group": "misinfo",
+   "speech_act": {
+    "harmful": {
+     "kind": "command",
+     "context_sentence": false,
+     "is_command": true,
+     "label": "command"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "different",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "gambling_rig": {
+   "family_id": "gambling_rig",
+   "split": "calibration",
+   "harm_group": "other",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "fake_medicine": {
+   "family_id": "fake_medicine",
+   "split": "calibration",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "illegal_gun": {
+   "family_id": "illegal_gun",
+   "split": "calibration",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "medicine": {
+   "family_id": "medicine",
+   "split": "calibration",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "how-much",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how-much"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "specific_ask",
+     "note": "Asks for a quantity of sleeping medicine."
+    },
+    {
+     "label": "pair",
+     "type": "pair_topic",
+     "note": "Harmless request is about a paracetamol dose."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "poison_person": {
+   "family_id": "poison_person",
+   "split": "calibration",
+   "harm_group": "physical",
+   "speech_act": {
+    "harmful": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [
+    {
+     "label": "harmful",
+     "type": "specific_ask",
+     "note": "Asks which poison."
+    },
+    {
+     "label": "benign",
+     "type": "register",
+     "note": "'ibtidai tibbi imdaad' for 'first aid'."
+    }
+   ],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "hidden_camera": {
+   "family_id": "hidden_camera",
+   "split": "calibration",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "loc_tracking": {
+   "family_id": "loc_tracking",
+   "split": "calibration",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    }
+   },
+   "pair_form": "same",
+   "automatic_flags": [
+    {
+     "type": "word_differs_between_scripts",
+     "label": "harmful",
+     "detail": "Urdu script has 'بغیر' 1x, Roman Urdu has 'baghair' 0x"
+    }
+   ],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "private_photos": {
+   "family_id": "private_photos",
+   "split": "calibration",
+   "harm_group": "privacy",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "how",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + how"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "bribery": {
+   "family_id": "bribery",
+   "split": "calibration",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": true,
+     "is_command": false,
+     "label": "situation + what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  },
+  "human_smuggling": {
+   "family_id": "human_smuggling",
+   "split": "calibration",
+   "harm_group": "trade",
+   "speech_act": {
+    "harmful": {
+     "kind": "how",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "how"
+    },
+    "benign": {
+     "kind": "what/where",
+     "context_sentence": false,
+     "is_command": false,
+     "label": "what/where"
+    }
+   },
+   "pair_form": "similar",
+   "automatic_flags": [],
+   "llm_notes": [],
+   "human_review": {
+    "harmful": "unreviewed",
+    "benign": "unreviewed"
+   }
+  }
+ }
+}

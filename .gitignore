@@ -42,6 +42,8 @@ experiments/results/**/*.npz
 # unredacted model responses (D-030): never in git. The labels file (keys + R/A/N) is tracked.
 experiments/adjudication/*.jsonl
 experiments/adjudication/*_PRIVATE.json
+# pack for the human response check: holds unredacted replies and the private item mapping
+experiments/adjudication/human_pack/
 release/
 
 !experiments/adjudication/test_ro_rows.jsonl

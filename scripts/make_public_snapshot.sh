@@ -32,7 +32,8 @@ LAST=$(git -C "$ROOT" log -1 --date=format:'%Y-%m-%d' --pretty=format:'%ad')
   echo "Hugging Face repositories. The full history can be shown to the hackathon organizers on request."
   echo
   echo "Left out of the snapshot: internal task lists and access notes, a note of open questions for the"
-  echo "organizers, a local bootstrap script and an early, stale copy of the code that was once uploaded to"
+  echo "organizers, a working note on how other public write-ups present their work, a local bootstrap script"
+  echo "and an early, stale copy of the code that was once uploaded to"
   echo "Kaggle. A few documents still mention entries of those task lists by identifiers such as B-012; they"
   echo "are not needed to follow the study."
   echo

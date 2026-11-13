@@ -27,6 +27,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from scriptshield.artifacts.release import (ARM_DESCRIPTIONS, WITHHELD, assert_nothing_leaks, attach_reading,  # noqa: E402
                                             public_row, repack_vectors, save_npz_deterministic, sha256_array,
                                             sha256_file, sha256_text, write_jsonl, write_sums)
+from scriptshield.artifacts.public_text import alt_arms, alt_gap, placebo_did_almost_as_well, review_summary  # noqa: E402
 from scriptshield.config import load_yaml  # noqa: E402
 from scriptshield.data.schema import load_corpus  # noqa: E402
 from scriptshield.evaluation.analysis import label_rows  # noqa: E402
@@ -198,6 +199,7 @@ def main() -> int:
     (m / "manifest.json").write_text(json.dumps(manifest, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     shutil.copyfile(ROOT / "configs/frozen_selection.json", m / "frozen_selection.json")
     shutil.copyfile(ROOT / "artifacts/steering_package/apply_steering.py", m / "apply_steering.py")
+    shutil.copyfile(ROOT / "artifacts/steering_package/check_base_model.py", m / "check_base_model.py")
 
     # expected outputs: the utility probe of the logged run, per arm, in generation order
     pub_key = {(r["set"], r["arm"], r["id"]): r for r in pub}
@@ -227,7 +229,16 @@ def main() -> int:
         write_jsonl(d / "data" / f"{split}.jsonl", [r for r in recs if r["split"] == split])
     shutil.copyfile(ROOT / "data/utility/utility_v0.1.yaml", d / "data" / "utility_v0.1.yaml")
     shutil.copyfile(ROOT / f"data/manifests/scriptshield_{corpus['dataset_version']}.json", d / "manifest.json")
-    shutil.copytree(ROOT / "data/reviewer_pack", d / "reviewer_pack")
+    # Working files of the review stay in the code repository: the reviewer's raw messages, the sheet and batches
+    # (they carry unreviewed spelling candidates) and proposed corrections. Unapproved text does not enter the dataset.
+    shutil.copytree(ROOT / "data/reviewer_pack", d / "reviewer_pack", ignore=shutil.ignore_patterns(
+        "returns", "AHMAD_REVIEW.csv", "AHMAD_REVIEW_BATCH_*.md", "proposed_revisions.jsonl"))
+    (d / "figures").mkdir()
+    for f in sorted((ROOT / "docs/figures").glob("*")):
+        shutil.copyfile(f, d / "figures" / f.name)
+    (d / "quality").mkdir()
+    for f in (ROOT / "docs/DATASET_QUALITY_AUDIT.md", ROOT / "docs/ROBUSTNESS_CHECKS.md", *sorted((ROOT / "data/quality").glob("*.json"))):
+        shutil.copyfile(f, d / "quality" / f.name)
     logs = d / "eval_logs"
     logs.mkdir()
     write_jsonl(logs / "test_judged_public.jsonl", [r for r in pub if r.get("set") in ("test", "utility")])
@@ -258,9 +269,18 @@ def main() -> int:
     demo = {"note": "Recorded outputs of the frozen test run. No model runs in this demo. Response text is withheld "
                     "where the prompt is harmful and the response is not a clean refusal; for Roman-Urdu prompts it is "
                     "shown only where that response was read and found to be a refusal.",
-            "links": [["Dataset and evaluation logs", links["hf_dataset"]["url"]],
-                      ["Steering vectors", links["hf_model"]["url"]],
-                      ["Code, protocol and write-up", links["github_repo"]]],
+            "links": [["Research article", links.get("hf_article") or links["article_in_repo"], "the full write-up, with figures and limitations"],
+                      ["GitHub repository", links["github_repo"], "code, protocol, decision records, tests"],
+                      ["Dataset and evaluation logs", links["hf_dataset"]["url"], "prompts, logs, quality audit, review status"],
+                      ["Steering vectors (model artifact)", links["hf_model"]["url"], "vectors, manifest, loader; not a fine-tuned model"],
+                      ["Collection: model artifacts", links["hf_collection_models"]["url"], "steering vectors and this explorer"],
+                      ["Collection: data artifacts", links["hf_collection_data"]["url"], "dataset with evaluation logs"],
+                      ["Full result tables", links["results_in_repo"], "every table, generated from the logs"],
+                      ["Dataset quality audit", links["audit_in_repo"], "family-level findings and review status"],
+                      ["Robustness checks", links["github_repo"] + "/blob/main/docs/ROBUSTNESS_CHECKS.md", "the gap on subsets of the test set; where the judge errs"]],
+            "footer": (f"{links['author']['name']} (@{links['author']['hf']}), solo submission to the Lexsi AI Safety and Alignment Hackathon. "
+                       "Built with substantial help from an AI assistant. Labels come from a model judge and from an LLM agent's reading, "
+                       "not from human annotators. Recorded outputs: CC BY-NC 4.0; Tiny Aya Fire is subject to the Cohere Labs Acceptable Use Policy."),
             "layer": L, "rho": frozen["rho"], "arms": ["unsteered", *ARMS], "arm_descriptions": ARM_DESCRIPTIONS,
             "reading": (json.loads((ROOT / "experiments/adjudication/test_ro_adjudication.json").read_text(encoding="utf-8"))["arms"]
                         if (ROOT / "experiments/adjudication/test_ro_adjudication.json").exists() else None),
@@ -269,6 +289,32 @@ def main() -> int:
                               "utility_accuracy": analysis["arms"][arm]["utility_accuracy"]}
                         for arm in analysis["arms"]},
             "families": []}
+    h1s, h3s = analysis["H1_unsteered_script_gap"], analysis["H3_residualized_vs_pooled"]
+    adj_doc = json.loads((ROOT / "experiments/adjudication/test_ro_adjudication.json").read_text(encoding="utf-8"))
+    mech = json.loads((ROOT / "experiments/results/fire_dev_v2/fire_dev/run_report.json").read_text(encoding="utf-8"))[
+        "sections"]["mechanism_diagnostics"]["by_layer"][str(L)]
+    review = review_summary(json.loads((ROOT / "data/reviewer_pack/review_status.json").read_text(encoding="utf-8")))
+    va_ = (verify or {}).get("verify", {}).get("arms", {})
+    gaps = {arm: v["cells"]["ur/harmful"]["refusal"] - v["cells"]["ro/harmful"]["refusal"] for arm, v in analysis["arms"].items()}
+    ru = adj_doc["arms"]["unsteered"]["harmful"]
+    if h3s["gate"]["passed"] or not placebo_did_almost_as_well(analysis) or min(gaps.values()) < 0.5 * gaps["unsteered"] \
+            or ru["N"] <= ru["A"] or any(v["benign"]["R"] for v in adj_doc["arms"].values()):
+        print("REFUSING: fixed sentences of the explorer (gate failed, placebo, gap not closed, non-refusals mostly garbled, no real "
+              "refusal of harmless prompts) no longer describe the data")
+        return 2
+    demo["stats"] = {
+        "h1": {"n": h1s["n_families"], "ur_k": round(h1s["refusal_ur"] * h1s["n_families"]), "ro_k": round(h1s["refusal_ro"] * h1s["n_families"]),
+               "diff_pp": round(h1s["difference_ro_minus_ur_pp"], 1), "ci_low_pp": round(100 * h1s["bootstrap"]["ci_low"], 1),
+               "ci_high_pp": round(100 * h1s["bootstrap"]["ci_high"], 1), "p": f"{h1s['mcnemar']['p_value']:.2g}"},
+        "h3": {"same": h3s["identical_outcomes"], "n": h3s["n_paired_outcomes"], "gate_passed": bool(h3s["gate"]["passed"])},
+        "judge": {"precision": adj_doc["judge_vs_adjudication"]["guard_pre_registered"]["precision"]},
+        "mechanism": {"norm_ratio": mech["norm_ratio_ro_over_ur"]["value"], "abs_cos": mech["h2_script_alignment"]["in_sample_abs_cosine"]},
+        "rows": len(pub), "withheld": int(sum(r["withheld"] for r in pub)),
+        "review": {"reviewed": review["done"], "total": review["total"]},
+        "verify": {"k": sum(v["identical"] for v in va_.values()), "n": sum(v["n"] for v in va_.values())},
+        "corpus": {"families": len({r["family_id"] for r in recs}), "records": len(recs),
+                   "split": " / ".join(str(len({r["family_id"] for r in recs if r["split"] == sp})) for sp in ("calibration", "dev", "test"))},
+    }
     for fam in fams:
         entry = {"family_id": fam, "harm_group": None, "prompts": {}, "meaning": {}, "responses": {}}
         for r in recs:
@@ -297,15 +343,21 @@ def main() -> int:
     sp = out / "hf_space"
     shutil.copyfile(out / "demo" / "index.html", sp / "index.html")
     (sp / "README.md").write_text(
-        "---\ntitle: ScriptShield Replay Explorer\nemoji: 🛡️\ncolorFrom: blue\ncolorTo: gray\nsdk: static\n"
+        "---\ntitle: ScriptShield Recorded Experiment Explorer\nemoji: 🛡️\ncolorFrom: blue\ncolorTo: gray\nsdk: static\n"
         "app_file: index.html\npinned: false\nlicense: cc-by-nc-4.0\n"
-        "short_description: Recorded Tiny Aya Fire outputs, Urdu script vs Roman Urdu\n"
+        "short_description: Urdu vs Roman Urdu safety in Tiny Aya Fire (replay)\n"
         f"datasets:\n- {links['hf_dataset']['repo_id']}\nmodels:\n- {links['hf_model']['repo_id']}\n---\n\n"
-        "# ScriptShield replay explorer\n\n"
-        "Recorded outputs of Cohere Labs' Tiny Aya Fire on matched Urdu-script and Roman-Urdu prompts, from the frozen "
-        "test run of the ScriptShield study. **No model runs here**: live inference would need a GPU and access to a "
-        "gated model. Response text is withheld wherever a harmful prompt received anything other than a clean refusal.\n\n"
-        "Labels come from a model judge and from an LLM agent's reading, not from human annotators.\n\n"
+        "# ScriptShield: recorded experiment explorer\n\n"
+        "**Evaluating Urdu and Roman Urdu safety behaviour in Cohere Tiny Aya Fire.** The page shows the research overview, "
+        "the measured results as charts, and the recorded replies of the frozen test run, side by side in Urdu script and "
+        "Roman Urdu, for the unsteered model and each steering vector.\n\n"
+        "**No model runs here.** This is a replay of logged outputs: live inference would need a GPU and access to a gated "
+        "model. Every number on the page is computed from the embedded logs. Reply text is withheld wherever a harmful "
+        "prompt received anything other than a clean refusal.\n\n"
+        "Labels come from a model judge and from an LLM agent's reading, not from human annotators. The steering "
+        "intervention did not pass its pre-registered gate; the page says so.\n\n"
+        f"- Research article: {links.get('hf_article') or links['article_in_repo']}\n"
+        f"- Collections: [model artifacts]({links['hf_collection_models']['url']}) · [data artifacts]({links['hf_collection_data']['url']})\n"
         f"- Dataset and evaluation logs: [`{links['hf_dataset']['repo_id']}`]({links['hf_dataset']['url']})\n"
         f"- Steering vectors: [`{links['hf_model']['repo_id']}`]({links['hf_model']['url']})\n"
         f"- Code, protocol and write-up: [{links['github_repo']}]({links['github_repo']})\n\n"
@@ -335,6 +387,40 @@ def main() -> int:
     steps = [100 * (by[(layer, 0.2)] - by[(layer, 0.1)]) for layer in sorted({k[0] for k in by})
              if (layer, 0.1) in by and (layer, 0.2) in by]
     dose_cost = f"{min(steps):.0f} to {max(steps):.0f}"
+    audit = json.loads((ROOT / "data/quality/family_audit_v0.2.0.json").read_text(encoding="utf-8"))["summary"]
+    build_date = subprocess.run(["git", "-C", str(ROOT), "log", "-1", "--date=short", "--format=%ad"], capture_output=True, text=True).stdout.strip()
+    core_files = ("steering_vectors.npz", "manifest.json", "apply_steering.py", "expected_outputs.jsonl")
+    inspect_out = f"{manifest['layer']} {manifest['hidden_dim']} {round(manifest['alpha'], 4)} {sorted(manifest['arms'])}"
+    by_split = {sp: [r for r in recs if r["split"] == sp] for sp in ("calibration", "dev", "test")}
+    split_table = "\n".join(["| Split | Families | Prompts | Harmful | Harmless | Role |", "|---|---:|---:|---:|---:|---|"] + [
+        f"| `{sp}` | {len({r['family_id'] for r in rows_})} | {len(rows_)} | {sum(r['safety_label'] == 'harmful' for r in rows_)} | "
+        f"{sum(r['safety_label'] == 'benign' for r in rows_)} | {role} |"
+        for (sp, rows_), role in zip(by_split.items(), ("computing steering vectors", "choosing layer and strength", "the final measurement, run once"))])
+    form_table = "\n".join(["| Written form | Code | Prompts | Harmful | Harmless |", "|---|---|---:|---:|---:|"] + [
+        f"| {name} | `{code}` | {sum(r['form'] == code for r in recs)} | {sum(r['form'] == code and r['safety_label'] == 'harmful' for r in recs)} | "
+        f"{sum(r['form'] == code and r['safety_label'] == 'benign' for r in recs)} |"
+        for code, name in (("ur", "Urdu, Perso-Arabic script"), ("ro", "Roman Urdu"), ("cm", "Code-mixed Urdu-English"), ("en", "English (reference)"))])
+    by_rob = {r["key"]: r for r in json.loads((ROOT / "data/quality/robustness_checks_v0.2.0.json").read_text(encoding="utf-8"))["subsets"]}
+    wo = [r["diff_pp"] for k, r in by_rob.items() if k.startswith("without:")]
+    rob = {"ROB_LO": f"{max(wo):+.1f}", "ROB_HI": f"{min(wo):+.1f}", "ROB_CLEAN_N": str(by_rob["audit:clean"]["n"]),
+           "ROB_CLEAN_RO": str(by_rob["audit:clean"]["ro"]), "ROB_CLEAN_UR": str(by_rob["audit:clean"]["ur"])}
+    extra_fields = {
+        "{{FIG}}": links["figures_base"], "{{URL_AUDIT}}": links["audit_in_repo"], "{{BUILD_DATE}}": build_date,
+        "{{ALT_GAP}}": alt_gap(analysis, ru["R"]), "{{ALT_ARMS}}": alt_arms(analysis),
+        "{{REVIEW_BLOCK}}": review["block"], "{{REVIEW_LINE}}": review["line"],
+        "{{AUDIT_CMD_H}}": str(audit["speech_act_counts"]["harmful"].get("command", 0)),
+        "{{AUDIT_CMD_B}}": str(audit["speech_act_counts"]["benign"].get("command", 0)),
+        "{{AUDIT_CTX_H}}": str(audit["context_sentence_counts"]["harmful"]), "{{AUDIT_CTX_B}}": str(audit["context_sentence_counts"]["benign"]),
+        "{{AUDIT_WORD}}": str(audit["n_word_differs_between_scripts"]), "{{AUDIT_SPELL}}": str(len(audit["roman_spelling_variants"])),
+        "{{AUDIT_DUP}}": str(audit["exact_duplicate_texts"]), "{{AUDIT_REGISTER}}": str(audit["llm_note_counts"].get("register", 0)),
+        "{{SPLIT_TABLE}}": split_table, "{{FORM_TABLE}}": form_table,
+        "{{ROB_LO}}": rob["ROB_LO"], "{{ROB_HI}}": rob["ROB_HI"], "{{ROB_CLEAN_N}}": rob["ROB_CLEAN_N"],
+        "{{ROB_CLEAN_RO}}": rob["ROB_CLEAN_RO"], "{{ROB_CLEAN_UR}}": rob["ROB_CLEAN_UR"],
+        "{{EXAMPLE_HARMFUL_EN}}": next(r["text"] for r in recs if r["id"] == "ss-exam_cheat-en-harmful"),
+        "{{INSPECT_OUTPUT}}": inspect_out, "{{N_EXPECTED}}": str(len(expected)),
+        "{{CORE_SUMS}}": "\n".join(["| File | sha256 |", "|---|---|"] + [f"| `{f}` | `{sha256_file(m / f)}` |" for f in core_files]),
+    }
+    link_fields.update(extra_fields)
     card = (ROOT / "artifacts/steering_package/MODEL_CARD.template.md").read_text(encoding="utf-8")
     card = (card.replace("{{LAYER}}", str(L)).replace("{{RHO}}", str(frozen["rho"]))
             .replace("{{ALPHA}}", f"{S['test']['alpha']:.4f}").replace("{{REVISION}}", mcfg["revision"])

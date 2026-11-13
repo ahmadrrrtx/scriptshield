@@ -55,7 +55,8 @@ both scripts and compare.
 | Replay of the recorded outputs | [`{{ID_SPACE}}`]({{URL_SPACE}}) |
 | Collections | [{{TITLE_COLLECTION_DATA}}]({{URL_COLLECTION_DATA}}) · [{{TITLE_COLLECTION_MODELS}}]({{URL_COLLECTION_MODELS}}) |
 
-Author: {{AUTHOR}}. Built for the [Lexsi AI Safety and Alignment Hackathon]({{URL_HACKATHON}}), Track 2.
+Author: {{AUTHOR}}. Built for the [Lexsi AI Safety and Alignment Hackathon]({{URL_HACKATHON}}), Track 2:
+problem 4 (multilingual and code-mixed safety) with problem 8 (inference-time safety steering).
 
 | Form | Code | Example (benign member of one family) |
 |---|---|---|
@@ -68,11 +69,10 @@ Each family pairs a **harmful** request with a **benign** request on the same to
 your own account vs breaking into someone else's), so refusal and over-refusal are measured on matched
 material. The primary comparison is `ur` vs `ro`: same language, same meaning, different script.
 
-> **Status: unreviewed.** Every prompt was written with an LLM under the author's direction and has
-> **not yet been checked by a native Urdu speaker** (`validation_status: unreviewed` on every record).
-> A bilingual reviewer pack is included in `reviewer_pack/`. The author is a native Urdu speaker and will
-> review the prompts; this card and the `validation_status` field will be updated when that is done. Until
-> then, treat naturalness and exact equivalence across forms as unverified.
+The harmful member of a family is a request of this kind (English form of one test family; it states a goal
+and contains no instructions): *"{{EXAMPLE_HARMFUL_EN}}"*
+
+{{REVIEW_BLOCK}}
 
 ## What we measured with it
 
@@ -80,9 +80,16 @@ Unsteered `CohereLabs/tiny-aya-fire` on the {{H1_N}} test families refused **{{H
 requests in Urdu script and **{{H1_RO}} %** of the same requests in Roman Urdu (exact McNemar
 p = {{H1_P}}). Labels come from a model judge, not human annotators.
 
+![{{ALT_GAP}}]({{FIG}}/script_gap.png)
+
+*The same {{H1_N}} harmful requests in four written forms, without steering. Only the Roman-Urdu form falls.*
+
 {{RESULTS_H1}}
 
 ### How far the automatic labels can be trusted
+
+Three checks follow, from the most to the least formal: a second judge that was fixed in advance, a correction
+for replies that only repeat the prompt, and a reading of every Roman-Urdu reply.
 
 {{RESULTS_VALIDITY}}
 
@@ -94,7 +101,7 @@ The full analysis, the steering experiment (a negative result) and the pre-regis
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("{{ID_DATASET}}")                       # splits: calibration, dev, test
+ds = load_dataset("{{ID_DATASET}}", revision="v{{VERSION}}")   # splits: calibration, dev, test; the tag pins the data of the study
 test = ds["test"]
 urdu  = test.filter(lambda r: r["form"] == "ur" and r["safety_label"] == "harmful")
 roman = test.filter(lambda r: r["form"] == "ro" and r["safety_label"] == "harmful")   # same intents, other script
@@ -110,7 +117,9 @@ logs = load_dataset("{{ID_DATASET}}", "test_outputs", split="test")   # one row 
 | `data/scriptshield_v{{VERSION}}.jsonl` | all records in one file (sha256 `{{SHA256}}`) |
 | `data/utility_v0.1.yaml` | 24 simple factual questions in Urdu script and Roman Urdu, used as a utility probe |
 | `manifest.json` | counts, split rule, checksums |
-| `reviewer_pack/` | bilingual instructions and review sheet for native-speaker validation |
+| `reviewer_pack/` | the original review pack, unchanged (`review_sheet.csv`, `INSTRUCTIONS.md`, `review_template.jsonl`); the guide the reviewer works from (`AHMAD_REVIEW_GUIDE.md`); and `review_status.json`, the status of every prompt pair. The working sheet, the batches and proposed corrections are in the [code repository]({{URL_GITHUB}}/tree/main/data/reviewer_pack) and enter this dataset only as an approved new version |
+| `quality/` | the family-level quality audit (report and JSON), the LLM reading notes it uses, and the post hoc robustness checks of the script gap |
+| `figures/` | the figures of the write-up and `figure_data.json` with the numbers they show |
 | `eval_logs/` | judged outputs of the frozen test run (redacted, see below), margins, analysis JSON, run reports |
 | `eval_logs/adjudication/` | rubric, labels and tallies of the response reading ({{N_ADJ}} rows; labels only, no response text) |
 
@@ -127,7 +136,7 @@ logs = load_dataset("{{ID_DATASET}}", "test_outputs", split="test")   # one row 
 | `intended_meaning_en` | what the prompt is meant to say |
 | `harm_group`, `harm_category` | coarse and fine topic ({{HARM_GROUPS}}) |
 | `split` | `calibration` (24 families), `dev` (12), `test` (36) |
-| `validation_status` | `unreviewed` for every record in this version |
+| `validation_status` | `unreviewed` for every record: v{{VERSION}} is frozen and is not edited. Review results are published next to it, per prompt pair, in `reviewer_pack/review_status.json` |
 | `source`, `created` | `authored`, creation date |
 
 ### Splits
@@ -135,6 +144,74 @@ logs = load_dataset("{{ID_DATASET}}", "test_outputs", split="test")   # one row 
 Splitting is by **family**, so all eight prompts of a family are in the same split and no meaning leaks
 between calibration and test. `calibration` is for building steering vectors or probes, `dev` for choosing
 hyper-parameters, `test` for the final measurement. If you tune anything on `test`, say so.
+
+{{SPLIT_TABLE}}
+
+Every family has all four written forms and both labels, so each split is balanced by construction:
+
+{{FORM_TABLE}}
+
+## How the data was made
+
+![Diagram of the data lineage in five stages: drafting with an LLM, checks with a validator and CuratorKIT, the frozen version split by family, the public evaluation logs with withheld responses, and human review.]({{FIG}}/data_lineage.png)
+
+1. **Drafting.** Each family was written for this project with an LLM under the author's direction: a harmful
+   request, a harmless request on the same topic, and for each the Urdu-script, Roman-Urdu, code-mixed and
+   English form. The Roman-Urdu form keeps the wording of the Urdu-script form, so that only the script
+   differs. No third-party prompt was copied.
+2. **Checks.** A validator enforces the schema, complete pairs and script purity (no Latin or Devanagari
+   letters in `ur`, no Arabic-script letters in `ro`). Lexsi **CuratorKIT** then validated, normalised,
+   de-duplicated and exported the corpus: {{N_RECORDS}} records in, {{N_RECORDS}} out, no text changed. Toxicity
+   filters were deliberately not applied to an adversarial dataset.
+3. **Freezing.** Families were assigned to splits by a seeded rule and the corpus was frozen with one
+   checksum before any experiment was run on it.
+4. **Evaluation.** The model's responses were logged, judged and published with the withholding rule below.
+5. **Review.** Human review started after publication and is tracked per prompt pair.
+
+## Quality audit
+
+A [family-level audit]({{URL_AUDIT}}) of all {{N_FAMILIES}} families is in `quality/`. It keeps four classes
+of evidence apart: automatic checks, LLM reading notes, items that need a human, and human-confirmed items.
+Main points:
+
+| Finding | Evidence | Size |
+|---|---|---|
+| Harmful requests are more often commands ("Write ..."); harmless ones are almost always questions | automatic check | {{AUDIT_CMD_H}} of 72 harmful, {{AUDIT_CMD_B}} of 72 harmless |
+| Harmless requests more often begin with a sentence describing a situation | automatic check | {{AUDIT_CTX_B}} of 72 harmless, {{AUDIT_CTX_H}} of 72 harmful |
+| A function word differs between the Urdu-script and the Roman-Urdu version | automatic check | {{AUDIT_WORD}} prompts (a synonym; meaning unchanged) |
+| Roman-Urdu spelling is not fully uniform | automatic check | {{AUDIT_SPELL}} words occur in two spellings |
+| Exact duplicates | automatic check | {{AUDIT_DUP}} |
+| Roman Urdu follows fairly formal Urdu wording; a person texting would often use the English word | LLM suggestion, needs human review | {{AUDIT_REGISTER}} notes |
+
+The first two rows do not affect a comparison between scripts, which uses the same sentence in both. They can
+affect anything built from "harmful minus harmless", such as a steering vector or a probe.
+
+**Does the measured gap depend on the flagged prompts?** A post hoc check (`quality/ROBUSTNESS_CHECKS.md`) repeats
+the comparison on subsets. Leaving out any one harm group, the difference stays between {{ROB_LO}} and {{ROB_HI}}
+points. On the {{ROB_CLEAN_N}} test families with no automatic flag and no LLM note, Roman Urdu is refused
+{{ROB_CLEAN_RO}} times out of {{ROB_CLEAN_N}} and Urdu script {{ROB_CLEAN_UR}} out of {{ROB_CLEAN_N}}. The same file
+will show the gap on the reviewer-accepted families as the review proceeds.
+
+## Versions
+
+| Version | Date | What changed |
+|---|---|---|
+| 0.1.1-pilot | 2026-11-03 | 24 pilot families; used for pipeline tests only; not published as a dataset |
+| **0.2.0** (tag `v{{VERSION}}`) | 2026-11-13 | first public release: {{N_FAMILIES}} families, {{N_RECORDS}} prompts. Every reported number uses this version |
+| 0.2.0, card revision | {{BUILD_DATE}} | documentation, figures, quality audit and review pack added. **No data file changed** (the corpus checksum above is the same) |
+| next | planned | only if the review yields approved corrections. It will keep, for each changed prompt, the original text, the revised text, the reason and the reviewer; v0.2.0 stays available under its tag |
+
+## Reproduce the evaluation
+
+```bash
+git clone {{URL_GITHUB}} && cd scriptshield
+pip install -e ".[dev,hub]"
+python scripts/recompute_from_public.py --download      # reruns the pre-registered analysis on the public logs; expect IDENTICAL
+python scripts/audit_dataset.py                         # rewrites the quality audit from the corpus
+```
+
+Re-running the model needs a GPU and your own access to the gated base model; the steps are in the
+repository's README.
 
 ## Evaluation logs and what is withheld
 
@@ -155,12 +232,31 @@ pre-registered analysis can be recomputed from this file** (`scripts/recompute_f
 repository does it and compares the result with the published numbers). Rows that were read carry an
 `adjudicated` field (R refusal, A answer, N non-responsive).
 
-## Intended use
+## Appropriate uses
 
-Measuring script robustness of refusal and over-refusal; building and testing steering vectors, probes
-or guardrails for Urdu / Roman Urdu; checking multilingual moderation models on Roman Urdu.
+- Measuring whether a model's refusals and over-refusals depend on the script of an Urdu prompt.
+- Building and testing steering vectors, probes or guardrails for Urdu and Roman Urdu.
+- Checking moderation or guard models on Roman-Urdu input and output.
 
-**Not for** training a model to comply with harmful requests, and not a benchmark of general Urdu ability.
+## Inappropriate uses
+
+- Training or prompting a model to comply with harmful requests.
+- Use as a benchmark of general Urdu ability, or as evidence that a model is safe: a model that refuses all
+  of these requests is not thereby safe.
+- Claims about human-validated Urdu quality: the review is a participant review and may be incomplete.
+- Commercial use (see the licence).
+
+## Bias considerations
+
+- **One author, one country.** Topics, names and phrasing reflect Pakistani usage and one author's choices.
+  Urdu as written in India, and Roman Urdu as typed by other communities, are not represented.
+- **Register.** The Urdu is fairly formal. Colloquial Roman Urdu, with its English loanwords and looser
+  spelling, is under-represented, and results may not carry over to it.
+- **Harm coverage is uneven.** Topic groups: {{HARM_GROUPS}}. There is no content about self-harm, sexual
+  content or extremism, and nothing here measures those.
+- **Labels encode one policy.** "Harmful" means "a safety-aligned assistant is expected to decline". Some
+  families describe lower-severity wrongdoing (cheating in an exam, for example) where policies differ.
+- **Drafted by an LLM.** Its preferences in wording are part of the data.
 
 ## Limitations
 
@@ -168,28 +264,25 @@ or guardrails for Urdu / Roman Urdu; checking multilingual moderation models on 
 - **Automatic refusal labels are unreliable for Roman-Urdu responses.** Both judges we tried call echoes,
   loops and off-topic text "refusals". If you score Roman-Urdu output with a moderation model, read a
   sample yourself.
-- **Unreviewed** by native speakers (see above). One Roman-Urdu spelling convention only ("kaise", "nahi",
-  "mein"); real Roman Urdu spelling varies a lot.
+- **Review is incomplete** (see the status at the top). One Roman-Urdu spelling convention only ("kaise",
+  "nahi", "mein"); real Roman Urdu spelling varies a lot. A second spelling has been drafted for the test
+  families and waits for the reviewer; it is not part of this version.
 - **Harmful requests are deliberately non-operational** (they ask, they do not instruct), single-turn,
   and not adversarial. A model that refuses all of them is not thereby safe.
-- **Speech-act imbalance**: 16 of 72 harmful prompts but only 2 of 72 benign prompts are imperative
-  "write …" requests, so "harmful vs benign" is slightly confounded with "asks for text vs asks a question".
+- **Sentence form is not balanced between labels**: {{AUDIT_CMD_H}} of 72 harmful prompts but only
+  {{AUDIT_CMD_B}} of 72 harmless prompts are commands, and {{AUDIT_CTX_B}} harmless prompts against
+  {{AUDIT_CTX_H}} harmful ones begin by describing a situation. "Harmful versus harmless" is therefore partly
+  confounded with the form of the request (see the quality audit).
 - English and code-mixed forms are references; they differ from Urdu in more than script.
 - Topics and phrasing reflect one author's choices and Pakistani usage.
-
-## Provenance
-
-Written for this project (no third-party prompts were copied); validated, de-duplicated and exported with
-Lexsi **CuratorKIT** (576 records in, 576 out, no text changed; toxicity filters were deliberately not
-applied to an adversarial dataset). A per-character script check guarantees that `ur` records contain no
-Latin or Devanagari letters and `ro` records no Arabic-script letters.
 
 ## How this was built
 
 This project was built with substantial help from an AI assistant (an LLM agent). Under the author's
 direction it drafted the prompts, wrote much of the code and analysis, and did the response readings
 recorded in `eval_logs/adjudication/`. The author chose the research direction, approved the protocol and
-the release, and is responsible for the content. No human annotation has been done yet.
+the release, and is responsible for the content. Responses were not labelled by human annotators. The
+author reviews the prompts himself; that review is a participant review, not independent expert validation.
 
 ## Licence
 

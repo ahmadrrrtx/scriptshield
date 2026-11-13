@@ -714,3 +714,80 @@ unused imports were removed (`pyflakes` reports nothing).
 
 **Not affected:** any result, any published artifact, any credential. The complete private history up to
 commit `cda2079` was searched for the stored token values and for token shapes: 0 hits in 369 blobs.
+
+## D-037 — Final quality upgrade: what may change after publication, and how (2026-11-13)
+
+**Context.** The first release was public and verified. The owner asked for a quality pass before submission:
+audit the dataset, improve the write-up, cards and Space, run a guided review, and strengthen the evidence
+where that is honest and cheap.
+
+**Baseline first.** Before any change, the public state was tagged (GitHub `v0.1.0`; Hub model `v0.2.0`,
+dataset `v0.2.0`, Space `v0.1.0`) and every public file was downloaded without a token and hashed
+(`docs/baselines/BASELINE_2026-11-13.json`). The four files of the vector package that were verified on a GPU
+(`steering_vectors.npz`, `manifest.json`, `apply_steering.py`, `expected_outputs.jsonl`) and every data file of
+the dataset stay byte-identical; the packager refuses to build otherwise. Work happens on the branch
+`final-upgrade` and reaches the public repository as a history-free snapshot, as before (D-030).
+
+**What stays fixed.** The frozen test set, the labels, the thresholds, the pre-registered tests and their
+outcomes. The failed gate for the residualized vector is stated wherever the vectors are described. Dataset
+version 0.2.0 is never edited: a corrected sentence can enter only a new version that keeps the original text,
+the revision, the reason and the reviewer.
+
+**Decisions.**
+
+1. **Track positioning.** Problem 4 (multilingual and code-mixed safety) is named first, with problem 8
+   (inference-time steering) as the repair that was tested. The confirmed contribution is the measured gap and
+   the judge audit; the steering result is negative. The earlier order put the failed part first. To be
+   confirmed by the owner before the form is submitted.
+2. **Four classes of evidence about the data, never merged:** automatic checks; LLM reading notes; items that
+   need a human; items confirmed by a human. An LLM note is a suggestion for the reviewer and is never counted
+   as review. `scripts/audit_dataset.py` writes the audit from the corpus and from the review status.
+3. **Review by the author is a participant review.** It is recorded with his name and that role, never as
+   expert or independent validation, and the documents say nothing else about the reviewer. A row without an
+   answer stays "unreviewed"; nothing is accepted by default; "label = no" always goes to separate adjudication.
+4. **Second spelling.** Candidates for a second Roman-Urdu spelling of the test families are produced by a
+   fixed word list (`src/scriptshield/data/roman_style.py`) and shown to the reviewer. They are candidates
+   only: no result uses them, and they stay out of the dataset repository until reviewed.
+5. **Working files of the review are not dataset content.** The dataset repository carries the original
+   review pack, the guide and the status file. The working sheet, the batches and proposed corrections stay
+   in the code repository. Unapproved text does not enter the dataset.
+6. **The verified loader is not edited.** `apply_steering.py` does not check which base model it is given.
+   The new `check_base_model.py` compares the manifest with the vector file and the weight hashes with a local
+   model, without touching the file that was verified on a GPU. The card lists what each of the two checks.
+7. **Shared wording is computed.** Sentences that state a result in several places (cards, article, Space) are
+   built in `src/scriptshield/artifacts/public_text.py` from the result files. Fixed sentences are guarded:
+   the packager and the article renderer refuse to run if the data stop supporting them.
+8. **The Space is a recorded-experiment explorer.** It says so in its title, header and data note. It runs no
+   model. Its charts are drawn in the page from the embedded logs, and `tests/js/demo_check.js` recomputes
+   every chart value from those logs. The withholding rule of D-034 is unchanged and is re-checked on the page
+   data.
+9. **Post hoc checks are labelled as such and decided beforehand.** `docs/EVIDENCE_UPGRADE_PLAN.md` assesses
+   six candidate checks. Two need no GPU and no person and were run (`docs/ROBUSTNESS_CHECKS.md`): the gap on
+   subsets defined without reference to any model output, and the judge's errors by kind of reply. They add
+   no confirmatory test. Subsets are tabulated for the steering arms without tests, because the gate is
+   defined on the full test set and no subset is a second chance for it.
+10. **Human check of the reading.** A stratified sample of 48 of the 214 distinct Roman-Urdu replies was drawn
+    with a fixed seed. The pack hides arm, judge label and LLM label, contains unredacted replies and is
+    therefore git-ignored and never published. The item mapping stays private until labels exist, so the
+    labeller cannot look up the hidden labels; its hash is committed beforehand. Whatever the labels show is
+    reported in `docs/HUMAN_RESPONSE_CHECK.md`.
+11. **No GPU run without a go-ahead.** The one GPU experiment judged worth its cost (a second generation
+    configuration and the reviewed second spelling, about one free Kaggle session) needs the owner's Kaggle
+    token and decision. It is described in the plan and has not been run.
+
+**Faults found during this pass and fixed.**
+
+- A first draft of the cards and the README described the reviewer in more detail than "the project author".
+  The description was not needed for any claim and had not been approved by him; it was removed before
+  anything was uploaded.
+- The first packaging of the upgrade copied the review working sheet, with its unreviewed spelling candidates,
+  into the dataset folder. Excluded before upload (decision 5).
+- `import_review.py` took the "original" sentence from the working sheet. A reviewer who corrected a sentence
+  directly in its cell would have had the correction silently ignored, and the edited text recorded as the
+  original. The original now comes from the corpus; a changed cell becomes a proposed correction; a sheet
+  edited in place is first copied to `returns/`. `build_review_pack.py` refuses to overwrite a sheet that
+  holds answers.
+- The explorer's first redesign put the two scripts in columns and the arms in rows, which made baseline and
+  steered replies hard to compare. Rows are now written forms and columns are arms, side by side.
+
+**Not done.** No experiment was rerun. No number of the first release changed.

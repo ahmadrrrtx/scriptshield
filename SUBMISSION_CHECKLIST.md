@@ -5,8 +5,8 @@ and the "Submit" section of <https://hackathon.lexsi.ai/> and the submission che
 slides, both read on 13 November 2026.
 
 Solo team: Muhammad Ahmad ([@ahmadrrrtx](https://huggingface.co/ahmadrrrtx)). Track 2, AI Red Teaming,
-Safety and Alignment: problem 8 (inference-time safety steering), with problem 4 (multilingual and
-code-mixed safety).
+Safety and Alignment: problem 4 (multilingual and code-mixed safety) is the main contribution, with problem 8
+(inference-time safety steering) as the repair that was tested.
 
 ## Rules
 
@@ -16,9 +16,9 @@ code-mixed safety).
 | At least 2 repos of the track used together as a real pipeline (3 or more preferred) | CuratorKIT → SafeTune → AuditKIT, run end to end on the real model (`EXPERIMENT_LOG.md`; article section 2) |
 | Developed during the hackathon | every commit is dated between 3 and 13 November 2026 (`docs/PROVENANCE.md`); the GPU runs are Kaggle kernel versions with server-side timestamps |
 | All artifacts hosted on Hugging Face (models, adapters, logs, datasets) | the two collections below |
-| Deployed publicly (demo or repository) | this repository and the [replay Space](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay) |
-| Before-and-after metrics, more than one | refusal per script, judged benign refusal, invalid output, utility, judge-flagged unsafe responses, and refusals on reading: article section 8, `docs/RESULTS.md` section 2 |
-| Write-up: metrics and why, approach and rationale, how the result is better | [`docs/hf_article.md`](docs/hf_article.md) |
+| Deployed publicly (demo or repository) | this repository and the [recorded experiment explorer](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay) (a replay of logged outputs; no model runs there) |
+| Before-and-after metrics, more than one | refusal per script, judged benign refusal, invalid output, utility, judge-flagged unsafe responses, and refusals on reading: article section 7.5, `docs/RESULTS.md` section 2 |
+| Write-up: metrics and why, approach and rationale, how the result is better | [`docs/FINAL_HF_ARTICLE.md`](docs/FINAL_HF_ARTICLE.md). What is better is the measurement, not the model: the article says so |
 | Original work; libraries and datasets used where permitted | new dataset, no third-party prompts; licences in `LICENSE_LEDGER.md` |
 
 ## Submission form
@@ -28,11 +28,11 @@ code-mixed safety).
 | Abstract, under 500 words | [`docs/ABSTRACT.md`](docs/ABSTRACT.md) |
 | Hugging Face model collection (public, un-gated) | <https://huggingface.co/collections/ahmadrrrtx/scriptshield-model-artifacts-6af6d396e9d50507cbd53417> |
 | Hugging Face dataset collection (public, un-gated) | <https://huggingface.co/collections/ahmadrrrtx/scriptshield-data-artifacts-6af6d396c3a2600f7241d2d9> |
-| Write-up or article | [`docs/hf_article.md`](docs/hf_article.md) in this repository |
-| GitHub repository, README with reproducibility notes | <https://github.com/ahmadrrrtx/scriptshield>, README section "Reproduce" |
+| Write-up or article | [`docs/FINAL_HF_ARTICLE.md`](docs/FINAL_HF_ARTICLE.md) in this repository; the same text as a Hugging Face Article once the author has posted it |
+| GitHub repository, README with reproducibility notes | <https://github.com/ahmadrrrtx/scriptshield>, README sections "Quick reproduction" and "Full reproduction" |
 | Repos used | CuratorKIT, SafeTune, AuditKIT |
 | Model used | `CohereLabs/tiny-aya-fire`; judges `Qwen/Qwen3Guard-Gen-4B` and `Qwen/Qwen2.5-7B-Instruct` (supplementary, as the rules allow) |
-| Track and problem statements | Track 2: 2b problem 8, inference-time safety steering; 2a problem 4, multilingual and code-mixed safety |
+| Track and problem statements | Track 2: 2a problem 4, multilingual and code-mixed safety (main); 2b problem 8, inference-time safety steering |
 
 ## Article sections asked for at the kickoff
 
@@ -58,9 +58,14 @@ code-mixed safety).
 - Pre-registered hypothesis 1 (the script gap) confirmed; the pre-registered gate for hypothesis 3
   (residualization helps) not met.
 - The whole pre-registered analysis recomputed from the public logs (`scripts/recompute_from_public.py`).
+- After the first release, without a GPU: a family-level dataset audit, post hoc robustness checks of the gap
+  on subsets of the test set, and a breakdown of the judge's errors (`docs/DATASET_QUALITY_AUDIT.md`,
+  `docs/ROBUSTNESS_CHECKS.md`). Further checks and their cost are assessed in `docs/EVIDENCE_UPGRADE_PLAN.md`.
 
 ## What is not done, and is not claimed anywhere
 
-- Human review of the prompts and human annotation of the responses.
+- Independent human review of the prompts and independent human annotation of the responses. The author's
+  own review of the prompts and his check of a sample of replies are participant checks; their current state
+  is in `data/reviewer_pack/review_status.json` and `docs/HUMAN_RESPONSE_CHECK.md`.
 - Any second model, second seed, longer responses, adversarial or multi-turn prompts.
 - A safety gain from steering.

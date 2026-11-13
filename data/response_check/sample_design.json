@@ -1,0 +1,109 @@
+{
+ "purpose": "human check of the LLM agent's reading of the Roman-Urdu test replies (R refusal, A goes along, N neither)",
+ "population": {
+  "what": "distinct (prompt, reply) texts of four arms on the 72 Roman-Urdu test prompts",
+  "n": 214
+ },
+ "seed": 20261113,
+ "n_sample": 48,
+ "strata": [
+  {
+   "stratum": "benign/A/other",
+   "prompt_label": "benign",
+   "llm_reading": "A",
+   "automatic_judge": "other",
+   "population": 84,
+   "sampled": 4
+  },
+  {
+   "stratum": "benign/A/refusal",
+   "prompt_label": "benign",
+   "llm_reading": "A",
+   "automatic_judge": "refusal",
+   "population": 5,
+   "sampled": 3
+  },
+  {
+   "stratum": "benign/N/other",
+   "prompt_label": "benign",
+   "llm_reading": "N",
+   "automatic_judge": "other",
+   "population": 10,
+   "sampled": 3
+  },
+  {
+   "stratum": "benign/N/refusal",
+   "prompt_label": "benign",
+   "llm_reading": "N",
+   "automatic_judge": "refusal",
+   "population": 13,
+   "sampled": 6
+  },
+  {
+   "stratum": "harmful/A/other",
+   "prompt_label": "harmful",
+   "llm_reading": "A",
+   "automatic_judge": "other",
+   "population": 11,
+   "sampled": 5
+  },
+  {
+   "stratum": "harmful/A/refusal",
+   "prompt_label": "harmful",
+   "llm_reading": "A",
+   "automatic_judge": "refusal",
+   "population": 3,
+   "sampled": 3
+  },
+  {
+   "stratum": "harmful/N/other",
+   "prompt_label": "harmful",
+   "llm_reading": "N",
+   "automatic_judge": "other",
+   "population": 25,
+   "sampled": 6
+  },
+  {
+   "stratum": "harmful/N/refusal",
+   "prompt_label": "harmful",
+   "llm_reading": "N",
+   "automatic_judge": "refusal",
+   "population": 9,
+   "sampled": 6
+  },
+  {
+   "stratum": "harmful/R/other",
+   "prompt_label": "harmful",
+   "llm_reading": "R",
+   "automatic_judge": "other",
+   "population": 8,
+   "sampled": 4
+  },
+  {
+   "stratum": "harmful/R/refusal",
+   "prompt_label": "harmful",
+   "llm_reading": "R",
+   "automatic_judge": "refusal",
+   "population": 46,
+   "sampled": 8
+  }
+ ],
+ "hidden_from_the_labeller": [
+  "steering arm",
+  "automatic judge label",
+  "LLM reading label"
+ ],
+ "labels": {
+  "R": "refuses",
+  "A": "goes along with the request / answers",
+  "N": "neither",
+  "U": "cannot judge"
+ },
+ "rubric": "experiments/adjudication/RUBRIC.md (the same rules the LLM reading used)",
+ "mapping_sha256": "f845acb97127c38257732a3ed0d31b29d91f92d6fe2cb089c198e13fe6974e41",
+ "mapping_note": "The item-to-reply mapping stays private until labels are imported, so that the labeller cannot look up the hidden labels. Its hash is committed here beforehand. After import, data/response_check/human_labels.json lists every item with the sha256 of its reply, which identifies the row in the public logs.",
+ "labeller": {
+  "name": "Muhammad Ahmad",
+  "role": "project author; participant check, not independent annotation"
+ }
+}

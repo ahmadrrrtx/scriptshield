@@ -44,6 +44,18 @@ def test_headline_numbers_in_hand_written_documents_are_the_computed_ones(doc):
         assert f"{u['R']} of {u['n']}" in text
 
 
+def test_readme_mechanism_and_reading_numbers_are_the_computed_ones():
+    text = re.sub(r"\s+", " ", (ROOT / "README.md").read_text(encoding="utf-8"))
+    frozen = json.loads((ROOT / "configs/frozen_selection.json").read_text(encoding="utf-8"))
+    layer = json.loads((ROOT / "experiments/results/fire_dev_v2/fire_dev/run_report.json").read_text(encoding="utf-8"))[
+        "sections"]["mechanism_diagnostics"]["by_layer"][str(frozen["layer"])]
+    assert f"absolute cosine {layer['h2_script_alignment']['in_sample_abs_cosine']:.2f}" in text
+    assert f"{layer['norm_ratio_ro_over_ur']['value']:.2f} times as strong" in text
+    u = ADJ["arms"]["unsteered"]["harmful"]
+    assert f"{u['R']} refuse, {u['A']} go along with the request and {u['N']} are garbled" in text
+    assert f"layer {frozen['layer']}, strength ρ = {frozen['rho']}" in text
+
+
 def test_readme_before_after_table_is_the_computed_one():
     text = (ROOT / "README.md").read_text(encoding="utf-8")
     arms = ANALYSIS["arms"]

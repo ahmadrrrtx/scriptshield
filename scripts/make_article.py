@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Render docs/hf_article.md from docs/hf_article.template.md. No number is typed by hand."""
+"""Render docs/FINAL_HF_ARTICLE.md from docs/final_article.template.md. No number is typed by hand.
+
+Figures are referenced by URL (configs/public_links.json, "figures_base"), so that the same text renders on
+GitHub and as a Hugging Face Article. Run scripts/make_figures.py and scripts/audit_dataset.py first.
+"""
 from __future__ import annotations
 
 import argparse
@@ -33,11 +37,58 @@ def section(md: str, start: str) -> str:
     return "\n".join(out).strip()
 
 
+def response_check_fields(links: dict) -> dict:
+    """State of the human check of the reading (docs/HUMAN_RESPONSE_CHECK.md). Says exactly what exists, no more."""
+    design = json.loads((ROOT / "data/response_check/sample_design.json").read_text(encoding="utf-8"))
+    s = json.loads((ROOT / "data/response_check/human_labels.json").read_text(encoding="utf-8"))["summary"]
+    url = links["github_repo"] + "/blob/main/docs/HUMAN_RESPONSE_CHECK.md"
+    n, pop, done = design["n_sample"], design["population"]["n"], s["n_labelled"] + s["n_cannot_judge"]
+    setup = (f"A stratified random sample of {n} of the {pop} distinct replies was drawn with a fixed seed, to be labelled by the "
+             "author with the steering arm, the judge's label and the LLM's label hidden. This is a participant check, not independent annotation.")
+    if s["n_labelled"] == 0:
+        line = f"Not yet. {setup} No label had been returned when this text was generated; [the report]({url}) shows the current state."
+        short = f"0 of {n} replies labelled so far"
+    else:
+        a = s["agreement_raw"]
+        k = s["kappa_vs_llm_reading"]
+        part = "" if s["n_open"] == 0 else f" ({s['n_open']} of {n} still open)"
+        line = (f"On a sample. {setup} So far {done} of {n} are labelled{part}: the author and the LLM gave the same label on {a['k']} of {a['n']}"
+                + (f" (Cohen's kappa {k:.2f})" if k is not None else "") + f". Details, including disagreements: [the report]({url}).")
+        short = f"{done} of {n} replies labelled; same label as the LLM on {a['k']} of {a['n']}"
+    return {"RESPONSE_CHECK_LINE": line, "RESPONSE_CHECK_SHORT": short}
+
+
+def robustness_fields() -> dict:
+    """Numbers of docs/ROBUSTNESS_CHECKS.md (post hoc sensitivity analysis) quoted in the threats table."""
+    by = {r["key"]: r for r in json.loads((ROOT / "data/quality/robustness_checks_v0.2.0.json").read_text(encoding="utf-8"))["subsets"]}
+    without = [r for k, r in by.items() if k.startswith("without:")]
+    groups = [r for k, r in by.items() if k.startswith("group:")]
+    nogap = [r["title"].split(": ")[1] for r in groups if r["ro"] >= r["ur"]]
+    words = {0: "none", 1: "one", 2: "two", 3: "three", 4: "four"}
+    clean = by["audit:clean"]
+    doc = json.loads((ROOT / "data/quality/robustness_checks_v0.2.0.json").read_text(encoding="utf-8"))
+    je = {e["key"]: e for e in doc["judge_errors"]}
+    tot, echo = je["all"], je["echo"]
+    if echo["true_refusal"] != 0 or tot["false_refusal_nonresponsive"] <= tot["false_refusal_answer"] or tot["missed_refusal"] * 2 >= tot["judge_refusal"] - tot["true_refusal"]:
+        raise SystemExit("REFUSING: the template says that no repeated prompt was a refusal and that the judge's errors run mostly one way")
+    return {
+        "JE_N": str(tot["n"]), "JE_ECHO_N": str(echo["n"]), "JE_ECHO_REF": str(echo["judge_refusal"]), "JE_REF": str(tot["judge_refusal"]),
+        "JE_FALSE": str(tot["judge_refusal"] - tot["true_refusal"]), "JE_FALSE_N": str(tot["false_refusal_nonresponsive"]),
+        "JE_FALSE_A": str(tot["false_refusal_answer"]), "JE_MISSED": str(tot["missed_refusal"]), "JE_TRUE": str(tot["refusal_on_reading"]),
+        "ROB_LO": f"{max(r['diff_pp'] for r in without):+.1f}", "ROB_HI": f"{min(r['diff_pp'] for r in without):+.1f}",
+        "ROB_CLEAN_N": str(clean["n"]), "ROB_CLEAN_RO": str(clean["ro"]), "ROB_CLEAN_UR": str(clean["ur"]),
+        "ROB_NOGAP": (f"{words.get(len(nogap), len(nogap))} of the {len(groups)} harm groups ({', '.join(nogap)}; "
+                      f"{sum(r['n'] for r in groups if r['ro'] >= r['ur'])} families)") if nogap else "none of the harm groups",
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--author", default=None, help="byline; default: name and Hugging Face handle from configs/public_links.json")
     ap.add_argument("--verify-report", default="experiments/results/verify_release_v1/verify_release/verify_report.json")
-    ap.add_argument("--out", default="docs/hf_article.md")
+    ap.add_argument("--template", default="docs/final_article.template.md")
+    ap.add_argument("--out", default="docs/FINAL_HF_ARTICLE.md")
+    ap.add_argument("--checked-on", default="13 November 2026", help="date on which the marked references were checked")
     a = ap.parse_args()
     t = load("experiments/results/test_analysis/test_analysis_guard.json")
     rub = load("experiments/results/test_analysis/test_analysis_rubric.json")
@@ -138,7 +189,82 @@ def main() -> int:
         "UTIL_UR": pct(t["utility"]["unsteered"]["by_form"]["ur"]), "UTIL_RO": pct(t["utility"]["unsteered"]["by_form"]["ro"]),
         "N_TESTS": n_tests, "REVISION_SHORT": rev[:8],
     }
-    text = (ROOT / "docs/hf_article.template.md").read_text(encoding="utf-8")
+    # ---------------------------------------------------------------- additions for the final article
+    audit = load("data/quality/family_audit_v0.2.0.json")["summary"]
+    review = load("data/reviewer_pack/review_status.json")
+    n_rev = review["n_rows_total"] - review["counts"]["unreviewed"]
+    fig = load("docs/figures/figure_data.json")
+    ur_check = load("experiments/adjudication/ur_harmful_unsteered_check.json")
+    corpus = {r["id"]: r["text"] for r in (json.loads(x) for x in (ROOT / man["path"]).read_text(encoding="utf-8").splitlines() if x.strip())}
+    ro_k = {arm: t["arms"][arm]["cells"]["ro/harmful"]["refusal"] for arm in t["arms"]}
+    be_k = {arm: t["arms"][arm]["cells"]["ur/benign"]["refusal"] + t["arms"][arm]["cells"]["ro/benign"]["refusal"] for arm in t["arms"]}
+    lifts = [ro_k[a_] - ro_k["unsteered"] for a_ in ro_k if a_ != "unsteered"]
+    align = D[L]["h2_script_alignment"]["in_sample_abs_cosine"]
+    null95 = D[L]["h2_script_alignment"]["isotropic_random_null_abs_cosine"]["p95"]
+    ratio_l = D[L]["norm_ratio_ro_over_ur"]["value"]
+    if abs(ro_k["pooled"] - ro_k["orthogonal_null"]) > 2 or min(lifts) < 1:
+        print("REFUSING: the template says the placebo did almost as well as the real vectors; no longer true:", ro_k)
+        return 2
+    if not (null95 < align < 0.2 and 0.4 <= ratio_l <= 0.6):
+        print("REFUSING: the template describes a small but detectable script alignment and a harm signal about half as strong")
+        return 2
+    if any(adj["arms"][c]["benign"]["R"] for c in adj["arms"]):
+        print("REFUSING: the template says no harmless prompt was really refused in the arms that were read")
+        return 2
+    runtimes = [int(x.replace(",", "")) for x in re.findall(r"\*\*Runtime:\*\*\s*~?([\d,]+)\s*s", (ROOT / "EXPERIMENT_LOG.md").read_text(encoding="utf-8"))]
+    names = {"unsteered": "no steering", "pooled": "pooled", "residualized": "residualized", "random_subspace": "pooled with a random direction removed",
+             "orthogonal_null": "placebo", "ur_only": "Urdu-only", "ro_only": "Roman-only"}
+    order = [k for k in names if k in ro_k]
+    layers = sorted(int(k) for k in D)
+
+    def k_of(d):
+        return f"{d['refusal_ur'] * h1['n_families']:.0f} of {h1['n_families']}", f"{d['refusal_ro'] * h1['n_families']:.0f} of {h1['n_families']}"
+    sens = ["| Labels from | Decided | Urdu script | Roman Urdu | Difference |", "|---|---|---:|---:|---:|"]
+    for label, when, d in (("Primary judge (Qwen3Guard)", "pre-registered", h1), ("Second judge (Qwen2.5-7B with a fixed rubric)", "pre-declared", rub["H1_unsteered_script_gap"]),
+                           ("Primary judge, replies that repeat the prompt counted as invalid", "post hoc", echo["H1_unsteered_script_gap"])):
+        a_ur, a_ro = k_of(d)
+        sens.append(f"| {label} | {when} | {a_ur} ({pct(d['refusal_ur'])}) | {a_ro} ({pct(d['refusal_ro'])}) | {d['difference_ro_minus_ur_pp']:+.1f} points |")
+    sens.append(f"| Replies read one by one (LLM agent, not a human) | post hoc | {ur_check['explicit_refusal']} of {ur_check['n']} "
+                f"({pct(ur_check['explicit_refusal'] / ur_check['n'])}) | {u['R']} of {u['n']} ({pct(u['R'] / u['n'])}) | "
+                f"{100 * (u['R'] / u['n'] - ur_check['explicit_refusal'] / ur_check['n']):+.1f} points |")
+    gap = {x["form"]: x for x in fig["script_gap"]["judge"]}
+    rd = fig["roman_urdu_outcomes_reading"]
+    verify = json.loads(vp.read_text(encoding="utf-8"))["verify"]["arms"] if vp.exists() else {}
+    log_rows = [json.loads(x) for x in (ROOT / "release/hf_dataset/eval_logs/test_judged_public.jsonl").read_text(encoding="utf-8").splitlines() if x.strip()] \
+        if (ROOT / "release/hf_dataset/eval_logs/test_judged_public.jsonl").exists() else []
+    rep.update({
+        "FIG": links["figures_base"], "CHECKED_ON": a.checked_on,
+        "H1_UR_K": f"{h1['refusal_ur'] * h1['n_families']:.0f}", "H1_RO_K": f"{h1['refusal_ro'] * h1['n_families']:.0f}",
+        "ALIGN_L": f"{align:.2f}", "NULL_L": f"{null95:.2f}", "COS_UR_RO": f"{D[L]['cos_v_ur_v_ro']['value']:.2f}",
+        "VERIFY_K": str(sum(x["identical"] for x in verify.values())), "VERIFY_N": str(sum(x["n"] for x in verify.values())),
+        **robustness_fields(), **response_check_fields(links),
+        "REVIEW_DONE": str(n_rev), "REVIEW_STATE": "pending" if n_rev == 0 else ("complete" if n_rev == review["n_rows_total"] else "in progress"),
+        "EXAMPLE_EN": corpus["ss-wifi_crack-en-benign"], "EXAMPLE_UR": corpus["ss-wifi_crack-ur-benign"], "EXAMPLE_RO": corpus["ss-wifi_crack-ro-benign"],
+        "AUDIT_CMD_H": str(audit["speech_act_counts"]["harmful"].get("command", 0)), "AUDIT_CMD_B": str(audit["speech_act_counts"]["benign"].get("command", 0)),
+        "AUDIT_CTX_H": str(audit["context_sentence_counts"]["harmful"]), "AUDIT_CTX_B": str(audit["context_sentence_counts"]["benign"]),
+        "AUDIT_WORD": str(audit["n_word_differs_between_scripts"]), "H1_SENSITIVITY_TABLE": "\n".join(sens),
+        "LIFT_MIN": str(min(lifts)), "LIFT_MAX": str(max(lifts)),
+        "WITHHELD": f"{sum(bool(r['withheld']) for r in log_rows):,}", "PUBLIC_ROWS": f"{len(log_rows):,}",
+        "SAFETUNE_COMMIT": load("release/hf_model/manifest.json")["toolkits"]["safetune_commit"],
+        "GPU_RUNS": str(len(runtimes)), "GPU_HOURS": f"{sum(runtimes) / 3600:.1f}",
+        "ALT_GAP": ("Bar chart. Share of " + str(h1["n_families"]) + " harmful requests refused by Tiny Aya Fire without steering: Urdu script "
+                    f"{gap['ur']['refused']} of {gap['ur']['n']}, Roman Urdu {gap['ro']['refused']} of {gap['ro']['n']} "
+                    f"({fig['script_gap']['reading_roman_urdu_refusals']} of {gap['ro']['n']} after reading the replies), code-mixed "
+                    f"{gap['cm']['refused']} of {gap['cm']['n']}, English {gap['en']['refused']} of {gap['en']['n']}."),
+        "ALT_MECH": (f"Two line charts across layers {layers[0]} to {layers[-1]}. Left: the ratio of the Roman-Urdu to the Urdu-script harm signal is "
+                     f"{D[str(layers[0])]['norm_ratio_ro_over_ur']['value']:.2f} at layer {layers[0]} and {ratio_l:.2f} at layer {L}. Right: the absolute cosine "
+                     f"between the refusal direction and the script direction is at most "
+                     f"{max(D[str(k)]['h2_script_alignment']['in_sample_abs_cosine'] for k in layers):.2f} at any layer."),
+        "ALT_ARMS": ("Two horizontal bar charts over seven arms. Left, harmful Roman-Urdu requests refused out of 36: "
+                     + ", ".join(f"{names[k]} {ro_k[k]}" for k in order) + ". Right, harmless requests refused out of 72: "
+                     + ", ".join(f"{names[k]} {be_k[k]}" for k in order) + "."),
+        "ALT_OUTCOMES": ("Stacked bars for four arms showing what the model wrote in reply to 36 harmful Roman-Urdu requests, as refuse / go along / neither: "
+                         + "; ".join(f"{names[k]} {rd[k]['R']} / {rd[k]['A']} / {rd[k]['N']}" for k in rd) + "."),
+    })
+    if not log_rows or not verify:
+        print("REFUSING: the final article needs the local release folder and the verification report")
+        return 2
+    text = (ROOT / a.template).read_text(encoding="utf-8")
     for k, v in rep.items():
         text = text.replace("{{" + k + "}}", v)
     left = re.findall(r"\{\{\w+\}\}", text)

@@ -1,0 +1,197 @@
+{
+ "script_gap": {
+  "judge": [
+   {
+    "form": "ur",
+    "refused": 36,
+    "n": 36,
+    "ci95": [
+     0.9026,
+     1.0
+    ]
+   },
+   {
+    "form": "ro",
+    "refused": 17,
+    "n": 36,
+    "ci95": [
+     0.3041,
+     0.6451
+    ]
+   },
+   {
+    "form": "cm",
+    "refused": 35,
+    "n": 36,
+    "ci95": [
+     0.8547,
+     0.9993
+    ]
+   },
+   {
+    "form": "en",
+    "refused": 36,
+    "n": 36,
+    "ci95": [
+     0.9026,
+     1.0
+    ]
+   }
+  ],
+  "reading_roman_urdu_refusals": 13
+ },
+ "roman_urdu_outcomes_reading": {
+  "unsteered": {
+   "R": 13,
+   "A": 6,
+   "N": 17
+  },
+  "pooled": {
+   "R": 19,
+   "A": 3,
+   "N": 14
+  },
+  "residualized": {
+   "R": 19,
+   "A": 3,
+   "N": 14
+  },
+  "orthogonal_null": {
+   "R": 15,
+   "A": 5,
+   "N": 16
+  }
+ },
+ "arms_comparison": {
+  "unsteered": {
+   "Harmful Roman-Urdu requests refused": [
+    17,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    5,
+    72
+   ]
+  },
+  "pooled": {
+   "Harmful Roman-Urdu requests refused": [
+    22,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    10,
+    72
+   ]
+  },
+  "residualized": {
+   "Harmful Roman-Urdu requests refused": [
+    23,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    7,
+    72
+   ]
+  },
+  "random_subspace": {
+   "Harmful Roman-Urdu requests refused": [
+    22,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    10,
+    72
+   ]
+  },
+  "orthogonal_null": {
+   "Harmful Roman-Urdu requests refused": [
+    21,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    3,
+    72
+   ]
+  },
+  "ur_only": {
+   "Harmful Roman-Urdu requests refused": [
+    22,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    9,
+    72
+   ]
+  },
+  "ro_only": {
+   "Harmful Roman-Urdu requests refused": [
+    21,
+    36
+   ],
+   "Harmless requests refused, both scripts": [
+    6,
+    72
+   ]
+  }
+ },
+ "mechanism_by_layer": {
+  "layers": [
+   2,
+   4,
+   6,
+   8,
+   10,
+   12,
+   14,
+   16,
+   18,
+   20,
+   22,
+   24,
+   26,
+   28,
+   30,
+   32,
+   34
+  ],
+  "norm_ratio_ro_over_ur": [
+   0.8032504305773992,
+   0.8450866588924116,
+   0.8040311031466144,
+   0.7704714148586562,
+   0.7136007968492472,
+   0.6327841259428477,
+   0.5573105103042431,
+   0.4996839978719476,
+   0.479311484365544,
+   0.45904770448336235,
+   0.4859782618826989,
+   0.46399397228489375,
+   0.4738504788547556,
+   0.470190126665905,
+   0.46889672611453515,
+   0.4585405279266683,
+   0.4699857499364863
+  ],
+  "abs_cos_refusal_vs_script": [
+   0.1883114620890122,
+   0.20823305462039757,
+   0.16311730919819567,
+   0.11399492321429129,
+   0.031055066269215077,
+   0.07031596732253576,
+   0.07344678404328887,
+   0.06838205573102543,
+   0.09117593767297523,
+   0.13275961193241712,
+   0.08545174248008111,
+   0.03721544379643512,
+   0.002482114323593264,
+   0.03660006082392917,
+   0.05889982655331466,
+   0.02266485679786988,
+   0.04301775767403638
+  ],
+  "selected_layer": 18
+ }
+}

@@ -56,7 +56,7 @@ downloaded to the local machine or redistributed.
 
 ## Third-party libraries
 
-numpy (BSD-3), scipy (BSD-3), pandas (BSD-3), PyYAML (MIT), jsonschema (MIT), pytest (MIT), requests (Apache-2.0), torch (BSD-3), transformers (Apache-2.0). Remote-only ML stack does not change our repo obligations, but SafeTune's dependency tail must be recorded per run.
+numpy (BSD-3), scipy (BSD-3), pandas (BSD-3), PyYAML (MIT), jsonschema (MIT), pytest (MIT), matplotlib (PSF-based licence; only for redrawing the figures), requests (Apache-2.0), torch (BSD-3), transformers (Apache-2.0). Remote-only ML stack does not change our repo obligations, but SafeTune's dependency tail must be recorded per run.
 
 ## Questions that were open, and how they were settled
 

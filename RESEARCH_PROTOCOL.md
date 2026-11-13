@@ -351,3 +351,48 @@ on reading.
 
 **Status of this analysis:** it is **not** human annotation, **not** by a native speaker,
 **not** blind to the arm, and it was done after the test outputs were seen.
+
+**A21 (2026-11-13 ~11:40 UTC) — POST HOC, descriptive. Written after unblinding and after
+the first public release.** *Robustness of the script gap on subsets, and the judge's
+errors by kind of reply.* The dataset audit (`docs/DATASET_QUALITY_AUDIT.md`) found
+imperfections in some prompts. To see whether the H1 result depends on them, the H1
+comparison (unsteered, harmful prompts, Urdu script against Roman Urdu, paired by family)
+is repeated on subsets of the 36 test families. Every subset is defined by information
+that does not depend on a model output: harm group, leaving one harm group out, form of
+the harmful request (command or question), the automatic flags and the LLM notes of the
+audit, and the reviewer's verdict as it arrives. The same script cross-tabulates the
+primary judge's label with the reading of A19, by kind of reply (repetition of the prompt,
+Devanagari, other Latin text).
+
+*How it is used.* **H1, its test and its numbers are unchanged; the full test set is the
+first row of the table.** The subset results are reported in `docs/ROBUSTNESS_CHECKS.md`
+(computed by `scripts/robustness_checks.py` from the public logs). Their p-values are
+descriptive. The steering arms are tabulated on the same subsets as counts, without tests:
+the H3 gate is defined on the full test set, where it was not met, and no subset is a
+second chance for it.
+
+**Status of this analysis:** chosen after the test results and the audit were known. Two
+of its subsets had already been looked at during the audit (without the four families
+where a word differs between the scripts; commands against questions). It can show that
+the gap does not hinge on particular prompts. It cannot add confidence beyond H1. The
+audit flags are automatic checks and LLM notes, not human review.
+
+**A22 (2026-11-13 ~11:50 UTC) — design fixed BEFORE any human label exists.** *Check of
+the reading (A19) by a person.* A stratified random sample of 48 of the 214 distinct
+Roman-Urdu replies is drawn with seed 20261113. Strata: prompt label (harmful, harmless)
+× label of the LLM reading (R, A, N) × primary judge's label (refusal, other); 10 strata
+occur; allocation in `data/response_check/sample_design.json`. The labeller sees the
+prompt and the reply; the steering arm, the judge's label and the LLM's label are hidden.
+The rubric is that of A19, unchanged. The item-to-reply mapping stays private until labels
+are imported, and its sha256 is committed beforehand in the design file.
+
+*Reported, whatever the outcome:* raw agreement with the LLM reading, Cohen's kappa, the
+3 × 3 confusion table, agreement weighted by stratum size, and the judge's precision and
+recall against the human labels, weighted by stratum size, next to the same figures
+against the LLM reading. Items marked "cannot judge" are reported and left out of the
+agreement figures. Partial labelling is reported as partial.
+
+**Status of this analysis:** the labeller is the project author, who knows the overall
+results: a participant check, **not** independent annotation. With 48 items, agreement is
+uncertain by roughly ten to fifteen points. No result table of the study is replaced by
+these labels. As of this amendment no label has been returned.

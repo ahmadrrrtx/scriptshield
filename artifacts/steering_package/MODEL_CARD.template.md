@@ -25,6 +25,11 @@ Six 2,048-dimensional steering vectors for decoder block {{LAYER}} of
 [`CohereLabs/tiny-aya-fire`](https://huggingface.co/CohereLabs/tiny-aya-fire), with a manifest and a
 standalone loader. No model weights are included.
 
+> **This is an inference-time steering package, not a fine-tuned model checkpoint.** It holds six small
+> vectors, a manifest and two Python files. It cannot be loaded with `from_pretrained`, and it does nothing
+> without your own copy of the base model. A vector is added to the model's activations while it generates;
+> the model's weights are never changed.
+
 They were built to test one idea: a refusal-steering vector learned from Urdu-script **and** Roman-Urdu
 prompts also carries "which script is this" information; if that component is projected out, the vector
 might protect Roman-Urdu users better.
@@ -40,21 +45,28 @@ result can be checked and built on, **not as a recommended safety intervention**
 | Replay of the recorded outputs | [`{{ID_SPACE}}`]({{URL_SPACE}}) |
 | Collections | [{{TITLE_COLLECTION_MODELS}}]({{URL_COLLECTION_MODELS}}) · [{{TITLE_COLLECTION_DATA}}]({{URL_COLLECTION_DATA}}) |
 
-Author: {{AUTHOR}}. Built for the [Lexsi AI Safety and Alignment Hackathon]({{URL_HACKATHON}}), Track 2
-(inference-time safety steering).
+Author: {{AUTHOR}}. Built for the [Lexsi AI Safety and Alignment Hackathon]({{URL_HACKATHON}}), Track 2:
+problem 4 (multilingual and code-mixed safety) with problem 8 (inference-time safety steering).
 
 ## Findings in brief
 
 {{RESULTS_BRIEF}}
 
+![{{ALT_ARMS}}]({{FIG}}/arms_comparison.png)
+
+*Every vector, including the placebo (`orthogonal_null`), lifts the judged refusal of harmful Roman-Urdu
+requests by a few prompts out of 36, with overlapping intervals. The residualized vector is not better than
+the pooled one.*
+
 ## What is in the package
 
 | File | Content |
 |---|---|
-| `steering_vectors.npz` | one float64 array of length 2,048 per arm (names below) |
+| `steering_vectors.npz` | one float64 array of length 2,048 per arm (names below). Each is a direction in the residual stream at the output of decoder block {{LAYER}} (0-based) |
 | `manifest.json` | layer, strength, per-vector checksums, base-model revision and weight hashes, extraction and inference settings, toolkit versions, code commit |
 | `frozen_selection.json` | the layer and strength chosen on the development split before the test set was run |
 | `apply_steering.py` | standalone loader (needs only `numpy`, `torch`, `transformers`, `safetune`) |
+| `check_base_model.py` | checks that the package is intact and that a local base model is the one the vectors were made from (needs only `numpy`; does not load the model) |
 | `expected_outputs.jsonl` | 144 logged responses (48 harmless factual questions in Urdu script and Roman Urdu × unsteered, pooled, residualized) with their sha256, to check that your setup reproduces ours |
 | `SHA256SUMS` | checksums of every file |
 
@@ -94,6 +106,32 @@ harmful − benign: a **positive** strength pushes toward refusal.
 
 {{RESULTS_CLAIMS}}
 
+## Check what you downloaded
+
+```bash
+sha256sum -c SHA256SUMS                                             # every file of the package
+python check_base_model.py                                          # manifest and vector file agree (no model needed)
+python check_base_model.py --model-dir /path/to/tiny-aya-fire       # and the base model is the right one (hashes the weights)
+```
+
+Expected last line of the third command:
+`OK: the package is intact and the model files are the ones the vectors were made from.`
+
+The vectors can be inspected on a laptop, without a GPU or the base model:
+
+```python
+from apply_steering import load_package          # numpy only; every vector is checked against its checksum
+
+vectors, manifest = load_package(".")
+print(manifest["layer"], manifest["hidden_dim"], round(manifest["alpha"], 4), sorted(vectors))
+```
+
+Output, produced from the published files when this card was built:
+
+```
+{{INSPECT_OUTPUT}}
+```
+
 ## How to use
 
 ```bash
@@ -123,6 +161,23 @@ print(generate(model, tok, ["..."], steered))               # steering is live o
 Frozen setting: layer {{LAYER}}, ρ = {{RHO}} (α = {{ALPHA}}; ρ is the added vector's norm as a fraction of
 the mean residual-stream norm at that layer). You need your own access to the base model.
 
+## What the loader checks, and what it does not
+
+| Situation | What happens |
+|---|---|
+| A vector was altered, or the file is damaged | `load_package` raises `checksum mismatch` |
+| A vector has the wrong number of dimensions | `load_package` raises (shape is compared with `hidden_dim` in the manifest) |
+| A vector named in the manifest is missing | `load_package` raises |
+| The manifest states another sign convention | `load_package` raises instead of guessing the sign |
+| The file holds a vector that the manifest does not list | **not caught by the loader**; `check_base_model.py` reports it |
+| The base model has another hidden size or fewer blocks | **not caught before generation** by the loader (it fails later with a tensor error); `check_base_model.py --model-dir` reports it first |
+| The base model has the same shape but other weights (another Tiny Aya variant, another revision) | **not caught by the loader**: it would steer silently. `check_base_model.py --model-dir` compares the sha256 of the weight files with the manifest and refuses |
+| Steering hooks left installed after generation | `generate` raises |
+
+`apply_steering.py` is byte-for-byte the file that was verified on a GPU, which is why the extra checks live
+in a separate script. Run `check_base_model.py` once before you steer. The strongest check of all is
+`--verify`: it regenerates {{N_EXPECTED}} logged replies and compares their hashes.
+
 ## How the vectors were made
 
 1. **Data.** ScriptShield corpus v0.2.0: 72 intent families, each with a harmful and a matched benign
@@ -146,10 +201,23 @@ the mean residual-stream norm at that layer). You need your own access to the ba
 Test run produced at code commit `{{CODE_COMMIT}}`, base model revision `{{REVISION}}` (the sha256 of
 both weight shards and of the tokenizer are in `manifest.json`), float16 on a Tesla T4.
 
+## Versions
+
+| Version | Date | What |
+|---|---|---|
+| tag `v0.2.0` | 2026-11-13 | first public release: vectors, manifest, loader and expected outputs exactly as verified on a GPU |
+| current | {{BUILD_DATE}} | documentation rewritten; `check_base_model.py` added. The four verified files are unchanged |
+
+sha256 of the four verified files (identical at `v0.2.0` and now):
+
+{{CORE_SUMS}}
+
+To get exactly the first release: `hf download {{ID_MODEL}} --revision v0.2.0 --local-dir vectors`.
+
 ## Limitations
 
-- **Small and unreviewed.** 36 test families. The prompts were written with an LLM and have not been
-  checked by a native Urdu speaker. Intervals are wide.
+- **Small, and not validated by annotators.** 36 test families. The prompts were drafted with an LLM;
+  {{REVIEW_LINE}} Intervals are wide.
 - **The judge is unreliable in Roman Urdu.** See the section above. The reading that corrects it was done
   by an LLM agent, not by people.
 - **One model, one layer, one strength, one seed, 64-token responses.** Nothing here is known to transfer.
@@ -164,7 +232,8 @@ both weight shards and of the tokenizer are in `manifest.json`), float16 on a Te
 This project was built with substantial help from an AI assistant (an LLM agent). Under the author's
 direction it drafted the prompts, wrote much of the code and analysis, and did the response readings
 labelled above as agent readings. The author chose the research direction, approved the protocol and the
-release, and is responsible for the content. No human annotation has been done yet.
+release, and is responsible for the content. Responses were not labelled by human annotators; the author's
+review of the prompts is recorded in the dataset repository.
 
 ## Licence and terms
 

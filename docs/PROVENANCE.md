@@ -1,6 +1,6 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `010d6d5d6109affe0f52ebd15336376b110207d9`.
+This public repository is a snapshot of a private working repository at commit `e97e972aa5bfcec93c58086dc3d98ce04205a2f2`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
@@ -14,13 +14,32 @@ of the Kaggle kernel versions that ran each stage (`EXPERIMENT_LOG.md`) and by t
 Hugging Face repositories. The full history can be shown to the hackathon organizers on request.
 
 Left out of the snapshot: internal task lists and access notes, a note of open questions for the
-organizers, a local bootstrap script and an early, stale copy of the code that was once uploaded to
+organizers, a working note on how other public write-ups present their work, a local bootstrap script
+and an early, stale copy of the code that was once uploaded to
 Kaggle. A few documents still mention entries of those task lists by identifiers such as B-012; they
 are not needed to follow the study.
 
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+e97e972aa5bfcec93c58086dc3d98ce04205a2f2  2026-11-13T11:59:19Z  Result tables: review status in the banner comes from the status file
+b5a07cebd553550d6513f443774521ebbb7dbef4  2026-11-13T11:58:13Z  Keep the note on other submissions out of the public snapshot
+4ac57f698b8fc6b7e338ccf5b26dadf5233ea6bb  2026-11-13T11:56:59Z  D-037 wording; ledger: final quality upgrade phase
+5ecd44e765c59003bebeceed8271e8f2789447f4  2026-11-13T11:55:39Z  Protocol amendments A21 (robustness checks) and A22 (human check of the reading, design before labels)
+8e2388101fe502b33670fa7d37a2556c9ba03a09  2026-11-13T11:54:21Z  publish_hf: commit message and single-repository option for updates
+8f5773c80076fe30f1e495d9448742d219a3865a  2026-11-13T11:52:20Z  Evidence upgrade: robustness checks, judge-error breakdown, human response-check workflow, evidence plan; review import reads sheet edits; README restructure; v0.2.0
+61c5f417b27a436ba6c0212922f93285f71f21f5  2026-11-13T11:35:52Z  Dataset repo: keep review working files (unapproved candidates) out; card wording
+756fb16dee4ab2a5b5639590a23ef96cbe1995f4  2026-11-13T11:35:05Z  Do not state the reviewer's language background; describe the review as participant review only
+96a3af42b9d9b48edf0e90eb8c629f8c92d73208  2026-11-13T11:34:20Z  Explorer: dark-mode segment text, caption wording
+58d8cfb9644468a736571e87f9537f1a6b4a3b64  2026-11-13T11:33:52Z  Explorer: arms side by side per written form; packager guards the fixed sentences
+028eb1d09ffbf94f4fd0ef637b01afdf3d40bc3d  2026-11-13T11:30:02Z  Final article template, README, cards, redesigned explorer template, base-model check, shared public text helpers
+44c6b736152b3ee3def8e6ab6e22a78c196d867e  2026-11-13T11:14:46Z  docs/PUBLIC_SUBMISSION_BENCHMARK.md; figures script works without a local release folder
+912ac81cfcafaddaccefeb139bbe31eec786d23c  2026-11-13T11:13:53Z  Figures generated from the result files: scripts/make_figures.py, docs/figures/
+6d5804dbcb67502604e853468e43aa607090afd1  2026-11-13T11:09:46Z  Review workflow for the project author: guide, 12 batches, CSV, import script, spelling style B candidates, tests
+c953f378613b694608cf8d2d6339b424466203c0  2026-11-13T11:06:37Z  Dataset quality audit: scripts/audit_dataset.py, LLM reading notes, docs/DATASET_QUALITY_AUDIT.md
+19880a87e1c9aedcc36e3918d03210c47eb8e250  2026-11-13T10:55:28Z  Baseline of the initial public release (tags v0.1.0 / v0.2.0), scripts/release_baseline.py
+94ffec33099cb85fb0d2a6e6d75588a5946d0d46  2026-11-13T10:04:38Z  Internal: Drive backup recorded (file id, checksums, restore test)
+332faca32d554ed16b5c07b75a634939eca853d3  2026-11-13T10:01:29Z  Internal: ledger of the post-publication checks and fixes (2026-11-13 09:44-10:02 UTC)
 010d6d5d6109affe0f52ebd15336376b110207d9  2026-11-13T09:58:58Z  Valid CITATION.cff, clean pip check after the documented install, unused imports removed
 356c20a0f5fa8ba5d73799707d4ea7578f6df540  2026-11-13T09:53:09Z  Track the secret scanner, make the Makefile work in a fresh clone, D-036
 cda2079149c3375e82cf097f5d28bce2a7271365  2026-11-13T09:43:23Z  Docs: link the Lexsi toolkits and the models in the README and the write-up

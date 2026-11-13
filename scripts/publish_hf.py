@@ -77,6 +77,8 @@ def main() -> int:
     ap.add_argument("--token-file", default=None, help="file holding the write token (default: HF_TOKEN)")
     ap.add_argument("--update", action="store_true",
                     help="upload: the repositories already exist; replace their content with the release folders")
+    ap.add_argument("--message", default=None, help="upload: commit message on the Hub (default: 'ScriptShield release (code commit ...)')")
+    ap.add_argument("--only", default=None, choices=["model", "dataset", "space"], help="upload: one repository only")
     a = ap.parse_args()
     rel = ROOT / a.release
     links = json.loads((ROOT / "configs/public_links.json").read_text(encoding="utf-8"))
@@ -130,6 +132,8 @@ def main() -> int:
 
     if a.step == "upload":
         for t in plan:
+            if a.only and t["repo_type"] != a.only:
+                continue
             kw = {"repo_id": t["repo_id"], "repo_type": t["repo_type"]}
             exists = api.repo_exists(**kw)
             if exists and not a.update:
@@ -139,14 +143,15 @@ def main() -> int:
             # a new static Space starts with template files of the Hub (e.g. style.css): remove what is not ours
             api.upload_folder(folder_path=str(rel / t["folder"]),
                               delete_patterns=["*"] if (exists or t["repo_type"] == "space") else None,
-                              commit_message=f"ScriptShield release (code commit {summary['packaged_at_commit'][:8]})", **kw)
+                              commit_message=(a.message or "ScriptShield release") + f" (code commit {summary['packaged_at_commit'][:8]})", **kw)
             problems = compare_remote(api, t, local[t["folder"]], rel / t["folder"], token)
             info = api.repo_info(**kw)
             print(f"{t['repo_type']:8s} {t['repo_id']}: private={info.private}, {t['files']} files uploaded, "
                   + ("every remote file identical to the local one" if not problems else f"PROBLEMS: {problems[:5]}"))
             if problems:
                 return 1
-        print("\nUploaded PRIVATE and verified. Review, then run the `publish` step.")
+        print("\nUpdated in place and compared file by file. Run the `verify` step (it uses no token)." if a.update else
+              "\nUploaded PRIVATE and verified. Review, then run the `publish` step.")
         return 0
 
     # ---- publish: public, un-gated, collections filled and public

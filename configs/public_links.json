@@ -7,7 +7,7 @@
  },
  "hackathon": "https://hackathon.lexsi.ai/",
  "github_repo": "https://github.com/ahmadrrrtx/scriptshield",
- "article_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/hf_article.md",
+ "article_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/FINAL_HF_ARTICLE.md",
  "results_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/RESULTS.md",
  "hf_model": {
   "repo_id": "ahmadrrrtx/scriptshield-tiny-aya-fire-steering",
@@ -30,5 +30,14 @@
   "slug": "ahmadrrrtx/scriptshield-data-artifacts-6af6d396c3a2600f7241d2d9",
   "url": "https://huggingface.co/collections/ahmadrrrtx/scriptshield-data-artifacts-6af6d396c3a2600f7241d2d9",
   "title": "ScriptShield — data artifacts"
+ },
+ "audit_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/DATASET_QUALITY_AUDIT.md",
+ "figures_base": "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman/resolve/main/figures",
+ "hf_article": null,
+ "release_tags": {
+  "code_initial": "v0.1.0",
+  "dataset": "v0.2.0",
+  "model": "v0.2.0",
+  "space_initial": "v0.1.0"
  }
 }
