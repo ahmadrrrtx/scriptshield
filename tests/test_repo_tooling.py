@@ -101,3 +101,34 @@ def test_citation_file_is_valid_cff_1_2():
     links = __import__("json").loads((ROOT / "configs/public_links.json").read_text(encoding="utf-8"))
     assert c["repository-code"] == links["github_repo"] == c["url"]
     assert c["repository-artifact"] == links["hf_dataset"]["url"]
+
+
+# ------------------------------------------------------------------ generated documents and a fresh clone
+CLONE_SAFE_GENERATORS = ("scripts/audit_dataset.py", "scripts/import_review.py", "scripts/import_response_labels.py",
+                         "scripts/build_review_pack.py")
+
+
+def test_audit_committed_files_are_what_the_script_produces():
+    """Found by running the audit in a fresh clone: it used to add a section only when a local release folder existed."""
+    out = subprocess.run([sys.executable, str(ROOT / "scripts/audit_dataset.py"), "--check"], capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0, out.stdout[-400:] + out.stderr[-400:]
+
+
+def test_generators_meant_for_a_clone_read_no_untracked_inputs():
+    """These scripts rewrite committed documents. They must not read the release folder or raw run outputs, which a clone
+    does not have; otherwise their output would depend on where they are run."""
+    for rel in CLONE_SAFE_GENERATORS:
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        for needle in ("release/", "experiments/results"):
+            assert needle not in text, f"{rel} reads {needle!r}"
+
+
+def test_one_code_version_everywhere():
+    """pyproject, CITATION.cff, the package and the README badge name the same code version."""
+    pyproject = re.search(r'^version = "([^"]+)"', (ROOT / "pyproject.toml").read_text(encoding="utf-8"), re.M).group(1)
+    cff = re.search(r"^version: (\S+)", (ROOT / "CITATION.cff").read_text(encoding="utf-8"), re.M).group(1)
+    init = re.search(r'^__version__ = "([^"]+)"', (ROOT / "src/scriptshield/__init__.py").read_text(encoding="utf-8"), re.M).group(1)
+    badge = re.search(r"code%20release-v([0-9.]+)-", (ROOT / "README.md").read_text(encoding="utf-8")).group(1)
+    assert pyproject == cff == init == badge, (pyproject, cff, init, badge)
+    newest = re.search(r"^## (\S+)", (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"), re.M).group(1)
+    assert newest == pyproject, f"CHANGELOG.md starts with {newest}, the code version is {pyproject}"

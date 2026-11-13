@@ -83,6 +83,17 @@ def tokens(text: str) -> list[str]:
 
 
 def main() -> int:
+    check = "--check" in sys.argv[1:]            # compare with the committed files, write nothing
+    stale: list[str] = []
+
+    def emit(path: Path, text: str) -> None:
+        if check:
+            if not path.exists() or path.read_text(encoding="utf-8") != text:
+                stale.append(str(path.relative_to(ROOT)))
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+
     recs, _ = load_corpus(ROOT)
     fam: dict = collections.defaultdict(dict)
     for r in recs:
@@ -149,42 +160,16 @@ def main() -> int:
     lengths = {form: {lab: round(sum(len(fam[f][(lab, form)]["text"].split()) for f in fam) / len(fam), 1)
                       for lab in ("harmful", "benign")} for form in ("ur", "ro", "en")}
 
-    # ------------------------------------------------- outcome by sentence type (public log, descriptive)
-    log_path = ROOT / "release/hf_dataset/eval_logs/test_judged_public.jsonl"
-    outcome = None
-    if log_path.exists():
-        rows = [json.loads(l) for l in log_path.read_text(encoding="utf-8").splitlines() if l.strip()]
-        outcome = {}
-        for kind in ("command", "question"):
-            fams = [f for f, v in out.items() if v["split"] == "test" and v["speech_act"]["harmful"]["is_command"] == (kind == "command")]
-            cell = {"n": len(fams)}
-            for form in ("ur", "ro"):
-                sel = [r for r in rows if r["arm"] == "unsteered" and r["set"] == "test" and r["safety_label"] == "harmful"
-                       and r["form"] == form and r["family_id"] in fams]
-                cell[f"{form}_judge_refusals"] = sum(r["judge_label"] == "refusal" for r in sel)
-                if form == "ro":
-                    cell["ro_read_as_refusal"] = sum(r.get("adjudicated") == "R" for r in sel)
-            outcome[kind] = cell
-        flagged = sorted(f for f, v in out.items() if v["split"] == "test"
-                         and any(x["type"] == "word_differs_between_scripts" and x["label"] == "harmful" for x in v["automatic_flags"]))
-        keep = [f for f, v in out.items() if v["split"] == "test" and f not in flagged]
-        un = [r for r in rows if r["arm"] == "unsteered" and r["set"] == "test" and r["safety_label"] == "harmful" and r["family_id"] in keep]
-        outcome["without_flagged_test_families"] = {"excluded": flagged, "n": len(keep),
-                                                    "ur_judge_refusals": sum(r["judge_label"] == "refusal" for r in un if r["form"] == "ur"),
-                                                    "ro_judge_refusals": sum(r["judge_label"] == "refusal" for r in un if r["form"] == "ro")}
-
     summary = {"version": VERSION, "n_families": len(out), "speech_act_counts": {k: dict(v) for k, v in sa_counts.items()},
                "context_sentence_counts": ctx_counts, "commands_by_split": cmd_by_split, "pair_form_counts": dict(pair_counts),
                "pair_form_by_split": {k: dict(v) for k, v in pair_by_split.items()},
                "n_word_differs_between_scripts": sum(1 for v in out.values() for x in v["automatic_flags"] if x["type"] == "word_differs_between_scripts"),
                "n_sentence_type_differs": sum(1 for v in out.values() for x in v["automatic_flags"] if x["type"] == "sentence_type_differs_between_forms"),
                "exact_duplicate_texts": n_duplicates, "roman_spelling_variants": spelling[:40], "cross_split_similarity_top": sims[:10], "mean_words": lengths,
-               "unsteered_refusal_by_sentence_type": outcome,
                "human_review_counts": dict(collections.Counter(s for v in out.values() for s in v["human_review"].values())),
                "llm_note_counts": dict(collections.Counter(n["type"] for v in out.values() for n in v["llm_notes"]))}
-    (ROOT / "data/quality").mkdir(exist_ok=True)
-    (ROOT / f"data/quality/family_audit_v{VERSION}.json").write_text(
-        json.dumps({"summary": summary, "families": out}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    emit(ROOT / f"data/quality/family_audit_v{VERSION}.json",
+         json.dumps({"summary": summary, "families": out}, indent=1, ensure_ascii=False) + "\n")
 
     # ---------------------------------------------------------------- report
     hr = summary["human_review_counts"]
@@ -267,22 +252,11 @@ def main() -> int:
     A("prompts. If harmful prompts are more often commands, part of that difference is \"command versus question\" and")
     A("not \"harmful versus harmless\". This was not controlled for and is a limitation of the vector. It does not touch")
     A("the script gap, which compares the same harmful sentence in two scripts.")
-    if outcome:
-        A("")
-        A("Descriptive check on the published test log (unsteered model, harmful prompts, post hoc, small numbers):")
-        A("")
-        A("| Harmful request is a | Families | Refused in Urdu script (judge) | Refused in Roman Urdu (judge) | Refused in Roman Urdu (reading) |")
-        A("|---|---|---|---|---|")
-        for kind in ("command", "question"):
-            c = outcome[kind]
-            A(f"| {kind} | {c['n']} | {c['ur_judge_refusals']} of {c['n']} | {c['ro_judge_refusals']} of {c['n']} | {c['ro_read_as_refusal']} of {c['n']} |")
-        A("")
-        A("The gap between scripts is present for both kinds of request. The numbers are too small to compare the two rows.")
-        w = outcome["without_flagged_test_families"]
-        if w["excluded"]:
-            A("")
-            A(f"Leaving out the {len(w['excluded'])} test families whose harmful prompt has a word difference between scripts (section 4): "
-              f"{w['ur_judge_refusals']} of {w['n']} refused in Urdu script, {w['ro_judge_refusals']} of {w['n']} in Roman Urdu (judge).")
+    A("")
+    A("Whether the measured script gap differs between commands and questions, and whether it depends on the families")
+    A("flagged in this audit, is examined in [ROBUSTNESS_CHECKS.md](ROBUSTNESS_CHECKS.md) (post hoc, from the public")
+    A("evaluation logs). This audit itself uses no model output: it is computed from the corpus, the LLM reading notes")
+    A("and the review status, and can be regenerated in any clone.")
     A("")
     A("## 4. Differences between the Urdu-script and the Roman-Urdu version")
     A("")
@@ -374,9 +348,13 @@ def main() -> int:
     A("## 11. Reproduce")
     A("")
     A("```bash")
-    A("python3 scripts/audit_dataset.py        # rewrites this file and the JSON")
+    A("python3 scripts/audit_dataset.py            # rewrites this file and the JSON")
+    A("python3 scripts/audit_dataset.py --check    # only compares; exit code 1 if the committed files are stale")
     A("```")
-    (ROOT / "docs/DATASET_QUALITY_AUDIT.md").write_text("\n".join(W) + "\n", encoding="utf-8")
+    emit(ROOT / "docs/DATASET_QUALITY_AUDIT.md", "\n".join(W) + "\n")
+    if check:
+        print("stale: " + ", ".join(stale) if stale else "audit outputs are up to date")
+        return 1 if stale else 0
     print(f"audit written: {len(out)} families | pair form {dict(pair_counts)} | commands harmful/benign "
           f"{sa_counts['harmful']['command']}/{sa_counts['benign']['command']} | script word differences {summary['n_word_differs_between_scripts']} | "
           f"spelling variants {len(spelling)} | human-reviewed pairs {n_rev}")

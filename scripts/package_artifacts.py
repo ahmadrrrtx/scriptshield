@@ -24,6 +24,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from scriptshield.artifacts.linkcheck import unresolved_relative_links  # noqa: E402
 from scriptshield.artifacts.release import (ARM_DESCRIPTIONS, WITHHELD, assert_nothing_leaks, attach_reading,  # noqa: E402
                                             public_row, repack_vectors, save_npz_deterministic, sha256_array,
                                             sha256_file, sha256_text, write_jsonl, write_sums)
@@ -237,8 +238,23 @@ def main() -> int:
     for f in sorted((ROOT / "docs/figures").glob("*")):
         shutil.copyfile(f, d / "figures" / f.name)
     (d / "quality").mkdir()
-    for f in (ROOT / "docs/DATASET_QUALITY_AUDIT.md", ROOT / "docs/ROBUSTNESS_CHECKS.md", *sorted((ROOT / "data/quality").glob("*.json"))):
+    for f in sorted((ROOT / "data/quality").glob("*.json")):
         shutil.copyfile(f, d / "quality" / f.name)
+    # The two documents are written for the code repository. In the dataset repository the folders are laid out
+    # differently, so their relative links are rewritten and a line says where the named scripts and paths live.
+    ds_url = links["hf_dataset"]["url"]
+    relink = {"](../data/quality/": f"]({ds_url}/blob/main/quality/",
+              "](../data/reviewer_pack/)": f"]({ds_url}/tree/main/reviewer_pack)",
+              "](../data/reviewer_pack/": f"]({ds_url}/blob/main/reviewer_pack/"}
+    for name in ("DATASET_QUALITY_AUDIT.md", "ROBUSTNESS_CHECKS.md"):
+        text = (ROOT / "docs" / name).read_text(encoding="utf-8")
+        for old, new in relink.items():
+            text = text.replace(old, new)
+        title, rest = text.split("\n", 1)
+        note = (f"\n> Copy of [`docs/{name}`]({links['github_repo']}/blob/main/docs/{name}) from the code repository. "
+                f"Scripts and file paths named in the text (`scripts/...`, `data/...`, `docs/...`) are in that repository; "
+                f"in this dataset repository the audit data is under `quality/` and the review pack under `reviewer_pack/`.\n")
+        (d / "quality" / name).write_text(title + "\n" + note + rest, encoding="utf-8")
     logs = d / "eval_logs"
     logs.mkdir()
     write_jsonl(logs / "test_judged_public.jsonl", [r for r in pub if r.get("set") in ("test", "utility")])
@@ -349,8 +365,9 @@ def main() -> int:
         f"datasets:\n- {links['hf_dataset']['repo_id']}\nmodels:\n- {links['hf_model']['repo_id']}\n---\n\n"
         "# ScriptShield: recorded experiment explorer\n\n"
         "**Evaluating Urdu and Roman Urdu safety behaviour in Cohere Tiny Aya Fire.** The page shows the research overview, "
-        "the measured results as charts, and the recorded replies of the frozen test run, side by side in Urdu script and "
-        "Roman Urdu, for the unsteered model and each steering vector.\n\n"
+        "the measured results as charts, and the recorded replies of the frozen test run: for each request, one row per "
+        "written form (Urdu script, Roman Urdu, English, code-mixed) with the unsteered model and each steering vector "
+        "side by side.\n\n"
         "**No model runs here.** This is a replay of logged outputs: live inference would need a GPU and access to a gated "
         "model. Every number on the page is computed from the embedded logs. Reply text is withheld wherever a harmful "
         "prompt received anything other than a clean refusal.\n\n"
@@ -461,6 +478,13 @@ def main() -> int:
         if left:
             print(f"REFUSING: unfilled placeholders in {f}: {left[:5]}")
             return 2
+
+    # ----------------------------------------------------------- relative links resolve inside each release folder
+    for sub in ("hf_model", "hf_dataset", "hf_space"):
+        dead = unresolved_relative_links(out / sub)
+        if dead:
+            print(f"REFUSING: relative links in release/{sub} point at nothing: {dead[:6]}")
+            return 4
 
     # ----------------------------------------------------------- leak scan + checksums
     # Rule: text that exists ONLY in withheld responses must not appear anywhere in the release.

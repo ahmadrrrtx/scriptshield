@@ -8,10 +8,11 @@
 #     make robustness  the script gap on subsets of the test set, from the public logs
 #     make review      import the reviewer's answers, then refresh the audit and the robustness checks
 #     make figures     redraw the figures (needs matplotlib: pip install -e ".[figures]")
+#     make docs-check  the committed audit and robustness documents are what the scripts produce
 #
 #   With the raw outputs of a GPU run under experiments/results/ (they are not published, see README):
 #     make analysis report article package scan
-.PHONY: test validate analysis report article package scan recompute snapshot all audit robustness review figures demo-check
+.PHONY: test validate analysis report article package scan recompute snapshot all audit robustness review figures demo-check docs-check
 J ?= experiments/results/judge_test_merged/judged.jsonl
 M ?= experiments/results/fire_test_v2/fire_test/margins.jsonl
 V ?= experiments/results/verify_release_v1/verify_release/verify_report.json
@@ -49,6 +50,11 @@ figures:
 	python3 scripts/make_figures.py
 demo-check:
 	node tests/js/demo_check.js release/hf_space/index.html
+# the committed generated documents are what the scripts produce (works in a fresh clone)
+docs-check:
+	python3 scripts/audit_dataset.py --check
+	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/robustness_checks.py --check; \
+	  else python3 scripts/robustness_checks.py --download --check; fi
 snapshot:
 	bash scripts/make_public_snapshot.sh
-all: test validate report article package demo-check scan recompute
+all: test validate report article package demo-check docs-check scan recompute

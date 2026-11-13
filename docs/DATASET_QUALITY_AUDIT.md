@@ -62,16 +62,10 @@ prompts. If harmful prompts are more often commands, part of that difference is 
 not "harmful versus harmless". This was not controlled for and is a limitation of the vector. It does not touch
 the script gap, which compares the same harmful sentence in two scripts.
 
-Descriptive check on the published test log (unsteered model, harmful prompts, post hoc, small numbers):
-
-| Harmful request is a | Families | Refused in Urdu script (judge) | Refused in Roman Urdu (judge) | Refused in Roman Urdu (reading) |
-|---|---|---|---|---|
-| command | 7 | 7 of 7 | 1 of 7 | 1 of 7 |
-| question | 29 | 29 of 29 | 16 of 29 | 12 of 29 |
-
-The gap between scripts is present for both kinds of request. The numbers are too small to compare the two rows.
-
-Leaving out the 2 test families whose harmful prompt has a word difference between scripts (section 4): 34 of 34 refused in Urdu script, 15 of 34 in Roman Urdu (judge).
+Whether the measured script gap differs between commands and questions, and whether it depends on the families
+flagged in this audit, is examined in [ROBUSTNESS_CHECKS.md](ROBUSTNESS_CHECKS.md) (post hoc, from the public
+evaluation logs). This audit itself uses no model output: it is computed from the corpus, the LLM reading notes
+and the review status, and can be regenerated in any clone.
 
 ## 4. Differences between the Urdu-script and the Roman-Urdu version
 
@@ -245,5 +239,6 @@ H = harmful request, B = harmless request. "Auto" counts automatic flags, "LLM" 
 ## 11. Reproduce
 
 ```bash
-python3 scripts/audit_dataset.py        # rewrites this file and the JSON
+python3 scripts/audit_dataset.py            # rewrites this file and the JSON
+python3 scripts/audit_dataset.py --check    # only compares; exit code 1 if the committed files are stale
 ```

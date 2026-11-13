@@ -45,4 +45,15 @@ LAST=$(git -C "$ROOT" log -1 --date=format:'%Y-%m-%d' --pretty=format:'%ad')
   echo '```'
 } > "$OUT/docs/PROVENANCE.md"
 test -s "$OUT/docs/PROVENANCE.md" || { echo "FAILED: provenance file was not written"; exit 3; }
+# Links between documents must still resolve once the internal files are left out.
+PYTHONPATH="$ROOT/src" python3 - "$OUT" <<'PYEOF' || { echo "FAILED: dead relative links in the snapshot (listed above)"; exit 4; }
+import sys
+from pathlib import Path
+from scriptshield.artifacts.linkcheck import unresolved_relative_links
+root = Path(sys.argv[1])
+dead = unresolved_relative_links(root, [f for f in sorted(root.rglob("*.md")) if not f.name.endswith(".template.md")])
+for f, t in dead:
+    print(f"  dead link in {f}: {t}")
+sys.exit(1 if dead else 0)
+PYEOF
 echo "snapshot of $HEAD_SHA -> $OUT ($(find "$OUT" -type f | wc -l) files, $(git -C "$ROOT" rev-list --count HEAD) commits listed)"

@@ -8,7 +8,7 @@ A pre-registered study of script-dependent refusal in Cohere Labs' Tiny Aya Fire
 [![space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-recorded%20experiment%20explorer-f5a623)](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay)
 [![code licence](https://img.shields.io/badge/code-MIT-2f6feb)](LICENSE)
 [![data licence](https://img.shields.io/badge/data%20and%20vectors-CC%20BY--NC%204.0-2f6feb)](LICENSE-DATA.md)
-[![release](https://img.shields.io/badge/code%20release-v0.2.0-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/releases)
+[![release](https://img.shields.io/badge/code%20release-v0.2.1-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/tags)
 
 Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. Safety evaluations usually treat "Urdu" as one
 language. ScriptShield gives Cohere Labs' [Tiny Aya Fire](https://huggingface.co/CohereLabs/tiny-aya-fire) the
@@ -79,8 +79,9 @@ judge models label the replies, and the statistics are computed locally from the
 | Dataset quality audit and review status | [`docs/DATASET_QUALITY_AUDIT.md`](docs/DATASET_QUALITY_AUDIT.md), [`data/reviewer_pack/`](data/reviewer_pack/) |
 
 **Versions.** The data and vectors that every reported number comes from are tagged `v0.2.0` on Hugging Face
-and do not change. The first public state of this repository is tagged `v0.1.0`; the checksums of everything
-that was public then are in [`docs/baselines/`](docs/baselines/BASELINE_2026-11-13.md).
+and do not change. In this repository, `v0.1.0` is the first public state (the checksums of everything that was
+public then are in [`docs/baselines/`](docs/baselines/BASELINE_2026-11-13.md)) and the `v0.2.x` tags are the
+revised write-up, audit and tooling ([`CHANGELOG.md`](CHANGELOG.md)). No tag after `v0.1.0` changes a reported number.
 
 ## Method
 
@@ -218,6 +219,7 @@ python scripts/build_kaggle_kernel.py --name fire_test --slug <slug> --title <ti
 | `RESEARCH_PROTOCOL.md` | hypotheses, gate, tests; amendments A1–A22 are dated and say whether they came before or after the data |
 | `DECISIONS.md` | every non-obvious choice and every bug, with the evidence |
 | `EXPERIMENT_LOG.md` | every GPU run: commit, runtime, what is valid and what is not |
+| `CHANGELOG.md` | what changed between the code versions |
 | `docs/FINAL_HF_ARTICLE.md`, `docs/RESULTS.md` | generated write-up and result tables |
 | `docs/DATASET_QUALITY_AUDIT.md` | family-level audit of the corpus; automatic checks, LLM notes and human review kept apart |
 | `docs/ROBUSTNESS_CHECKS.md` | post hoc: the gap on subsets of the test set, and where the automatic judge errs |

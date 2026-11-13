@@ -87,7 +87,7 @@ The six candidates below are judged by how much they repair these weak points.
 | | |
 |---|---|
 | Question | Does the gap depend on a few flawed prompts, on one topic or on one form of request? Does it depend on the one Roman-Urdu spelling used? |
-| Hypothesis | The gap does not hinge on the flagged prompts. Two subsets (without the four-word mismatch; commands against questions) were already in the audit; the others were open. For spelling the outcome is open. |
+| Hypothesis | The gap does not hinge on the flagged prompts. Two subsets (without the families where a word differs between the scripts; commands against questions) had already been looked at during the audit; the others were open. For spelling the outcome is open. |
 | Why it would change the submission | The audit found imperfections; a reader will ask whether they carry the result. "One spelling" is the largest untested threat to the headline. |
 | Design, part a | Repeat the pre-registered comparison on subsets defined without reference to any model output: by harm group, leaving one group out, by form of request, without audit-flagged families, and by reviewer verdict as the review arrives. No GPU. |
 | Design, part b | Run the unsteered model on the 36 test families in a second Roman-Urdu spelling (72 prompts). Only the spellings the reviewer confirms as natural are used. Reported apart from the primary comparison. |

@@ -1,6 +1,6 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `e97e972aa5bfcec93c58086dc3d98ce04205a2f2`.
+This public repository is a snapshot of a private working repository at commit `ec5d4cb473d86b1fd6670b77186e2eb4fa185703`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
@@ -22,6 +22,9 @@ are not needed to follow the study.
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+ec5d4cb473d86b1fd6670b77186e2eb4fa185703  2026-11-13T12:11:26Z  CHANGELOG.md; the release badge links to the tags page
+61d5ea473aea4f92e14126ea108bcf1dc1d500c0  2026-11-13T12:09:39Z  Relative links are checked in the repository, the public snapshot and every release folder
+7bca20a4c88d723b6d46a2998656d715938fe66c  2026-11-13T12:06:50Z  Audit no longer depends on a local release folder; docs-check; one code version (0.2.1); Space README wording
 e97e972aa5bfcec93c58086dc3d98ce04205a2f2  2026-11-13T11:59:19Z  Result tables: review status in the banner comes from the status file
 b5a07cebd553550d6513f443774521ebbb7dbef4  2026-11-13T11:58:13Z  Keep the note on other submissions out of the public snapshot
 4ac57f698b8fc6b7e338ccf5b26dadf5233ea6bb  2026-11-13T11:56:59Z  D-037 wording; ledger: final quality upgrade phase
