@@ -1,0 +1,1581 @@
+{
+ "kind": "experiment_dev",
+ "stage": "dev",
+ "completed": true,
+ "started_utc": "2026-11-12T12:07:33Z",
+ "sections": {
+  "setup": {
+   "code_commit": "9a4cbde34411883f06984938e66c3f24e1a81757",
+   "argv": [
+    "--out",
+    "/kaggle/working/fire_dev",
+    "--stage",
+    "dev"
+   ],
+   "torch": "2.11.0+cu130",
+   "transformers": "5.20.2",
+   "safetune": "0.1.8",
+   "auditkit": "1.1.3",
+   "gpus": [
+    "Tesla T4",
+    "Tesla T4"
+   ],
+   "model": {
+    "hf_repo": "CohereLabs/tiny-aya-fire",
+    "hf_revision": "73500c80fcb6c8bea3e830c21d5d2920249a0e1a",
+    "weights_source": "cohere-labs/tiny-aya/transformers/fire/1",
+    "model_dir": "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1",
+    "weights_match_hf_lfs_sha256": true,
+    "class": "Cohere2ForCausalLM",
+    "n_layers": 36,
+    "dtype": "float16",
+    "tokenizer_loader": "AutoTokenizer"
+   },
+   "corpus": {
+    "dataset_version": "0.2.0",
+    "sha256": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+    "n_records": 576,
+    "n_families": 72
+   },
+   "splits_read": [
+    "calibration",
+    "dev"
+   ],
+   "layers": [
+    10,
+    14,
+    18,
+    22
+   ],
+   "rhos": [
+    0.1,
+    0.2,
+    0.4,
+    0.8
+   ],
+   "max_new_tokens": 64,
+   "seed": 20261103,
+   "frozen_selection": null
+  },
+  "vectors": {
+   "api": "safetune extract_caa_vectors engine (SteeringVectorExtractor), pinned 26f59e6",
+   "n_calibration_families": 24,
+   "cross_check_vs_independent_capture": {
+    "harm_ur@L10": 0.9999999999999745,
+    "harm_ro@L10": 0.999999999999966,
+    "script@L10": 0.9999999999999946,
+    "harm_ur@L14": 0.9999999999999939,
+    "harm_ro@L14": 0.9999999999999856,
+    "script@L14": 0.9999999999999939,
+    "harm_ur@L18": 0.9999999999999983,
+    "harm_ro@L18": 0.9999999999999913,
+    "script@L18": 0.9999999999999954,
+    "harm_ur@L22": 0.9999999999999976,
+    "harm_ro@L22": 0.9999999999999942,
+    "script@L22": 0.999999999999997
+   },
+   "min_cosine": 0.999999999999966,
+   "geometry": {
+    "10": {
+     "norm_pooled": 3.7113367184054953,
+     "mean_activation_norm": 30.38412857055664,
+     "alpha_per_unit_rho": 8.186842336313424,
+     "residualization": {
+      "rank": 1,
+      "removed_frac": 0.03091887921070859,
+      "alignment": 0.03091887921070894,
+      "degenerate": false,
+      "norm_before": 3.7113367184054953,
+      "norm_after": 3.7113367184054953
+     },
+     "random_subspace_removed_frac": 0.023711457587028365,
+     "cos_to_pooled": {
+      "pooled": 0.9999999999999999,
+      "residualized": 0.9995218971630156,
+      "random_subspace": 0.9997188438651633,
+      "shuffled_labels": -0.5904957444687449,
+      "ur_only": 0.9411106202737844,
+      "ro_only": 0.8805422272948876
+     }
+    },
+    "14": {
+     "norm_pooled": 7.097018272255151,
+     "mean_activation_norm": 32.370670318603516,
+     "alpha_per_unit_rho": 4.56116485498598,
+     "residualization": {
+      "rank": 1,
+      "removed_frac": 0.07375036070944924,
+      "alignment": 0.07375036070944904,
+      "degenerate": false,
+      "norm_before": 7.097018272255151,
+      "norm_after": 7.097018272255151
+     },
+     "random_subspace_removed_frac": 0.00882400512338509,
+     "cos_to_pooled": {
+      "pooled": 0.9999999999999999,
+      "residualized": 0.99727673405892,
+      "random_subspace": 0.9999610677089296,
+      "shuffled_labels": -0.7139417611362656,
+      "ur_only": 0.971577001993745,
+      "ro_only": 0.905243880686792
+     }
+    },
+    "18": {
+     "norm_pooled": 16.7456759283363,
+     "mean_activation_norm": 45.11181640625,
+     "alpha_per_unit_rho": 2.693938220189354,
+     "residualization": {
+      "rank": 1,
+      "removed_frac": 0.09117933299223935,
+      "alignment": 0.09117933299223976,
+      "degenerate": false,
+      "norm_before": 16.7456759283363,
+      "norm_after": 16.745675928336297
+     },
+     "random_subspace_removed_frac": 0.019897987818650285,
+     "cos_to_pooled": {
+      "pooled": 1.0,
+      "residualized": 0.9958344888760836,
+      "random_subspace": 0.9998020154414421,
+      "shuffled_labels": -0.8037801520940124,
+      "ur_only": 0.9843667705274792,
+      "ro_only": 0.9300613652004712
+     }
+    },
+    "22": {
+     "norm_pooled": 22.289392885163473,
+     "mean_activation_norm": 56.450401306152344,
+     "alpha_per_unit_rho": 2.532612781199955,
+     "residualization": {
+      "rank": 1,
+      "removed_frac": 0.08543006844983284,
+      "alignment": 0.0854300684498333,
+      "degenerate": false,
+      "norm_before": 22.289392885163473,
+      "norm_after": 22.289392885163476
+     },
+     "random_subspace_removed_frac": 0.026382421720784695,
+     "cos_to_pooled": {
+      "pooled": 1.0,
+      "residualized": 0.9963441691527367,
+      "random_subspace": 0.9996519233333905,
+      "shuffled_labels": -0.8071376531232379,
+      "ur_only": 0.9844299467617393,
+      "ro_only": 0.9323208828754252
+     }
+    }
+   },
+   "arms_are_norm_matched_to_pooled": true
+  },
+  "mechanism_diagnostics": {
+   "scope": "24 calibration families; cross-fitted (leave-one-family-out); not a behavioural result",
+   "by_layer": {
+    "2": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 20.02701174575979,
+     "norm_v_ur": 0.7054855784766502,
+     "norm_v_ro": 0.5666815946775148,
+     "norm_v_pooled": 0.5888035837596972,
+     "norm_script": 4.019634602915408,
+     "v_pooled_over_activation": 0.02940047128520616,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.8032504305773992,
+      "ci95": [
+       0.6583837799411619,
+       0.9142550690544475
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.710281433619759,
+      "ci95": [
+       0.41083979291923045,
+       0.765223658516206
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.4923933236152374,
+      "within_script_ceiling_ur": 0.5683779124046753,
+      "disattenuated": 0.8663132624771348,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.1883114620890122,
+      "removed_norm_fraction_if_residualized": 0.1883114620890122,
+      "removed_variance_fraction_if_residualized": 0.03546120675410148,
+      "cross_fitted_cosine": -0.18211139835054815,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.7320212783951754,
+       "sd": 0.15254544536967812,
+       "cohens_d": -4.7987095033955125,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.0
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017316780244723735,
+       "p95": 0.04176551443346247
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 0.519775026933076,
+      "mean_projection_ro": 0.40870468098868534,
+      "ratio_ro_over_ur": 0.7863107302408132,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 0.11107034594439073,
+       "sd": 0.24718129126318816,
+       "cohens_d": 0.4493477049851954,
+       "p_two_sided": 0.03719256148770246,
+       "frac_positive": 0.7083333333333334
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "4": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 22.014663512896302,
+     "norm_v_ur": 1.6889816795329953,
+     "norm_v_ro": 1.427335884487033,
+     "norm_v_pooled": 1.3373090597336497,
+     "norm_script": 6.538079760225022,
+     "v_pooled_over_activation": 0.060746286626195634,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.8450866588924116,
+      "ci95": [
+       0.7315460053340685,
+       1.0493141732842213
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.46948889934621596,
+      "ci95": [
+       0.21860999788087732,
+       0.5819430817926212
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.26218087938424356,
+      "within_script_ceiling_ur": 0.4714896341949412,
+      "disattenuated": 0.5560692332757473,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.20823305462039757,
+      "removed_norm_fraction_if_residualized": 0.20823305462039757,
+      "removed_variance_fraction_if_residualized": 0.04336100503654148,
+      "cross_fitted_cosine": -0.20000181577892578,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -1.3076278237524481,
+       "sd": 0.35464072731859386,
+       "cohens_d": -3.68719022668181,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.0
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017106511905279634,
+       "p95": 0.042701958738366116
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 0.9978438492309789,
+      "mean_projection_ro": 0.7394637617980138,
+      "ratio_ro_over_ur": 0.7410616023417951,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 0.25838008743296514,
+       "sd": 0.4611501296636269,
+       "cohens_d": 0.5602949469437064,
+       "p_two_sided": 0.010797840431913617,
+       "frac_positive": 0.6666666666666666
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "6": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 24.87406530262934,
+     "norm_v_ur": 2.3579887289675523,
+     "norm_v_ro": 1.8958962789590643,
+     "norm_v_pooled": 1.864299445470884,
+     "norm_script": 7.300913952333828,
+     "v_pooled_over_activation": 0.0749495276622039,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.8040311031466144,
+      "ci95": [
+       0.7376982124774952,
+       0.9393722904031718
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.5310271735036105,
+      "ci95": [
+       0.3070156407728306,
+       0.633381918387227
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.30301392474084954,
+      "within_script_ceiling_ur": 0.5136977311645079,
+      "disattenuated": 0.5898681390979544,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.16311730919819567,
+      "removed_norm_fraction_if_residualized": 0.16311730919819567,
+      "removed_variance_fraction_if_residualized": 0.02660725656005977,
+      "cross_fitted_cosine": -0.1529955565463166,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -1.117007393434082,
+       "sd": 0.499105397320206,
+       "cohens_d": -2.2380190625697742,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.0
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017691760189541685,
+       "p95": 0.043150591964316955
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 1.483861378636935,
+      "mean_projection_ro": 1.0691421581304201,
+      "ratio_ro_over_ur": 0.7205135018154639,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 0.41471922050651466,
+       "sd": 0.5493992558488362,
+       "cohens_d": 0.7548594507390852,
+       "p_two_sided": 0.0007998400319936012,
+       "frac_positive": 0.75
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "8": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 25.585389917937505,
+     "norm_v_ur": 3.1229874678286764,
+     "norm_v_ro": 2.4061725729238126,
+     "norm_v_pooled": 2.484397145917544,
+     "norm_script": 8.218541193077442,
+     "v_pooled_over_activation": 0.0971021803414367,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.7704714148586562,
+      "ci95": [
+       0.7043894521165006,
+       0.895500575881273
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.6085743764276914,
+      "ci95": [
+       0.3939722573442848,
+       0.6624823373192088
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.40218160638227074,
+      "within_script_ceiling_ur": 0.6048033229971659,
+      "disattenuated": 0.6649791611415392,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.11399492321429129,
+      "removed_norm_fraction_if_residualized": 0.11399492321429129,
+      "removed_variance_fraction_if_residualized": 0.012994842518632168,
+      "cross_fitted_cosine": -0.10632104116197011,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.8738038564805336,
+       "sd": 0.6668703102583178,
+       "cohens_d": -1.3103055317338366,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.08333333333333333
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017560855741424568,
+       "p95": 0.04494192986070802
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 2.24054215290578,
+      "mean_projection_ro": 1.5562886130425373,
+      "ratio_ro_over_ur": 0.6946035855760053,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 0.684253539863243,
+       "sd": 0.9241691244256763,
+       "cohens_d": 0.7403986151219577,
+       "p_two_sided": 0.0013997200559888023,
+       "frac_positive": 0.7083333333333334
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "10": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 30.383539118162894,
+     "norm_v_ur": 4.730697026372623,
+     "norm_v_ro": 3.375829167671868,
+     "norm_v_pooled": 3.71244189427918,
+     "norm_script": 8.886836971099665,
+     "v_pooled_over_activation": 0.12218595996474714,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.7136007968492472,
+      "ci95": [
+       0.6571025941604037,
+       0.8258624008977763
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.6685394150044609,
+      "ci95": [
+       0.4988345895252475,
+       0.7139931587452231
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.45677259747300825,
+      "within_script_ceiling_ur": 0.6648918869867957,
+      "disattenuated": 0.6869877741222603,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.031055066269215077,
+      "removed_norm_fraction_if_residualized": 0.031055066269215077,
+      "removed_variance_fraction_if_residualized": 0.00096441714098534,
+      "cross_fitted_cosine": -0.0202190610438074,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.17968349920502857,
+       "sd": 0.8842413184115068,
+       "cohens_d": -0.20320640470388848,
+       "p_two_sided": 0.34513097380523894,
+       "frac_positive": 0.4166666666666667
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017617339772456716,
+       "p95": 0.043285897415509346
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 3.6000938454103952,
+      "mean_projection_ro": 2.2921633668362476,
+      "ratio_ro_over_ur": 0.6366954488584868,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 1.307930478574148,
+       "sd": 1.1312350853414739,
+       "cohens_d": 1.1561968820825044,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.875
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "12": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 30.683792615901538,
+     "norm_v_ur": 5.528382370069933,
+     "norm_v_ro": 3.4982726059225513,
+     "norm_v_pooled": 4.137508199764595,
+     "norm_script": 8.765132968900918,
+     "v_pooled_over_activation": 0.134843441668302,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.6327841259428477,
+      "ci95": [
+       0.5884785481569564,
+       0.7670876733084382
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.6637863031516282,
+      "ci95": [
+       0.5107032634046833,
+       0.7048965061250959
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.47737091661524617,
+      "within_script_ceiling_ur": 0.7601134140987652,
+      "disattenuated": 0.6280259073986281,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.07031596732253576,
+      "removed_norm_fraction_if_residualized": 0.07031596732253576,
+      "removed_variance_fraction_if_residualized": 0.004944335260503916,
+      "cross_fitted_cosine": -0.06571452025269495,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.5759965080024035,
+       "sd": 0.9828257244156978,
+       "cohens_d": -0.5860616930278668,
+       "p_two_sided": 0.007198560287942412,
+       "frac_positive": 0.2916666666666667
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017688827628712444,
+       "p95": 0.042892233861560436
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 4.525198118479859,
+      "mean_projection_ro": 2.3982855148685887,
+      "ratio_ro_over_ur": 0.5299846442246466,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 2.12691260361127,
+       "sd": 1.4709880322645126,
+       "cohens_d": 1.445907483242399,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.9583333333333334
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "14": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 32.370809196180275,
+     "norm_v_ur": 9.61592682846561,
+     "norm_v_ro": 5.359057087820431,
+     "norm_v_pooled": 7.0969426863319995,
+     "norm_script": 9.245270371169154,
+     "v_pooled_over_activation": 0.21923896444236654,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.5573105103042431,
+      "ci95": [
+       0.49731631673866766,
+       0.6747869613491206
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.7789370845520001,
+      "ci95": [
+       0.6283436528216564,
+       0.8184886288013975
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.6580011615882949,
+      "within_script_ceiling_ur": 0.8822526052809876,
+      "disattenuated": 0.7458194599252318,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.07344678404328887,
+      "removed_norm_fraction_if_residualized": 0.07344678404328887,
+      "removed_variance_fraction_if_residualized": 0.005394430086301513,
+      "cross_fitted_cosine": -0.06959524053696149,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.6434268153107605,
+       "sd": 1.0546701835561634,
+       "cohens_d": -0.6100739599381086,
+       "p_two_sided": 0.003999200159968006,
+       "frac_positive": 0.3333333333333333
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017654713390185452,
+       "p95": 0.04322910558496129
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 8.747441261630044,
+      "mean_projection_ro": 4.335900579673427,
+      "ratio_ro_over_ur": 0.49567644411543643,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 4.411540681956616,
+       "sd": 2.4713520845735446,
+       "cohens_d": 1.7850717060891264,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "16": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 35.629366276025586,
+     "norm_v_ur": 15.444032338126272,
+     "norm_v_ro": 7.717135821978578,
+     "norm_v_pooled": 11.02154883633348,
+     "norm_script": 10.629420078308149,
+     "v_pooled_over_activation": 0.3093388962056757,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.4996839978719476,
+      "ci95": [
+       0.45205749099845444,
+       0.6101518658140545
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.7879678279300264,
+      "ci95": [
+       0.6388191060634045,
+       0.828428772060336
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.6683682560653014,
+      "within_script_ceiling_ur": 0.9140478913926512,
+      "disattenuated": 0.7312179836080249,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.06838205573102543,
+      "removed_norm_fraction_if_residualized": 0.06838205573102543,
+      "removed_variance_fraction_if_residualized": 0.004676105546001068,
+      "cross_fitted_cosine": -0.06533711930153907,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.6944956877625943,
+       "sd": 1.329344302618875,
+       "cohens_d": -0.52243477208606,
+       "p_two_sided": 0.01839632073585283,
+       "frac_positive": 0.3333333333333333
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017738161131713816,
+       "p95": 0.04353285999786424
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 14.326019526890319,
+      "mean_projection_ro": 6.251491787865071,
+      "ratio_ro_over_ur": 0.4363732560974704,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 8.074527739025248,
+       "sd": 4.136380018296655,
+       "cohens_d": 1.9520758980820885,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "18": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 45.112306312402524,
+     "norm_v_ur": 23.415991539121233,
+     "norm_v_ro": 11.223553662507218,
+     "norm_v_pooled": 16.744747633284348,
+     "norm_script": 11.977640922077315,
+     "v_pooled_over_activation": 0.37117915269787016,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.479311484365544,
+      "ci95": [
+       0.4131106078831059,
+       0.6141473989498542
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.8509348798024239,
+      "ci95": [
+       0.6940898471172451,
+       0.8811888719322982
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7482109766040759,
+      "within_script_ceiling_ur": 0.9409062465061195,
+      "disattenuated": 0.7952024756796102,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.09117593767297523,
+      "removed_norm_fraction_if_residualized": 0.09117593767297523,
+      "removed_variance_fraction_if_residualized": 0.008313051610546263,
+      "cross_fitted_cosine": -0.08933611564084668,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -1.0700359145192364,
+       "sd": 1.8146354687139588,
+       "cohens_d": -0.5896698995295051,
+       "p_two_sided": 0.012397520495900819,
+       "frac_positive": 0.25
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017900976837297276,
+       "p95": 0.042714730000056156
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 22.283598748249062,
+      "mean_projection_ro": 9.65929653572399,
+      "ratio_ro_over_ur": 0.43347112128748827,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 12.624302212525071,
+       "sd": 7.861813859904071,
+       "cohens_d": 1.6057747534459066,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "20": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 44.80642214547191,
+     "norm_v_ur": 27.328201742163643,
+     "norm_v_ro": 12.544948277398444,
+     "norm_v_pooled": 19.35587030798473,
+     "norm_script": 12.337032649183815,
+     "v_pooled_over_activation": 0.4319887502988411,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.45904770448336235,
+      "ci95": [
+       0.3918533729005349,
+       0.5842951821600233
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.8668888408409491,
+      "ci95": [
+       0.7134841571662351,
+       0.8982074211553994
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7709734472789666,
+      "within_script_ceiling_ur": 0.948335860554723,
+      "disattenuated": 0.8129751065492669,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.13275961193241712,
+      "removed_norm_fraction_if_residualized": 0.13275961193241712,
+      "removed_variance_fraction_if_residualized": 0.01762511456044599,
+      "cross_fitted_cosine": -0.127233025968915,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -1.5696779954329567,
+       "sd": 2.4298694289495852,
+       "cohens_d": -0.6459927339023797,
+       "p_two_sided": 0.004999000199960008,
+       "frac_positive": 0.16666666666666666
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017295411141524605,
+       "p95": 0.04376384107499493
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 26.178345837488962,
+      "mean_projection_ro": 10.982378916594433,
+      "ratio_ro_over_ur": 0.4195215001272925,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 15.195966920894527,
+       "sd": 8.410786802057551,
+       "cohens_d": 1.8067235894241311,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "22": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 56.4506084944179,
+     "norm_v_ur": 31.004756602129397,
+     "norm_v_ro": 15.067637723598978,
+     "norm_v_pooled": 22.285107189589123,
+     "norm_script": 19.46057845419826,
+     "v_pooled_over_activation": 0.3947717798611999,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.4859782618826989,
+      "ci95": [
+       0.4272597618874692,
+       0.6146421725455413
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.854269362626099,
+      "ci95": [
+       0.6890145592506954,
+       0.8919955195364336
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7471283733904225,
+      "within_script_ceiling_ur": 0.9423910699507384,
+      "disattenuated": 0.7928007779503653,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.08545174248008111,
+      "removed_norm_fraction_if_residualized": 0.08545174248008111,
+      "removed_variance_fraction_if_residualized": 0.007302000292882099,
+      "cross_fitted_cosine": -0.08172289939914464,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -1.590374895261606,
+       "sd": 2.3574052476778786,
+       "cohens_d": -0.6746294031661197,
+       "p_two_sided": 0.003799240151969606,
+       "frac_positive": 0.16666666666666666
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.01697155968366709,
+       "p95": 0.04099565505293194
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 29.50718450456807,
+      "mean_projection_ro": 12.992083002653724,
+      "ratio_ro_over_ur": 0.4403023609603414,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 16.515101501914348,
+       "sd": 9.121103750525306,
+       "cohens_d": 1.810647258667922,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "24": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 63.238635295414134,
+     "norm_v_ur": 34.490340009542976,
+     "norm_v_ro": 16.003309866484447,
+     "norm_v_pooled": 24.40224249124607,
+     "norm_script": 26.9016327284823,
+     "v_pooled_over_activation": 0.3858755391740031,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.46399397228489375,
+      "ci95": [
+       0.4062191318318604,
+       0.5940568474980071
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.8480586950293586,
+      "ci95": [
+       0.6636080811055608,
+       0.8855362265162743
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7331031337927473,
+      "within_script_ceiling_ur": 0.9395925070891238,
+      "disattenuated": 0.7802351852122739,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.03721544379643512,
+      "removed_norm_fraction_if_residualized": 0.03721544379643512,
+      "removed_variance_fraction_if_residualized": 0.0013849892569656212,
+      "cross_fitted_cosine": -0.03278426110627068,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -0.8819501515555608,
+       "sd": 2.2998314050971573,
+       "cohens_d": -0.3834846978786701,
+       "p_two_sided": 0.07618476304739052,
+       "frac_positive": 0.2916666666666667
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017007138809947,
+       "p95": 0.041042013431357785
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 32.77983575716328,
+      "mean_projection_ro": 13.629826751458191,
+      "ratio_ro_over_ur": 0.41579911664077523,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 19.15000900570509,
+       "sd": 10.51811968364085,
+       "cohens_d": 1.8206684827412338,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "26": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 68.81087932008646,
+     "norm_v_ur": 36.55714894441734,
+     "norm_v_ro": 17.32262253287678,
+     "norm_v_pooled": 25.839960538021398,
+     "norm_script": 32.340870567155235,
+     "v_pooled_over_activation": 0.3755214406986731,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.4738504788547556,
+      "ci95": [
+       0.4162349426832352,
+       0.610076550990632
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.81665236650471,
+      "ci95": [
+       0.6099670856418691,
+       0.8565709936352899
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.6976134493113917,
+      "within_script_ceiling_ur": 0.9360133744329511,
+      "disattenuated": 0.7453028646455131,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.002482114323593264,
+      "removed_norm_fraction_if_residualized": 0.002482114323593264,
+      "removed_variance_fraction_if_residualized": 6.1608915153868454e-06,
+      "cross_fitted_cosine": 0.00033693494129413844,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": 0.01089676932594578,
+       "sd": 2.576285510086132,
+       "cohens_d": 0.004229643524867503,
+       "p_two_sided": 0.9842031593681264,
+       "frac_positive": 0.375
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017999545718096133,
+       "p95": 0.042934716476348306
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 34.55380655074779,
+      "mean_projection_ro": 14.391798601280664,
+      "ratio_ro_over_ur": 0.4165039987748964,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 20.162007949467128,
+       "sd": 11.820006952051841,
+       "cohens_d": 1.705752630371101,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "28": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 99.86249544421568,
+     "norm_v_ur": 55.90331428249503,
+     "norm_v_ro": 26.285186423530234,
+     "norm_v_pooled": 39.792075704128166,
+     "norm_script": 51.651713222660895,
+     "v_pooled_over_activation": 0.39846866961537597,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.470190126665905,
+      "ci95": [
+       0.37793682657499617,
+       0.6155414130880212
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.8566407488388438,
+      "ci95": [
+       0.6564654333686377,
+       0.8887394624985915
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7637168243192027,
+      "within_script_ceiling_ur": 0.946965744787704,
+      "disattenuated": 0.806488332363508,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.03660006082392917,
+      "removed_norm_fraction_if_residualized": 0.03660006082392917,
+      "removed_variance_fraction_if_residualized": 0.0013395644523153149,
+      "cross_fitted_cosine": 0.04097072872826762,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": 2.116208330795913,
+       "sd": 3.9231521824289217,
+       "cohens_d": 0.539415304936174,
+       "p_two_sided": 0.008198360327934412,
+       "frac_positive": 0.7083333333333334
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017608079618740818,
+       "p95": 0.04344850300739852
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 53.55227413105124,
+      "mean_projection_ro": 23.030726498090516,
+      "ratio_ro_over_ur": 0.43006066262901427,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 30.521547632960733,
+       "sd": 20.301328989885995,
+       "cohens_d": 1.5034260884184671,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "30": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 132.90094252472335,
+     "norm_v_ur": 72.5722457407903,
+     "norm_v_ro": 34.02888843463609,
+     "norm_v_pooled": 51.24245859466735,
+     "norm_script": 79.7159344051957,
+     "v_pooled_over_activation": 0.3855688125397214,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.46889672611453515,
+      "ci95": [
+       0.3799840037730797,
+       0.6141443127160499
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.8257491118542801,
+      "ci95": [
+       0.6195036811397291,
+       0.8599752795302732
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.7284673531861897,
+      "within_script_ceiling_ur": 0.9397887043591723,
+      "disattenuated": 0.7751395072181897,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.05889982655331466,
+      "removed_norm_fraction_if_residualized": 0.05889982655331466,
+      "removed_variance_fraction_if_residualized": 0.0034691895680105506,
+      "cross_fitted_cosine": 0.0632541531083645,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": 5.0423639200425905,
+       "sd": 6.028490552596733,
+       "cohens_d": 0.8364222977625179,
+       "p_two_sided": 0.0003999200159968006,
+       "frac_positive": 0.8333333333333334
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.0173646148033254,
+       "p95": 0.04274390261386051
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 69.06605561683295,
+      "mean_projection_ro": 29.132989949821297,
+      "ratio_ro_over_ur": 0.4218134319331381,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 39.933065667011654,
+       "sd": 26.91826749056432,
+       "cohens_d": 1.483493158726111,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 0.9583333333333334
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "32": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 165.35272022397976,
+     "norm_v_ur": 88.22644092091772,
+     "norm_v_ro": 40.45539879696862,
+     "norm_v_pooled": 61.13693335478891,
+     "norm_script": 116.37485737845358,
+     "v_pooled_over_activation": 0.369736483754095,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.4585405279266683,
+      "ci95": [
+       0.3833074354137181,
+       0.6012735814982685
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.7747252549568372,
+      "ci95": [
+       0.563468890048074,
+       0.806962273960735
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.6714376990059716,
+      "within_script_ceiling_ur": 0.9281292600935908,
+      "disattenuated": 0.7234312373022969,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.02266485679786988,
+      "removed_norm_fraction_if_residualized": 0.02266485679786988,
+      "removed_variance_fraction_if_residualized": 0.0005136957336679484,
+      "cross_fitted_cosine": -0.017558113618825266,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -2.043322968225474,
+       "sd": 7.058569708938712,
+       "cohens_d": -0.2894811629667531,
+       "p_two_sided": 0.17036592681463708,
+       "frac_positive": 0.2916666666666667
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017810561756505257,
+       "p95": 0.042843195272016535
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 83.121887247452,
+      "mean_projection_ro": 33.17946419037095,
+      "ratio_ro_over_ur": 0.39916639634993406,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 49.942423057081044,
+       "sd": 31.0383325916711,
+       "cohens_d": 1.6090562503503398,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    },
+    "34": {
+     "n_families": 24,
+     "hidden": 2048,
+     "mean_activation_norm": 203.38150140395365,
+     "norm_v_ur": 106.39151000699421,
+     "norm_v_ro": 50.00249361751236,
+     "norm_v_pooled": 72.69443661384899,
+     "norm_script": 162.99996408436888,
+     "v_pooled_over_activation": 0.3574289505782744,
+     "norm_ratio_ro_over_ur": {
+      "value": 0.4699857499364863,
+      "ci95": [
+       0.40014851183369,
+       0.6146766355407071
+      ]
+     },
+     "cos_v_ur_v_ro": {
+      "value": 0.6878515696154665,
+      "ci95": [
+       0.5001666998726363,
+       0.7137570840287966
+      ],
+      "note": "in-sample cosines of noisy means are biased toward 0; see split-half below"
+     },
+     "cos_v_ur_v_ro_split_half": {
+      "cross_script": 0.5852681705796278,
+      "within_script_ceiling_ur": 0.9167346093951775,
+      "disattenuated": 0.6384270481134805,
+      "note": "cross_script / ceiling ~ 1 means the two scripts share one harm direction up to noise"
+     },
+     "h2_script_alignment": {
+      "in_sample_abs_cosine": 0.04301775767403638,
+      "removed_norm_fraction_if_residualized": 0.04301775767403638,
+      "removed_variance_fraction_if_residualized": 0.0018505274753021158,
+      "cross_fitted_cosine": -0.03778090140110795,
+      "cross_fitted_projection_test": {
+       "n": 24,
+       "mean": -6.158285571455678,
+       "sd": 9.171822836752993,
+       "cohens_d": -0.6714352949316053,
+       "p_two_sided": 0.004199160167966407,
+       "frac_positive": 0.20833333333333334
+      },
+      "isotropic_random_null_abs_cosine": {
+       "mean": 0.017670401861329416,
+       "p95": 0.04264300593691994
+      },
+      "reading": "cross_fitted_projection_test asks whether families' benign script differences point consistently along (or against) the harm direction built from OTHER families"
+     },
+     "h1_representation": {
+      "mean_projection_ur": 98.62298115739479,
+      "mean_projection_ro": 38.31696047690898,
+      "ratio_ro_over_ur": 0.3885195927687282,
+      "paired_difference_test_ur_minus_ro": {
+       "n": 24,
+       "mean": 60.30602068048582,
+       "sd": 35.58017153775471,
+       "cohens_d": 1.6949333877295703,
+       "p_two_sided": 0.0001999600079984003,
+       "frac_positive": 1.0
+      },
+      "reading": "projection of each family's harmful-minus-benign contrast on the shared harm direction (leave-one-family-out); ur > ro means harm is under-represented in Roman Urdu"
+     }
+    }
+   }
+  },
+  "baseline_done": {
+   "n": 288,
+   "timing": {
+    "baseline:unsteered:LNone:rhoNone": 171.0
+   }
+  },
+  "dev_grid_progress": {
+   "done": 32,
+   "last": {
+    "arm": "residualized",
+    "layer": 22,
+    "rho": 0.8,
+    "alpha": 2.026090224959964,
+    "mean_margin": 2.4838662209610143
+   },
+   "timing": {
+    "baseline:unsteered:LNone:rhoNone": 171.0,
+    "dev_grid:pooled:L10:rho0.1": 28.7,
+    "dev_grid:residualized:L10:rho0.1": 0.0,
+    "dev_grid:pooled:L10:rho0.2": 0.0,
+    "dev_grid:residualized:L10:rho0.2": 0.0,
+    "dev_grid:pooled:L10:rho0.4": 0.0,
+    "dev_grid:residualized:L10:rho0.4": 0.0,
+    "dev_grid:pooled:L10:rho0.8": 0.0,
+    "dev_grid:residualized:L10:rho0.8": 0.0,
+    "dev_grid:pooled:L14:rho0.1": 0.0,
+    "dev_grid:residualized:L14:rho0.1": 0.0,
+    "dev_grid:pooled:L14:rho0.2": 0.0,
+    "dev_grid:residualized:L14:rho0.2": 0.0,
+    "dev_grid:pooled:L14:rho0.4": 0.0,
+    "dev_grid:residualized:L14:rho0.4": 0.0,
+    "dev_grid:pooled:L14:rho0.8": 0.0,
+    "dev_grid:residualized:L14:rho0.8": 0.0,
+    "dev_grid:pooled:L18:rho0.1": 0.0,
+    "dev_grid:residualized:L18:rho0.1": 0.0,
+    "dev_grid:pooled:L18:rho0.2": 0.0,
+    "dev_grid:residualized:L18:rho0.2": 0.0,
+    "dev_grid:pooled:L18:rho0.4": 0.0,
+    "dev_grid:residualized:L18:rho0.4": 0.0,
+    "dev_grid:pooled:L18:rho0.8": 0.0,
+    "dev_grid:residualized:L18:rho0.8": 0.0,
+    "dev_grid:pooled:L22:rho0.1": 0.0,
+    "dev_grid:residualized:L22:rho0.1": 0.0,
+    "dev_grid:pooled:L22:rho0.2": 0.0,
+    "dev_grid:residualized:L22:rho0.2": 0.0,
+    "dev_grid:pooled:L22:rho0.4": 0.0,
+    "dev_grid:residualized:L22:rho0.4": 0.0,
+    "dev_grid:pooled:L22:rho0.8": 0.0,
+    "dev_grid:residualized:L22:rho0.8": 0.0
+   }
+  },
+  "dev_grid": {
+   "n_prompts_per_config": 48,
+   "configs": [
+    {
+     "arm": "pooled",
+     "layer": 10,
+     "rho": 0.1,
+     "alpha": 0.8186842336313425,
+     "mean_margin": 1.6225563709934552
+    },
+    {
+     "arm": "residualized",
+     "layer": 10,
+     "rho": 0.1,
+     "alpha": 0.8186842336313425,
+     "mean_margin": 1.6274833269417286
+    },
+    {
+     "arm": "pooled",
+     "layer": 10,
+     "rho": 0.2,
+     "alpha": 1.637368467262685,
+     "mean_margin": 1.6849907611807187
+    },
+    {
+     "arm": "residualized",
+     "layer": 10,
+     "rho": 0.2,
+     "alpha": 1.637368467262685,
+     "mean_margin": 1.6940504709879558
+    },
+    {
+     "arm": "pooled",
+     "layer": 10,
+     "rho": 0.4,
+     "alpha": 3.27473693452537,
+     "mean_margin": 1.715896716962258
+    },
+    {
+     "arm": "residualized",
+     "layer": 10,
+     "rho": 0.4,
+     "alpha": 3.27473693452537,
+     "mean_margin": 1.7318404254813988
+    },
+    {
+     "arm": "pooled",
+     "layer": 10,
+     "rho": 0.8,
+     "alpha": 6.54947386905074,
+     "mean_margin": 1.7451517780621846
+    },
+    {
+     "arm": "residualized",
+     "layer": 10,
+     "rho": 0.8,
+     "alpha": 6.54947386905074,
+     "mean_margin": 1.7719287164509296
+    },
+    {
+     "arm": "pooled",
+     "layer": 14,
+     "rho": 0.1,
+     "alpha": 0.45611648549859796,
+     "mean_margin": 1.6911278714736302
+    },
+    {
+     "arm": "residualized",
+     "layer": 14,
+     "rho": 0.1,
+     "alpha": 0.45611648549859796,
+     "mean_margin": 1.7045555772880714
+    },
+    {
+     "arm": "pooled",
+     "layer": 14,
+     "rho": 0.2,
+     "alpha": 0.9122329709971959,
+     "mean_margin": 1.850713220735391
+    },
+    {
+     "arm": "residualized",
+     "layer": 14,
+     "rho": 0.2,
+     "alpha": 0.9122329709971959,
+     "mean_margin": 1.876969289034605
+    },
+    {
+     "arm": "pooled",
+     "layer": 14,
+     "rho": 0.4,
+     "alpha": 1.8244659419943918,
+     "mean_margin": 2.1185344407955804
+    },
+    {
+     "arm": "residualized",
+     "layer": 14,
+     "rho": 0.4,
+     "alpha": 1.8244659419943918,
+     "mean_margin": 2.159280547251304
+    },
+    {
+     "arm": "pooled",
+     "layer": 14,
+     "rho": 0.8,
+     "alpha": 3.6489318839887837,
+     "mean_margin": 2.1362208339075246
+    },
+    {
+     "arm": "residualized",
+     "layer": 14,
+     "rho": 0.8,
+     "alpha": 3.6489318839887837,
+     "mean_margin": 2.20545611033837
+    },
+    {
+     "arm": "pooled",
+     "layer": 18,
+     "rho": 0.1,
+     "alpha": 0.2693938220189354,
+     "mean_margin": 1.618454319735368
+    },
+    {
+     "arm": "residualized",
+     "layer": 18,
+     "rho": 0.1,
+     "alpha": 0.2693938220189354,
+     "mean_margin": 1.6432842575013638
+    },
+    {
+     "arm": "pooled",
+     "layer": 18,
+     "rho": 0.2,
+     "alpha": 0.5387876440378708,
+     "mean_margin": 1.7069085463881493
+    },
+    {
+     "arm": "residualized",
+     "layer": 18,
+     "rho": 0.2,
+     "alpha": 0.5387876440378708,
+     "mean_margin": 1.7522068011264007
+    },
+    {
+     "arm": "pooled",
+     "layer": 18,
+     "rho": 0.4,
+     "alpha": 1.0775752880757417,
+     "mean_margin": 1.8392553453644116
+    },
+    {
+     "arm": "residualized",
+     "layer": 18,
+     "rho": 0.4,
+     "alpha": 1.0775752880757417,
+     "mean_margin": 1.9087755630413692
+    },
+    {
+     "arm": "pooled",
+     "layer": 18,
+     "rho": 0.8,
+     "alpha": 2.1551505761514833,
+     "mean_margin": 2.3211714824040732
+    },
+    {
+     "arm": "residualized",
+     "layer": 18,
+     "rho": 0.8,
+     "alpha": 2.1551505761514833,
+     "mean_margin": 2.384500101208687
+    },
+    {
+     "arm": "pooled",
+     "layer": 22,
+     "rho": 0.1,
+     "alpha": 0.2532612781199955,
+     "mean_margin": 1.6447107034424941
+    },
+    {
+     "arm": "residualized",
+     "layer": 22,
+     "rho": 0.1,
+     "alpha": 0.2532612781199955,
+     "mean_margin": 1.678445001443227
+    },
+    {
+     "arm": "pooled",
+     "layer": 22,
+     "rho": 0.2,
+     "alpha": 0.506522556239991,
+     "mean_margin": 1.7394465530912082
+    },
+    {
+     "arm": "residualized",
+     "layer": 22,
+     "rho": 0.2,
+     "alpha": 0.506522556239991,
+     "mean_margin": 1.8071499230961006
+    },
+    {
+     "arm": "pooled",
+     "layer": 22,
+     "rho": 0.4,
+     "alpha": 1.013045112479982,
+     "mean_margin": 1.9286137248078983
+    },
+    {
+     "arm": "residualized",
+     "layer": 22,
+     "rho": 0.4,
+     "alpha": 1.013045112479982,
+     "mean_margin": 2.056413164983193
+    },
+    {
+     "arm": "pooled",
+     "layer": 22,
+     "rho": 0.8,
+     "alpha": 2.026090224959964,
+     "mean_margin": 2.3043737473587194
+    },
+    {
+     "arm": "residualized",
+     "layer": 22,
+     "rho": 0.8,
+     "alpha": 2.026090224959964,
+     "mean_margin": 2.4838662209610143
+    }
+   ],
+   "note": "selection is made AFTER judging, by the rule pre-declared in RESEARCH_PROTOCOL.md; this stage only generates"
+  },
+  "timing": {
+   "baseline:unsteered:LNone:rhoNone": 171.0,
+   "dev_grid:pooled:L10:rho0.1": 28.7,
+   "dev_grid:residualized:L10:rho0.1": 0.0,
+   "dev_grid:pooled:L10:rho0.2": 0.0,
+   "dev_grid:residualized:L10:rho0.2": 0.0,
+   "dev_grid:pooled:L10:rho0.4": 0.0,
+   "dev_grid:residualized:L10:rho0.4": 0.0,
+   "dev_grid:pooled:L10:rho0.8": 0.0,
+   "dev_grid:residualized:L10:rho0.8": 0.0,
+   "dev_grid:pooled:L14:rho0.1": 0.0,
+   "dev_grid:residualized:L14:rho0.1": 0.0,
+   "dev_grid:pooled:L14:rho0.2": 0.0,
+   "dev_grid:residualized:L14:rho0.2": 0.0,
+   "dev_grid:pooled:L14:rho0.4": 0.0,
+   "dev_grid:residualized:L14:rho0.4": 0.0,
+   "dev_grid:pooled:L14:rho0.8": 0.0,
+   "dev_grid:residualized:L14:rho0.8": 0.0,
+   "dev_grid:pooled:L18:rho0.1": 0.0,
+   "dev_grid:residualized:L18:rho0.1": 0.0,
+   "dev_grid:pooled:L18:rho0.2": 0.0,
+   "dev_grid:residualized:L18:rho0.2": 0.0,
+   "dev_grid:pooled:L18:rho0.4": 0.0,
+   "dev_grid:residualized:L18:rho0.4": 0.0,
+   "dev_grid:pooled:L18:rho0.8": 0.0,
+   "dev_grid:residualized:L18:rho0.8": 0.0,
+   "dev_grid:pooled:L22:rho0.1": 0.0,
+   "dev_grid:residualized:L22:rho0.1": 0.0,
+   "dev_grid:pooled:L22:rho0.2": 0.0,
+   "dev_grid:residualized:L22:rho0.2": 0.0,
+   "dev_grid:pooled:L22:rho0.4": 0.0,
+   "dev_grid:residualized:L22:rho0.4": 0.0,
+   "dev_grid:pooled:L22:rho0.8": 0.0,
+   "dev_grid:residualized:L22:rho0.8": 0.0
+  }
+ },
+ "elapsed_seconds": 2391.2
+}

@@ -1,0 +1,79 @@
+{
+  "stage": "safetune_contract",
+  "utc": "2026-11-03T01:09:12Z",
+  "model": "sshleifer/tiny-gpt2",
+  "is_safety_result": false,
+  "checks": {
+    "decoder_layers_resolve": {
+      "passed": true,
+      "detail": {
+        "n_layers": 2
+      }
+    },
+    "extract_returns_requested_layers": {
+      "passed": true,
+      "detail": {
+        "returned": [
+          1
+        ],
+        "requested": [
+          1
+        ]
+      }
+    },
+    "vector_is_1d": {
+      "passed": true,
+      "detail": {
+        "shape": [
+          2
+        ],
+        "hidden": 2
+      }
+    },
+    "sign_is_positive_minus_negative": {
+      "passed": false,
+      "detail": {
+        "cosine": 0.781019,
+        "meaning": "+1 confirms extract(positive=P,negative=N) == mean(P)-mean(N)"
+      }
+    },
+    "hooks_off_at_construction": {
+      "passed": true,
+      "detail": null
+    },
+    "hooks_off_after_call": {
+      "passed": true,
+      "detail": null
+    },
+    "steering_changes_logits": {
+      "passed": true,
+      "detail": {
+        "max_abs_logit_delta": 0.2579459547996521
+      }
+    },
+    "hooks_on_inside_context": {
+      "passed": true,
+      "detail": {
+        "n_handles": 1
+      }
+    },
+    "hooks_off_after_context": {
+      "passed": true,
+      "detail": null
+    },
+    "wrapper_generate_differs_from_base": {
+      "passed": false,
+      "detail": {
+        "note": "if equal, strength may be too small for this random-weight model"
+      }
+    },
+    "residualized_vector_accepted": {
+      "passed": true,
+      "detail": {
+        "norm_parity": true,
+        "orthogonal": true
+      }
+    }
+  },
+  "all_passed": false
+}

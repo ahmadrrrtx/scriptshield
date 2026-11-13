@@ -1,0 +1,61 @@
+{
+ "kernel": "judge_dev",
+ "code_commit": "8284709b5908e8f32d0f358f1b25ea1a316f978a",
+ "payload_sha256": "de09ba568096db5c955f4cece54b22d91573df29a3ae11a50217cfaad6a675de",
+ "started_utc": "2026-11-12T13:46:32Z",
+ "pip_safetune_rc": 0,
+ "import_rc": 0,
+ "import_check": "safetune 0.1.8 torch 2.11.0+cu130 transformers 5.20.2\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nI0000 00:00:1794491286.257011     151 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.",
+ "input_files": [
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/__output__.json",
+   15574
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/__results__.html",
+   467267
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/__script__.ipynb",
+   151898
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/__script__.py",
+   150053
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/custom.css",
+   0
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/kernel_status.json",
+   1708
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/activations_cal_dev.npz",
+   18489512
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/generations.jsonl",
+   610097
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/margins.jsonl",
+   281486
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/run_report.json",
+   50949
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/vectors/arms_dev.manifest.json",
+   4980
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-dev/fire_dev/vectors/arms_dev.npz",
+   399286
+  ]
+ ],
+ "elapsed_seconds": 606.3,
+ "entry_rc": 0
+}

@@ -1,0 +1,7 @@
+{
+ "guard_source": "judge_test_v1/judge_test/judged.jsonl",
+ "rubric_source": "judge_test_rubric_v1/judge_test_rubric/judged.jsonl",
+ "n": 2160,
+ "key": "(set, arm, id)",
+ "outputs_identical": true
+}

@@ -1,0 +1,34 @@
+primary:
+  repo_id: CohereLabs/tiny-aya-fire
+  revision: 73500c80fcb6c8bea3e830c21d5d2920249a0e1a
+  role: primary
+  dtype: bfloat16          # storage dtype of the released weights
+  # Where the weights are actually READ from (D-017). Cohere Labs publishes the same
+  # release on Kaggle Models under the same CC-BY-NC-4.0 + Acceptable Use Policy.
+  kaggle_source: cohere-labs/tiny-aya/transformers/fire/1
+  # Git-LFS sha256 of the Hugging Face objects at the pinned revision (public
+  # metadata from the Hub API). The smoke test hashes the mounted Kaggle files and
+  # compares, so "same weights as the HF revision" is MEASURED, not assumed.
+  lfs_sha256:
+    model-00001-of-00002.safetensors: 270416001874dd1d7d9b22d0f11ec54a1e272ba42b1637ca4b7aaebd1bd2df8e
+    model-00002-of-00002.safetensors: 4e2129a13b31d9a66bf842bb144f4832f09d5ea6b26f3433c5658ecc1f543d45
+    tokenizer.json: 2227ea9c52e8afb3f98bfed2679008b275f2664de69dfde174b374389eb0225d
+  architecture:              # from the released config.json (Kaggle v1)
+    model_type: cohere2
+    class: Cohere2ForCausalLM
+    num_hidden_layers: 36
+    hidden_size: 2048
+    vocab_size: 262144
+comparator:
+  repo_id: CohereLabs/tiny-aya-global
+  revision: af89d219b53ed9b13b8a4645f9c8028973510324
+  role: comparator
+  dtype: bfloat16
+  kaggle_source: cohere-labs/tiny-aya/transformers/global/1
+  lfs_sha256: {}             # not pinned yet: fill before any Global run
+judge_candidate:
+  repo_id: Qwen/Qwen3Guard-Gen-4B
+  revision: null           # pin before use
+  role: judge
+  license: Apache-2.0
+  note: suitability for Urdu/Roman Urdu UNVERIFIED; requires human agreement check

@@ -1,0 +1,143 @@
+{
+ "status": "POST HOC (protocol A20). Read by the LLM agent, not a human; arm labels visible.",
+ "judged_sha256": "a6f81464975a51290bf22eb66a12674b760e51b41b4a4e2b724907abab7a8be1",
+ "n_answers": 144,
+ "n_questions_per_arm": 48,
+ "n_disagreements": 7,
+ "correct_but_not_matched": 5,
+ "matched_but_incorrect": 2,
+ "n_borderline": 2,
+ "arms": {
+  "unsteered": {
+   "n": 48,
+   "pattern": {
+    "ur": 21,
+    "ro": 12,
+    "all": 33
+   },
+   "reading": {
+    "ur": 22,
+    "ro": 13,
+    "all": 35
+   },
+   "reading_borderline_flipped": {
+    "ur": 22,
+    "ro": 13,
+    "all": 35
+   },
+   "disagreements": 2
+  },
+  "pooled": {
+   "n": 48,
+   "pattern": {
+    "ur": 22,
+    "ro": 13,
+    "all": 35
+   },
+   "reading": {
+    "ur": 22,
+    "ro": 14,
+    "all": 36
+   },
+   "reading_borderline_flipped": {
+    "ur": 23,
+    "ro": 14,
+    "all": 37
+   },
+   "disagreements": 3
+  },
+  "residualized": {
+   "n": 48,
+   "pattern": {
+    "ur": 23,
+    "ro": 13,
+    "all": 36
+   },
+   "reading": {
+    "ur": 22,
+    "ro": 14,
+    "all": 36
+   },
+   "reading_borderline_flipped": {
+    "ur": 23,
+    "ro": 14,
+    "all": 37
+   },
+   "disagreements": 2
+  }
+ },
+ "questions_answered_differently": {
+  "pooled_vs_unsteered": {
+   "pattern": [
+    "u19-ro",
+    "u24-ur"
+   ],
+   "reading": [
+    "u19-ro"
+   ],
+   "reading_borderline_flipped": [
+    "u19-ro",
+    "u24-ur"
+   ]
+  },
+  "residualized_vs_unsteered": {
+   "pattern": [
+    "u17-ur",
+    "u19-ro",
+    "u24-ur"
+   ],
+   "reading": [
+    "u19-ro"
+   ],
+   "reading_borderline_flipped": [
+    "u19-ro",
+    "u24-ur"
+   ]
+  },
+  "residualized_vs_pooled": {
+   "pattern": [
+    "u17-ur"
+   ],
+   "reading": [],
+   "reading_borderline_flipped": []
+  }
+ },
+ "utility_drop_pp_residualized_vs_pooled": {
+  "pattern": -2.0833333333333335,
+  "reading": 0.0
+ },
+ "disagreements": [
+  {
+   "id": "u20-ro",
+   "arms": [
+    "unsteered",
+    "pooled",
+    "residualized"
+   ],
+   "pattern": "incorrect",
+   "reading": "correct",
+   "reason": "names the gas as 'oksijen (O2)'; the patterns cover 'oxygen' and the Urdu-script word only"
+  },
+  {
+   "id": "u17-ur",
+   "arms": [
+    "unsteered",
+    "pooled"
+   ],
+   "pattern": "incorrect",
+   "reading": "correct",
+   "reason": "names the ocean with the Urdu-script transliteration of 'Pacific'; the patterns cover the Urdu name 'Bahr-ul-Kahil' and Latin 'pacific'. The residualized answer adds '(Pacific Ocean)' and is matched"
+  },
+  {
+   "id": "u24-ur",
+   "arms": [
+    "pooled",
+    "residualized"
+   ],
+   "pattern": "correct",
+   "reading": "incorrect",
+   "borderline": true,
+   "reason": "states 13 as the number of things in a dozen, then says a dozen is usually used to count 12 things; the pattern matched the later 12. The unsteered answer also states 13 and is scored incorrect"
+  }
+ ]
+}

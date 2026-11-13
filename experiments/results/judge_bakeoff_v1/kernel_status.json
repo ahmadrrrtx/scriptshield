@@ -1,0 +1,57 @@
+{
+ "kernel": "judge_bakeoff",
+ "code_commit": "ab443719ae86976667e2d7cc2ff506514f03b838",
+ "payload_sha256": "30d9e467b5e8f81f6cfd569ef53e367710d20443901d7ee9de4abf30a69324ac",
+ "started_utc": "2026-11-12T11:58:38Z",
+ "pip_safetune_rc": 0,
+ "import_rc": 0,
+ "import_check": "safetune 0.1.8 torch 2.11.0+cu130 transformers 5.20.2\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nI0000 00:00:1794484802.314114     152 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.",
+ "input_files": [
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/__output__.json",
+   68147
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/__results__.html",
+   390965
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/__script__.ipynb",
+   88094
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/__script__.py",
+   86770
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/custom.css",
+   0
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/kernel_status.json",
+   1686
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/fire_smoke/baseline_generations.jsonl",
+   32690
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/fire_smoke/generations.jsonl",
+   35394
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/fire_smoke/smoke_report.json",
+   45818
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/fire_smoke/vectors/residualized_smoke.manifest.json",
+   1294
+  ],
+  [
+   "/kaggle/input/notebooks/ahmadrrrtx/scriptshield-fire-smoke/fire_smoke/vectors/residualized_smoke.npz",
+   16654
+  ]
+ ],
+ "elapsed_seconds": 389.9,
+ "entry_rc": 0
+}

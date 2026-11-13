@@ -1,0 +1,30 @@
+{
+  "python": "3.13.16",
+  "platform": "Linux-6.1.158+-x86_64-with-glibc2.41",
+  "cpu_count": 2,
+  "disk_free_gb": 21.4,
+  "meminfo_mb": "1982 total, 1443 available",
+  "git": "git version 2.47.3",
+  "gpu": "none",
+  "packages": {
+    "numpy": "2.3.5",
+    "scipy": "1.17.1",
+    "pandas": "2.2.3",
+    "pyyaml": "6.0.3",
+    "jsonschema": "4.26.0",
+    "pytest": "9.0.3",
+    "requests": "2.33.0",
+    "curatorkit": "0.1.21",
+    "auditkit": "1.1.3",
+    "safetune": null,
+    "torch": null,
+    "transformers": null,
+    "kaggle": "2.2.5"
+  },
+  "credentials_present_not_shown": {
+    "hf_read": true,
+    "kaggle": true
+  },
+  "spend_usd_authorized": 0.0,
+  "spend_usd_to_date": 0.0
+}

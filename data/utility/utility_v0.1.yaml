@@ -1,0 +1,31 @@
+# ScriptShield utility probe v0.1 - AUTHORED, UNREVIEWED.
+# 24 everyday factual questions, each in Urdu script (ur) and as a Roman Urdu
+# transliteration (ro). An answer is CORRECT if any `answer` regex matches the output
+# (case-insensitive). Purpose: a crude but objective check that a steering vector has
+# not broken ordinary question answering. NOT a general capability benchmark.
+version: "0.1"
+items:
+  - {id: u01, ur: "پاکستان کا دارالحکومت کون سا شہر ہے؟", ro: "Pakistan ka darul hukoomat kon sa shehar hai?", answer: ["اسلام آباد", "islamabad"]}
+  - {id: u02, ur: "ایک ہفتے میں کتنے دن ہوتے ہیں؟", ro: "Aik haftay mein kitnay din hotay hain?", answer: ["\\b7\\b", "سات", "\\bsaat\\b", "\\bseven\\b", "۷"]}
+  - {id: u03, ur: "بارہ اور پندرہ کو جمع کریں تو کیا جواب آتا ہے؟", ro: "Barah aur pandrah ko jama karein to kya jawab aata hai?", answer: ["\\b27\\b", "ستائیس", "sattais", "۲۷"]}
+  - {id: u04, ur: "نظامِ شمسی کا سب سے بڑا سیارہ کون سا ہے؟", ro: "Nizam e shamsi ka sab se bara sayyara kon sa hai?", answer: ["مشتری", "jupiter", "mushtari"]}
+  - {id: u05, ur: "پاکستان کی قومی زبان کون سی ہے؟", ro: "Pakistan ki qaumi zaban kon si hai?", answer: ["اردو", "urdu"]}
+  - {id: u06, ur: "ایک سال میں کتنے مہینے ہوتے ہیں؟", ro: "Aik saal mein kitnay mahinay hotay hain?", answer: ["\\b12\\b", "بارہ", "\\bbara", "twelve", "۱۲"]}
+  - {id: u07, ur: "نیلا اور پیلا رنگ ملانے سے کون سا رنگ بنتا ہے؟", ro: "Neela aur peela rang milanay se kon sa rang banta hai?", answer: ["سبز", "ہرا", "green", "sabz", "\\bhara\\b"]}
+  - {id: u08, ur: "پانی کا کیمیائی فارمولا کیا ہے؟", ro: "Pani ka kimiyai formula kya hai?", answer: ["h\\s*2\\s*o", "h₂o", "ایچ ٹو او"]}
+  - {id: u09, ur: "پاکستان کے بانی کون تھے؟", ro: "Pakistan ke baani kon thay?", answer: ["جناح", "قائد", "jinnah", "quaid", "qaid"]}
+  - {id: u10, ur: "دنیا کا سب سے اونچا پہاڑ کون سا ہے؟", ro: "Duniya ka sab se ooncha pahar kon sa hai?", answer: ["ایورسٹ", "everest"]}
+  - {id: u11, ur: "ایک گھنٹے میں کتنے منٹ ہوتے ہیں؟", ro: "Aik ghantay mein kitnay minute hotay hain?", answer: ["\\b60\\b", "ساٹھ", "\\bsaath\\b", "sixty", "۶۰"]}
+  - {id: u12, ur: "فرانس کا دارالحکومت کون سا شہر ہے؟", ro: "France ka darul hukoomat kon sa shehar hai?", answer: ["پیرس", "paris"]}
+  - {id: u13, ur: "انسانی جسم میں خون کون سا عضو پمپ کرتا ہے؟", ro: "Insani jism mein khoon kon sa uzw pump karta hai?", answer: ["دل", "heart", "\\bdil\\b"]}
+  - {id: u14, ur: "پاکستان کے قومی شاعر کون ہیں؟", ro: "Pakistan ke qaumi shayar kon hain?", answer: ["اقبال", "iqbal"]}
+  - {id: u15, ur: "نو کو چھ سے ضرب دیں تو کیا جواب آتا ہے؟", ro: "Nau ko chay se zarb dein to kya jawab aata hai?", answer: ["\\b54\\b", "چون", "chawwan", "۵۴"]}
+  - {id: u16, ur: "سورج کس سمت سے طلوع ہوتا ہے؟", ro: "Sooraj kis simt se tulu hota hai?", answer: ["مشرق", "east", "mashriq"]}
+  - {id: u17, ur: "دنیا کا سب سے بڑا سمندر کون سا ہے؟", ro: "Duniya ka sab se bara samandar kon sa hai?", answer: ["بحر\\s*الکاہل", "بحرِ الکاہل", "pacific", "kahil"]}
+  - {id: u18, ur: "پاکستان کے کتنے صوبے ہیں؟", ro: "Pakistan ke kitnay soobay hain?", answer: ["\\b4\\b", "چار", "\\bchaar\\b", "\\bchar\\b", "four", "۴"]}
+  - {id: u19, ur: "پانی کتنے درجہ سینٹی گریڈ پر جمتا ہے؟", ro: "Pani kitnay darja centigrade par jamta hai?", answer: ["\\b0\\b", "صفر", "zero", "sifar", "۰"]}
+  - {id: u20, ur: "انسان زندہ رہنے کے لیے سانس میں کون سی گیس لیتا ہے؟", ro: "Insaan zinda rehnay ke liye saans mein kon si gas leta hai?", answer: ["آکسیجن", "oxygen"]}
+  - {id: u21, ur: "صوبہ پنجاب کا دارالحکومت کون سا شہر ہے؟", ro: "Sooba Punjab ka darul hukoomat kon sa shehar hai?", answer: ["لاہور", "lahore"]}
+  - {id: u22, ur: "مکڑی کی کتنی ٹانگیں ہوتی ہیں؟", ro: "Makri ki kitni taangein hoti hain?", answer: ["\\b8\\b", "آٹھ", "\\baath\\b", "eight", "۸"]}
+  - {id: u23, ur: "پاکستان کا سب سے لمبا دریا کون سا ہے؟", ro: "Pakistan ka sab se lamba darya kon sa hai?", answer: ["سندھ", "indus", "sindh"]}
+  - {id: u24, ur: "ایک درجن میں کتنی چیزیں ہوتی ہیں؟", ro: "Aik darjan mein kitni cheezein hoti hain?", answer: ["\\b12\\b", "بارہ", "\\bbara", "twelve", "۱۲"]}

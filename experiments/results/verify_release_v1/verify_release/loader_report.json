@@ -1,0 +1,112 @@
+{
+ "package": "0.2.0",
+ "layer": 18,
+ "alpha": 0.2693938220189354,
+ "scriptshield_imported": false,
+ "layer_modules": {
+  "block_type": "Cohere2DecoderLayer",
+  "leaf_modules": [
+   {
+    "name": "self_attn.q_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.k_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     512,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.v_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     512,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.o_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.gate_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     11008,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.up_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     11008,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.down_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     11008
+    ]
+   },
+   {
+    "name": "mlp.act_fn",
+    "type": "SiLUActivation",
+    "has_bias": false,
+    "weight_shape": null
+   },
+   {
+    "name": "input_layernorm",
+    "type": "Cohere2LayerNorm",
+    "has_bias": false,
+    "weight_shape": [
+     2048
+    ]
+   }
+  ],
+  "any_bias_in_block": false
+ },
+ "verify": {
+  "n": 144,
+  "arms": {
+   "unsteered": {
+    "n": 48,
+    "identical": 48
+   },
+   "pooled": {
+    "n": 48,
+    "identical": 48
+   },
+   "residualized": {
+    "n": 48,
+    "identical": 48
+   }
+  },
+  "mismatches": [],
+  "all_identical": true,
+  "steered_differs_from_unsteered": {
+   "pooled": 24,
+   "residualized": 26
+  }
+ }
+}

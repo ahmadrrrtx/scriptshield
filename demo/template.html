@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScriptShield replay explorer</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1c1d21; --muted: #5d6068; --line: #dcdad2;
+    --accent: #1f5f8b; --refusal: #1b7a4e; --refusal-bg: #e3f3ea; --comply: #a23b2a; --comply-bg: #fbe9e5;
+    --invalid: #7a5b00; --invalid-bg: #fbf1cf; --unknown: #4b4f58; --unknown-bg: #e9e9ec; --ur: #1f5f8b; --ro: #b6562a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15161a; --panel: #1e2026; --ink: #ecebe6; --muted: #a3a6ae; --line: #33363e;
+      --accent: #7fb8e0; --refusal: #7fd3a6; --refusal-bg: #173526; --comply: #f0a091; --comply-bg: #40201a;
+      --invalid: #e6c96a; --invalid-bg: #3a3112; --unknown: #c3c6ce; --unknown-bg: #2c2f37; --ur: #7fb8e0; --ro: #e79a6f; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Naskh Arabic", "Noto Nastaliq Urdu", sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 18px; margin: 34px 0 10px; }
+  p { margin: 6px 0; } .muted { color: var(--muted); } .small { font-size: 13px; }
+  a { color: var(--accent); }
+  .note { border-left: 3px solid var(--accent); background: var(--panel); padding: 10px 14px; margin: 16px 0; border-radius: 0 6px 6px 0; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; font-size: 13px; color: var(--muted); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bar { display: inline-block; height: 9px; border-radius: 2px; vertical-align: middle; margin-right: 6px; min-width: 1px; }
+  .bar.ur { background: var(--ur); } .bar.ro { background: var(--ro); }
+  .barcell { min-width: 150px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: end; margin-bottom: 14px; }
+  label.ctl { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+  select, button { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+  button { cursor: pointer; } button[aria-pressed="true"] { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+  .seg { display: inline-flex; } .seg button { border-radius: 0; margin-left: -1px; }
+  .seg button:first-child { border-radius: 6px 0 0 6px; margin-left: 0; } .seg button:last-child { border-radius: 0 6px 6px 0; }
+  .arms { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 150px repeat(4, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--panel); }
+  .grid > div { padding: 10px 12px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); min-width: 0; }
+  .grid > div:nth-child(5n) { border-right: 0; }
+  .grid .head { font-size: 13px; font-weight: 600; color: var(--muted); background: var(--bg); }
+  .grid .rowhead { font-size: 13px; font-weight: 600; background: var(--bg); }
+  .grid .rowhead span { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .prompt { font-size: 15px; } .resp { font-size: 14px; margin-top: 6px; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .chip { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 10px; margin: 0 4px 2px 0; }
+  .chip.refusal { color: var(--refusal); background: var(--refusal-bg); } .chip.compliance { color: var(--comply); background: var(--comply-bg); }
+  .chip.invalid { color: var(--invalid); background: var(--invalid-bg); } .chip.unknown { color: var(--unknown); background: var(--unknown-bg); }
+  .chip.flag { color: var(--comply); background: transparent; border: 1px solid var(--comply); }
+  .chip.script { color: var(--muted); background: transparent; border: 1px solid var(--line); font-weight: 500; }
+  .withheld { color: var(--muted); font-style: italic; font-size: 13px; margin-top: 6px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .grid > div { border-right: 0; } .grid .head.form { display: none; }
+    .grid .cell::before { content: attr(data-form); display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 4px; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>ScriptShield replay explorer</h1>
+  <p class="muted">Tiny Aya Fire on matched Urdu-script and Roman-Urdu prompts · recorded outputs of the frozen test run · no model runs on this page</p>
+  <div class="note small" id="note"></div>
+  <p class="small" id="links"></p>
+
+  <h2>Refusal rates on the frozen test set</h2>
+  <p class="muted small">Share of prompts the automatic judge labelled as refused, by arm. Harmful prompts should be refused; benign prompts should not. Every attempted prompt is in the denominator.</p>
+  <div class="panel" style="overflow-x:auto"><table id="summary"></table></div>
+  <div id="readingwrap" hidden>
+    <h2>What the Roman-Urdu responses actually say</h2>
+    <p class="muted small">The judge above is unreliable in Roman Urdu: it calls echoes, loops and off-topic text refusals. These counts come from reading every Roman-Urdu response of four arms (by an LLM agent, not a human). 36 prompts per cell.</p>
+    <div class="panel" style="overflow-x:auto"><table id="reading"></table></div>
+  </div>
+
+  <h2>Read the recorded responses</h2>
+  <div class="controls">
+    <label class="ctl">Intent family<select id="family"></select></label>
+    <label class="ctl">Prompt type<span class="seg" id="label"></span></label>
+    <label class="ctl">Arms shown<span class="arms" id="arms"></span></label>
+  </div>
+  <p class="muted small" id="meaning"></p>
+  <div class="grid" id="grid"></div>
+  <p class="muted small" style="margin-top:18px" id="armdesc"></p>
+</main>
+<script type="application/json" id="data">/*__DATA__*/</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('data').textContent);
+  var FORMS = [['ur', 'Urdu script'], ['ro', 'Roman Urdu'], ['cm', 'Code-mixed'], ['en', 'English']];
+  var state = { family: 0, label: 'harmful', arms: { unsteered: true, pooled: true, residualized: true } };
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function pct(x) { return x == null ? 'n/a' : (100 * x).toFixed(1) + ' %'; }
+
+  document.getElementById('note').textContent = D.note + ' Steered arms use layer ' + D.layer + ' at strength \u03c1 = ' + D.rho + '. Labels come from a model judge, not from human annotators.';
+
+  if (D.links) {
+    var LK = document.getElementById('links');
+    D.links.forEach(function (l, i) {
+      if (i) LK.appendChild(document.createTextNode(' \u00b7 '));
+      var a = el('a', null, l[0]);
+      a.setAttribute('href', l[1]); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener');
+      LK.appendChild(a);
+    });
+  }
+
+  // ---- summary table
+  var T = document.getElementById('summary');
+  var hr = el('tr');
+  ['Arm', 'Harmful \u00b7 Urdu script', 'Harmful \u00b7 Roman Urdu', 'Benign \u00b7 Urdu script', 'Benign \u00b7 Roman Urdu', 'Utility'].forEach(function (h) { hr.appendChild(el('th', null, h)); });
+  T.appendChild(hr);
+  D.arms.forEach(function (arm) {
+    var s = D.summary[arm]; if (!s) return;
+    var tr = el('tr'); tr.appendChild(el('td', null, arm));
+    [['ur/harmful', 'ur'], ['ro/harmful', 'ro'], ['ur/benign', 'ur'], ['ro/benign', 'ro']].forEach(function (c) {
+      var v = s.cells[c[0]].refusal_rate, td = el('td', 'barcell');
+      var b = el('span', 'bar ' + c[1]); b.style.width = Math.round(v * 90) + 'px';
+      td.appendChild(b); td.appendChild(document.createTextNode(pct(v))); tr.appendChild(td);
+    });
+    tr.appendChild(el('td', 'num', pct(s.utility_accuracy)));
+    T.appendChild(tr);
+  });
+
+  // ---- reading table
+  if (D.reading) {
+    document.getElementById('readingwrap').hidden = false;
+    var R = document.getElementById('reading'), rh = el('tr');
+    ['Arm', 'Harmful: refused', 'answered', 'non-responsive', 'judge said refused', 'Benign: refused', 'answered', 'non-responsive', 'judge said refused'].forEach(function (h) { rh.appendChild(el('th', null, h)); });
+    R.appendChild(rh);
+    Object.keys(D.reading).forEach(function (arm) {
+      var v = D.reading[arm], tr = el('tr'); tr.appendChild(el('td', null, arm));
+      [v.harmful.R, v.harmful.A, v.harmful.N, v.harmful.guard_refusal_pre_registered, v.benign.R, v.benign.A, v.benign.N, v.benign.guard_refusal_pre_registered].forEach(function (x) { tr.appendChild(el('td', 'num', String(x))); });
+      R.appendChild(tr);
+    });
+  }
+
+  // ---- controls
+  var famSel = document.getElementById('family');
+  D.families.forEach(function (f, i) { var o = el('option', null, f.family_id + '  \u00b7  ' + (f.harm_group || '')); o.value = i; famSel.appendChild(o); });
+  famSel.addEventListener('change', function () { state.family = +famSel.value; render(); });
+  var seg = document.getElementById('label');
+  ['harmful', 'benign'].forEach(function (lab) {
+    var b = el('button', null, lab); b.type = 'button'; b.setAttribute('aria-pressed', String(lab === state.label));
+    b.addEventListener('click', function () { state.label = lab; Array.prototype.forEach.call(seg.children, function (x) { x.setAttribute('aria-pressed', String(x === b)); }); render(); });
+    seg.appendChild(b);
+  });
+  var armBox = document.getElementById('arms');
+  D.arms.forEach(function (arm) {
+    var l = el('label'), c = el('input'); c.type = 'checkbox'; c.checked = !!state.arms[arm];
+    c.addEventListener('change', function () { state.arms[arm] = c.checked; render(); });
+    l.appendChild(c); l.appendChild(document.createTextNode(' ' + arm)); armBox.appendChild(l);
+  });
+  document.getElementById('armdesc').textContent = Object.keys(D.arm_descriptions).map(function (k) { return k + ': ' + D.arm_descriptions[k]; }).join('  \u2022  ');
+
+  function render() {
+    var f = D.families[state.family], G = document.getElementById('grid');
+    G.textContent = '';
+    document.getElementById('meaning').textContent = 'Intended meaning: ' + ((f.meaning || {})[state.label] || '');
+    G.appendChild(el('div', 'head', ''));
+    FORMS.forEach(function (fm) { G.appendChild(el('div', 'head form', fm[1])); });
+    var rh = el('div', 'rowhead', 'Prompt'); G.appendChild(rh);
+    FORMS.forEach(function (fm) {
+      var c = el('div', 'cell'); c.setAttribute('data-form', fm[1]);
+      var p = el('div', 'prompt', ((f.prompts[state.label] || {})[fm[0]]) || ''); p.dir = 'auto'; c.appendChild(p); G.appendChild(c);
+    });
+    D.arms.forEach(function (arm) {
+      if (!state.arms[arm]) return;
+      var r = el('div', 'rowhead', arm); G.appendChild(r);
+      FORMS.forEach(function (fm) {
+        var c = el('div', 'cell'); c.setAttribute('data-form', fm[1]);
+        var x = (((f.responses[arm] || {})[state.label]) || {})[fm[0]];
+        if (!x) { c.appendChild(el('span', 'muted small', 'not run')); G.appendChild(c); return; }
+        c.appendChild(el('span', 'chip ' + x.label, 'judge: ' + x.label));
+        if (x.read_as) c.appendChild(el('span', 'chip script', 'read as: ' + ({R: 'refusal', A: 'answer', N: 'non-responsive'}[x.read_as] || x.read_as)));
+        if (x.echo) c.appendChild(el('span', 'chip script', 'echo of the prompt'));
+        if (x.unsafe) c.appendChild(el('span', 'chip flag', 'judge flag: unsafe'));
+        if (x.script && x.script !== 'empty') c.appendChild(el('span', 'chip script', 'answered in ' + x.script));
+        if (x.withheld) c.appendChild(el('div', 'withheld', 'Response text withheld (' + x.chars + ' characters).'));
+        else { var t = el('div', 'resp', x.text); t.dir = 'auto'; c.appendChild(t); }
+        G.appendChild(c);
+      });
+    });
+  }
+  render();
+})();
+</script>
+</body>
+</html>

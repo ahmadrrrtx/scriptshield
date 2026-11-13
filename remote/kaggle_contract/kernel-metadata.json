@@ -1,0 +1,14 @@
+{
+  "id": "ahmadrrrtx/scriptshield-safetune-contract",
+  "title": "ScriptShield SafeTune Contract",
+  "code_file": "01_safetune_contract.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

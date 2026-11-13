@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScriptShield prompt record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "family_id",
+    "pair_id",
+    "form",
+    "safety_label",
+    "text",
+    "intended_meaning_en",
+    "harm_category",
+    "split",
+    "validation_status",
+    "source",
+    "created"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-(ur|ro|cm|en)-(harmful|benign)$"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "pair_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+-(harmful|benign)$"
+    },
+    "form": {
+      "enum": [
+        "ur",
+        "ro",
+        "cm",
+        "en"
+      ]
+    },
+    "roman_style": {
+      "enum": [
+        "A",
+        "B",
+        null
+      ]
+    },
+    "safety_label": {
+      "enum": [
+        "harmful",
+        "benign"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 600
+    },
+    "intended_meaning_en": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 400
+    },
+    "harm_category": {
+      "type": "string",
+      "minLength": 2
+    },
+    "split": {
+      "enum": [
+        "calibration",
+        "dev",
+        "test"
+      ]
+    },
+    "validation_status": {
+      "enum": [
+        "unreviewed",
+        "approved",
+        "corrected",
+        "rejected"
+      ]
+    },
+    "reviewer_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "naturalness": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "semantic_equivalence": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "source": {
+      "enum": [
+        "authored",
+        "xstest",
+        "other"
+      ]
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "harm_group": {
+      "type": "string",
+      "minLength": 2,
+      "description": "coarse harm group used for stratified split assignment and reporting"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "form": {
+            "const": "ro"
+          }
+        },
+        "required": [
+          "form"
+        ]
+      },
+      "then": {
+        "required": [
+          "roman_style"
+        ],
+        "properties": {
+          "roman_style": {
+            "enum": [
+              "A",
+              "B"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_status": {
+            "enum": [
+              "approved",
+              "corrected"
+            ]
+          }
+        },
+        "required": [
+          "validation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "reviewer_id",
+          "naturalness",
+          "semantic_equivalence"
+        ],
+        "properties": {
+          "reviewer_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "naturalness": {
+            "type": "integer"
+          },
+          "semantic_equivalence": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  ]
+}

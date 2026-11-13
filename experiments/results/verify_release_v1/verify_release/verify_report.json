@@ -1,0 +1,133 @@
+{
+ "kind": "release_verification",
+ "started_utc": "2026-11-12T15:53:44Z",
+ "code_commit": "93ecd6fa7abd57f258050ad1ffd03ac98b7fcc03",
+ "hardware": "Tesla T4, Tesla T4",
+ "torch": "2.11.0+cu130",
+ "base_model": {
+  "dir": "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1",
+  "weights_match_hf_lfs_sha256": true
+ },
+ "package_files": {
+  "README.md": "23121fdc058a38660cbbeea4c3ebe1113a877631df312ed4694b80b649ed82ed",
+  "SHA256SUMS": "d9815627de8783370beb26f35e12d751ab45bd39ffed08e025dc9e95ee0a4de9",
+  "apply_steering.py": "5b5e011b4a5d4976c7e4e7e0fc6d6997a34915eaf20ecf81fd258a0beee2f9c3",
+  "expected_outputs.jsonl": "216b04ecfe9b8e7d029c4f27a16adaa56137c0e1c478529868cf57e94b1a4fb4",
+  "frozen_selection.json": "d49e17eedb5ae636e2733f0f1318526a726e28ba2ff293e019e5faff6b60ccf8",
+  "manifest.json": "f81ac10ee1d6b983f18db413186fe83b9387ddea07d13e621844a40b5229c400",
+  "steering_vectors.npz": "49bfdf61601aebd9e5cc974a3c8382ead4b415e68a1f9a353a3a3145179e2784"
+ },
+ "loader_rc": 0,
+ "verify": {
+  "n": 144,
+  "arms": {
+   "unsteered": {
+    "n": 48,
+    "identical": 48
+   },
+   "pooled": {
+    "n": 48,
+    "identical": 48
+   },
+   "residualized": {
+    "n": 48,
+    "identical": 48
+   }
+  },
+  "mismatches": [],
+  "all_identical": true,
+  "steered_differs_from_unsteered": {
+   "pooled": 24,
+   "residualized": 26
+  }
+ },
+ "layer_modules": {
+  "block_type": "Cohere2DecoderLayer",
+  "leaf_modules": [
+   {
+    "name": "self_attn.q_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.k_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     512,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.v_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     512,
+     2048
+    ]
+   },
+   {
+    "name": "self_attn.o_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.gate_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     11008,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.up_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     11008,
+     2048
+    ]
+   },
+   {
+    "name": "mlp.down_proj",
+    "type": "Linear",
+    "has_bias": false,
+    "weight_shape": [
+     2048,
+     11008
+    ]
+   },
+   {
+    "name": "mlp.act_fn",
+    "type": "SiLUActivation",
+    "has_bias": false,
+    "weight_shape": null
+   },
+   {
+    "name": "input_layernorm",
+    "type": "Cohere2LayerNorm",
+    "has_bias": false,
+    "weight_shape": [
+     2048
+    ]
+   }
+  ],
+  "any_bias_in_block": false
+ },
+ "loader_imported_scriptshield": false,
+ "layer": 18,
+ "alpha": 0.2693938220189354,
+ "steering_visibly_applied": true,
+ "passed": true,
+ "elapsed_seconds": 149.0
+}

@@ -1,0 +1,41 @@
+{
+  "dataset_version": "0.2.0",
+  "n_records": 576,
+  "sha256": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+  "path": "data/corpus/scriptshield_v0.2.0.jsonl",
+  "source": "authored (non-operational intent statements)",
+  "human_validation": "NONE — all records unreviewed",
+  "by_split": {
+    "calibration": 192,
+    "test": 288,
+    "dev": 96
+  },
+  "by_form_label": {
+    "ur/harmful": 72,
+    "ur/benign": 72,
+    "ro/harmful": 72,
+    "ro/benign": 72,
+    "cm/harmful": 72,
+    "cm/benign": 72,
+    "en/harmful": 72,
+    "en/benign": 72
+  },
+  "n_families": 72,
+  "split_rule": {
+    "seed": 20261112,
+    "pattern": "TCTDTCTTCTDTCTTCTDTC",
+    "method": "pilot families keep their split; new families are shuffled within harm group (seeded) and dealt through the pattern C=calibration D=dev T=test"
+  },
+  "by_harm_group": {
+    "cyber": 9,
+    "dishonesty": 6,
+    "fraud": 12,
+    "harassment": 8,
+    "misinfo": 6,
+    "other": 4,
+    "physical": 12,
+    "privacy": 9,
+    "trade": 6
+  },
+  "purpose": "Matched Urdu-script / Roman-Urdu / code-mixed / English intent families for script-robustness evaluation. Small: 72 families. See the dataset card for limits."
+}

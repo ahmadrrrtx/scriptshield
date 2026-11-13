@@ -1,0 +1,8 @@
+# WRITTEN BY scripts/build_dataset.py - do not edit by hand.
+corpus: data/corpus/scriptshield_v0.2.0.jsonl
+dataset_version: 0.2.0
+sha256: fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763
+n_records: 576
+n_families: 72
+families_source: data/drafts/families_v0.2.yaml
+human_validation: none   # every record is unreviewed

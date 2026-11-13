@@ -1,0 +1,34 @@
+{
+ "note": "Public locations of the ScriptShield artifacts. Read by the generators (article, cards) so that every link is written once.",
+ "author": {
+  "name": "Muhammad Ahmad",
+  "hf": "ahmadrrrtx",
+  "github": "ahmadrrrtx"
+ },
+ "hackathon": "https://hackathon.lexsi.ai/",
+ "github_repo": "https://github.com/ahmadrrrtx/scriptshield",
+ "article_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/hf_article.md",
+ "results_in_repo": "https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/RESULTS.md",
+ "hf_model": {
+  "repo_id": "ahmadrrrtx/scriptshield-tiny-aya-fire-steering",
+  "url": "https://huggingface.co/ahmadrrrtx/scriptshield-tiny-aya-fire-steering"
+ },
+ "hf_dataset": {
+  "repo_id": "ahmadrrrtx/scriptshield-urdu-roman",
+  "url": "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman"
+ },
+ "hf_space": {
+  "repo_id": "ahmadrrrtx/scriptshield-replay",
+  "url": "https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay"
+ },
+ "hf_collection_models": {
+  "slug": "ahmadrrrtx/scriptshield-model-artifacts-6af6d396e9d50507cbd53417",
+  "url": "https://huggingface.co/collections/ahmadrrrtx/scriptshield-model-artifacts-6af6d396e9d50507cbd53417",
+  "title": "ScriptShield — model artifacts"
+ },
+ "hf_collection_data": {
+  "slug": "ahmadrrrtx/scriptshield-data-artifacts-6af6d396c3a2600f7241d2d9",
+  "url": "https://huggingface.co/collections/ahmadrrrtx/scriptshield-data-artifacts-6af6d396c3a2600f7241d2d9",
+  "title": "ScriptShield — data artifacts"
+ }
+}

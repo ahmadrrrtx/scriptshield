@@ -1,0 +1,53 @@
+{
+ "kernel": "verify_release",
+ "code_commit": "93ecd6fa7abd57f258050ad1ffd03ac98b7fcc03",
+ "payload_sha256": "8053a2adf4289b7b5838d1d705a9fb9798e3095239e0a2b087d235715c6b5f31",
+ "started_utc": "2026-11-12T15:52:09Z",
+ "pip_safetune_rc": 0,
+ "import_rc": 0,
+ "import_check": "safetune 0.1.8 torch 2.11.0+cu130 transformers 5.20.2\nWARNING: All log messages before absl::InitializeLog() is called are written to STDERR\nI0000 00:00:1794498814.516766     152 cudart_stub.cc:31] Could not find cuda drivers on your machine, GPU will not be used.",
+ "input_files": [
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/.gitattributes",
+   1630
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/README.md",
+   7622
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/config.json",
+   1963
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/generation_config.json",
+   132
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/model-00001-of-00002.safetensors",
+   4992396352
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/model-00002-of-00002.safetensors",
+   1706092176
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/model.safetensors.index.json",
+   23597
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/special_tokens_map.json",
+   567
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/tokenizer.json",
+   21376527
+  ],
+  [
+   "/kaggle/input/models/cohere-labs/tiny-aya/transformers/fire/1/tokenizer_config.json",
+   8170
+  ]
+ ],
+ "elapsed_seconds": 242.8,
+ "entry_rc": 0
+}

@@ -1,0 +1,28 @@
+.PHONY: test validate analysis report article package scan recompute snapshot all
+J ?= experiments/results/judge_test_merged/judged.jsonl
+M ?= experiments/results/fire_test_v2/fire_test/margins.jsonl
+V ?= experiments/results/verify_release_v1/verify_release/verify_report.json
+
+test:
+	python3 -m pytest -q
+validate:
+	python3 scripts/validate_dataset.py && python3 scripts/validate_config.py && python3 scripts/scan_secrets.py
+analysis:
+	for j in guard rubric; do python3 scripts/analyze.py test --judged $(J) --margins $(M) --out experiments/results/test_analysis --judge $$j; \
+	  python3 scripts/analyze.py test --judged $(J) --margins $(M) --out experiments/results/test_analysis --judge $$j --echo-corrected; done
+	python3 scripts/adjudication.py report --judged $(J)
+	python3 scripts/utility_reading.py --judged $(J)
+	python3 scripts/analyze_devx.py
+report:
+	python3 scripts/make_report.py
+article: report
+	python3 scripts/make_article.py
+package: report
+	python3 scripts/package_artifacts.py --test-run experiments/results/fire_test_v2/fire_test --judged $(J) --verify-report $(V)
+scan:
+	python3 scripts/scan_secrets.py && python3 scripts/scan_repo_for_responses.py && python3 scripts/scan_repo_for_responses.py --dir release
+recompute:
+	python3 scripts/recompute_from_public.py --logs release/hf_dataset/eval_logs
+snapshot:
+	bash scripts/make_public_snapshot.sh
+all: test validate report article package scan recompute

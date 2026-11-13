@@ -1,0 +1,13 @@
+candidate_layer_fracs: [0.4, 0.5, 0.6, 0.7]   # dev-only selection
+alphas: [1.0, 2.0, 4.0, 8.0]                  # dev-only selection
+pool_method: last_token
+padding_side: left
+subspace_rank: 1                              # primary: ur - ro
+norm_match: true
+forms_in_pooled: [ur, ro]                     # NEVER cm or en (approved Change 1)
+seed: 20261103
+sign_convention: harmful_minus_benign
+application: h_plus_alpha_v
+controls: [norm_matched_pooled, random_subspace_same_rank, shuffled_labels, sign_flip, unsteered]
+arms_fire: [unsteered, english_only, urdu_only, roman_only, pooled, residualized]
+arms_global: [unsteered, pooled, residualized]

@@ -1,0 +1,46 @@
+# secrets — never commit
+.env
+.env.*
+*.token
+kaggle.json
+*secret*
+!src/scriptshield/**/secret_scan.py
+.cache/
+# models / weights / caches
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.ckpt
+hf_cache/
+models_cache/
+checkpoints/
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+# big data / outputs
+data/raw/
+data/generated/
+artifacts/vectors/*.npz
+artifacts/vectors/*.pt
+experiments/results/**/*.jsonl
+*.log
+
+# generated kernels (rebuilt from a commit by scripts/build_kaggle_kernel.py)
+remote/_build/
+
+# arrays derived from the model weights are published on the Hub (steering vectors), not in git; manifests are kept
+experiments/results/**/*.npz
+
+# unredacted model responses (D-030): never in git. The labels file (keys + R/A/N) is tracked.
+experiments/adjudication/*.jsonl
+experiments/adjudication/*_PRIVATE.json
+release/
+
+!experiments/adjudication/test_ro_rows.jsonl

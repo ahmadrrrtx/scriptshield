@@ -1,0 +1,57 @@
+{
+  "stage": "preflight",
+  "utc": "2026-11-03T01:01:39Z",
+  "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+  "python_ok_for_safetune": true,
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "torch": "2.11.0+cu130",
+  "cuda_available": true,
+  "gpu_names": [
+    "Tesla T4",
+    "Tesla T4"
+  ],
+  "vram_gb": [
+    15.64,
+    15.64
+  ],
+  "nvidia_smi": "Tesla T4, 15360 MiB, 580.178.04\nTesla T4, 15360 MiB, 580.178.04",
+  "working_disk_free_gb": 20.94,
+  "cpu_count": 4,
+  "hf_secret_present": false,
+  "hf_secret_error": "ConnectionError",
+  "hf_reachable": 200,
+  "fire_config_status": 401,
+  "global_config_status": 401,
+  "gate_open": false,
+  "installs": {
+    "AuditKIT": {
+      "pip_returncode": 0,
+      "sha": "71316da345784ff220d5ed59337441a59ab31526",
+      "import_ok": true,
+      "version": "1.1.3"
+    },
+    "CuratorKIT": {
+      "pip_returncode": 0,
+      "sha": "dd9e835301fcddc74a37501d9e207a5a060d209f",
+      "import_ok": true,
+      "version": "0.1.21"
+    },
+    "SafeTune": {
+      "pip_returncode": 0,
+      "sha": "26f59e6d1bdcacafe5f2be3b8d982fb214369659",
+      "import_ok": true,
+      "version": "0.1.8"
+    }
+  },
+  "symbols": {
+    "curatorkit.Curator": "OK",
+    "auditkit.evaluate": "OK",
+    "safetune.caa": "OK"
+  },
+  "verdict": {
+    "gpu_usable": true,
+    "python_ok": true,
+    "gate_open": false,
+    "all_symbols_ok": true
+  }
+}

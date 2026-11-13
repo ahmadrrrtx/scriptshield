@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this dataset, these steering vectors or this code, please cite it as below."
+title: "ScriptShield: script-dependent refusal in Tiny Aya Fire for Urdu and Roman Urdu"
+type: software
+authors:
+  - family-names: "Ahmad"
+    given-names: "Muhammad"
+    alias: "ahmadrrrtx"
+date-released: 2026-11-13
+year: 2026
+license: MIT
+repository-code: "https://github.com/ahmadrrrtx/scriptshield"
+url: "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman"
+keywords:
+  - ai-safety
+  - refusal
+  - activation-steering
+  - urdu
+  - roman-urdu
+  - multilingual
+abstract: >-
+  A pre-registered study of whether the refusal behaviour of Cohere Labs' Tiny Aya Fire depends on the
+  script Urdu is written in, with a matched Urdu-script / Roman-Urdu prompt set, steering vectors, and a
+  negative result on script-residualized activation steering.

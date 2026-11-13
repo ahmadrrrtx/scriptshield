@@ -1,0 +1,65 @@
+{
+  "artifact_type": "scriptshield_steering_vector",
+  "format": "npz",
+  "orientation": "harmful_minus_benign",
+  "application": "h <- h + alpha * v  (SafeTune CAAModel semantics)",
+  "layers": [
+    1800,
+    1801,
+    1802,
+    1803,
+    1804,
+    1805
+  ],
+  "hidden_dim": 2048,
+  "sha256_vectors": "07dffc771808b9c4efc890e7133de229198df51caf34dcf4841165a4226ec272",
+  "norms": {
+    "1800": 16.7456759283363,
+    "1801": 16.745675928336297,
+    "1802": 16.7456759283363,
+    "1803": 16.7456759283363,
+    "1804": 16.7456759283363,
+    "1805": 16.7456759283363
+  },
+  "license_note": "Derived from Cohere Labs Tiny Aya weights: CC-BY-NC + AUP. Non-commercial. Base weights are NOT included.",
+  "key_scheme": "layer*100 + arm_index",
+  "arm_index": [
+    "pooled",
+    "residualized",
+    "random_subspace",
+    "orthogonal_null",
+    "ur_only",
+    "ro_only"
+  ],
+  "base_model": "CohereLabs/tiny-aya-fire",
+  "base_model_revision": "73500c80fcb6c8bea3e830c21d5d2920249a0e1a",
+  "dataset_version": "0.2.0",
+  "dataset_sha256": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+  "code_commit": "1618d1e719515d62102418663209444e21715908",
+  "inference_dtype": "float16",
+  "stage": "test",
+  "geometry": {
+    "18": {
+      "norm_pooled": 16.7456759283363,
+      "mean_activation_norm": 45.11181640625,
+      "alpha_per_unit_rho": 2.693938220189354,
+      "residualization": {
+        "rank": 1,
+        "removed_frac": 0.09117933299223935,
+        "alignment": 0.09117933299223976,
+        "degenerate": false,
+        "norm_before": 16.7456759283363,
+        "norm_after": 16.745675928336297
+      },
+      "random_subspace_removed_frac": 0.019897987818650285,
+      "cos_to_pooled": {
+        "pooled": 1.0,
+        "residualized": 0.9958344888760836,
+        "random_subspace": 0.9998020154414421,
+        "orthogonal_null": 3.8008094601110935e-17,
+        "ur_only": 0.9843667705274792,
+        "ro_only": 0.9300613652004712
+      }
+    }
+  }
+}

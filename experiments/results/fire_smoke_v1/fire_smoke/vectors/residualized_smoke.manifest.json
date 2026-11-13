@@ -1,0 +1,35 @@
+{
+  "artifact_type": "scriptshield_steering_vector",
+  "format": "npz",
+  "orientation": "harmful_minus_benign",
+  "application": "h <- h + alpha * v  (SafeTune CAAModel semantics)",
+  "layers": [
+    14
+  ],
+  "hidden_dim": 2048,
+  "sha256_vectors": "8b156cff708da4087b8a5df4751327a91fe5e25b53447f46d86026c8e1febf77",
+  "norms": {
+    "14": 7.852514139552465
+  },
+  "license_note": "Derived from Cohere Labs Tiny Aya weights: CC-BY-NC + AUP. Non-commercial. Base weights are NOT included.",
+  "base_model": "CohereLabs/tiny-aya-fire",
+  "base_model_revision": "73500c80fcb6c8bea3e830c21d5d2920249a0e1a",
+  "weights_source": "cohere-labs/tiny-aya/transformers/fire/1",
+  "safetune_sha": "26f59e6d1bdcacafe5f2be3b8d982fb214369659",
+  "layer_index": 14,
+  "alpha_used_in_smoke": 4.0,
+  "inference_dtype": "float16",
+  "dataset_version": "0.1.1-pilot",
+  "dataset_sha256": "a7307b6be8afe1a9a2d5378187bfa899f89111ee6c8c7639a045bb71549d2ace",
+  "code_commit": "ef07144a10e81c8aaa54e0d01d1b277df2879713",
+  "residualization": {
+    "rank": 1,
+    "removed_frac": 0.05867675610471093,
+    "alignment": 0.058676756104711354,
+    "degenerate": false,
+    "norm_before": 7.852514132835586,
+    "norm_after": 7.852514132835587
+  },
+  "is_smoke_artifact": true,
+  "not_a_validated_safety_artifact": true
+}

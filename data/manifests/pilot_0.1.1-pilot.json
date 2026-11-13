@@ -1,0 +1,25 @@
+{
+  "dataset_version": "0.1.1-pilot",
+  "n_records": 96,
+  "sha256": "a7307b6be8afe1a9a2d5378187bfa899f89111ee6c8c7639a045bb71549d2ace",
+  "path": "data/drafts/pilot_v0.1.1.jsonl",
+  "source": "authored (non-operational intent statements)",
+  "human_validation": "NONE — all records unreviewed",
+  "by_split": {
+    "calibration": 48,
+    "dev": 24,
+    "test": 24
+  },
+  "by_form_label": {
+    "ur/harmful": 12,
+    "ur/benign": 12,
+    "ro/harmful": 12,
+    "ro/benign": 12,
+    "cm/harmful": 12,
+    "cm/benign": 12,
+    "en/harmful": 12,
+    "en/benign": 12
+  },
+  "n_families": 12,
+  "purpose": "PIPELINE VALIDATION ONLY — not powered for hypothesis testing"
+}

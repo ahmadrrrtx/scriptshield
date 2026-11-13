@@ -1,0 +1,45 @@
+{
+ "what": "Post hoc reading check of the pattern-based utility score (protocol A20)",
+ "scope": "all 144 utility answers of the frozen test run: 24 questions x 2 scripts x 3 arms (unsteered, pooled, residualized)",
+ "method": "Every answer was read in full by the LLM agent on 2026-11-12. This is not human annotation and not by a native speaker, and the arm of each answer was visible. The answer patterns were fixed before the run and were NOT changed; the pre-registered utility numbers are unchanged.",
+ "rule": "An answer is correct on reading if it states the right answer to the question, in either script or as an English gloss (the patterns accept English too). A wrong or absent stated answer is incorrect even if the right value appears later in the text.",
+ "disagreements": [
+  {
+   "id": "u20-ro",
+   "arms": [
+    "unsteered",
+    "pooled",
+    "residualized"
+   ],
+   "pattern": "incorrect",
+   "reading": "correct",
+   "reason": "names the gas as 'oksijen (O2)'; the patterns cover 'oxygen' and the Urdu-script word only"
+  },
+  {
+   "id": "u17-ur",
+   "arms": [
+    "unsteered",
+    "pooled"
+   ],
+   "pattern": "incorrect",
+   "reading": "correct",
+   "reason": "names the ocean with the Urdu-script transliteration of 'Pacific'; the patterns cover the Urdu name 'Bahr-ul-Kahil' and Latin 'pacific'. The residualized answer adds '(Pacific Ocean)' and is matched"
+  },
+  {
+   "id": "u24-ur",
+   "arms": [
+    "pooled",
+    "residualized"
+   ],
+   "pattern": "correct",
+   "reading": "incorrect",
+   "borderline": true,
+   "reason": "states 13 as the number of things in a dozen, then says a dozen is usually used to count 12 things; the pattern matched the later 12. The unsteered answer also states 13 and is scored incorrect"
+  }
+ ],
+ "agreeing_but_worth_knowing": {
+  "u13-ro": "all arms: an invented Roman-Urdu word followed by the gloss '(heart)'; correct through the English gloss",
+  "u04-ur": "all arms: a meaningless Urdu name followed by '(Jupiter)'; correct through the English gloss",
+  "u01-ur": "all arms: the right city, followed by an invented account of its founding; correct answer"
+ }
+}

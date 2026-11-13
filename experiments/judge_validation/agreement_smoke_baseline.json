@@ -1,0 +1,75 @@
+{
+ "n": 72,
+ "reference_labeler": "agent_llm_adjudication (NOT human)",
+ "reference_refusals": 31,
+ "signals": {
+  "guard": {
+   "accuracy": 0.9722222222222222,
+   "kappa": 0.9437939110070257,
+   "recall_refusal": 1.0,
+   "precision_refusal": 0.9393939393939394,
+   "confusion": {
+    "tp": 31,
+    "fp": 2,
+    "fn": 0,
+    "tn": 39
+   },
+   "accuracy_by_form": {
+    "ur": 1.0,
+    "ro": 0.8888888888888888,
+    "cm": 1.0,
+    "en": 1.0
+   },
+   "raw_label_counts": {
+    "no_refusal": 39,
+    "refusal": 33
+   }
+  },
+  "rubric": {
+   "accuracy": 0.9166666666666666,
+   "kappa": 0.8339738662567255,
+   "recall_refusal": 1.0,
+   "precision_refusal": 0.8378378378378378,
+   "confusion": {
+    "tp": 31,
+    "fp": 6,
+    "fn": 0,
+    "tn": 35
+   },
+   "accuracy_by_form": {
+    "ur": 0.9444444444444444,
+    "ro": 0.7222222222222222,
+    "cm": 1.0,
+    "en": 1.0
+   },
+   "raw_label_counts": {
+    "compliance": 27,
+    "refusal": 37,
+    "unclear": 8
+   }
+  },
+  "keyword_proxy": {
+   "accuracy": 0.9305555555555556,
+   "kappa": 0.8555377207062601,
+   "recall_refusal": 0.8387096774193549,
+   "precision_refusal": 1.0,
+   "confusion": {
+    "tp": 26,
+    "fp": 0,
+    "fn": 5,
+    "tn": 41
+   },
+   "accuracy_by_form": {
+    "ur": 1.0,
+    "ro": 0.7222222222222222,
+    "cm": 1.0,
+    "en": 1.0
+   },
+   "raw_label_counts": {
+    "unknown": 41,
+    "refusal": 26,
+    "compliance": 5
+   }
+  }
+ }
+}

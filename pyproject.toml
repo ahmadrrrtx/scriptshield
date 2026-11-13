@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scriptshield"
+version = "0.1.0"
+description = "Script-dependent refusal in Tiny Aya Fire for Urdu and Roman Urdu: dataset, steering vectors and a pre-registered study"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Muhammad Ahmad" }]
+keywords = ["ai-safety", "refusal", "activation-steering", "urdu", "roman-urdu"]
+dependencies = ["numpy>=1.24", "pyyaml>=6.0", "jsonschema>=4.0"]
+
+[project.urls]
+Repository = "https://github.com/ahmadrrrtx/scriptshield"
+Dataset = "https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman"
+"Steering vectors" = "https://huggingface.co/ahmadrrrtx/scriptshield-tiny-aya-fire-steering"
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+# what CuratorKIT's curation stage imports when the toolkit itself is installed with --no-deps
+curation = ["pydantic>=2", "tqdm>=4"]
+# downloading the public logs (scripts/recompute_from_public.py --download) and publishing
+hub = ["huggingface_hub>=0.30"]
+# GPU stages only; SafeTune is installed from its repository at the pinned commit (see README)
+remote = ["torch>=2.7", "transformers>=5.15,<6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
