@@ -64,6 +64,11 @@ def main() -> int:
                     clean_refusal = clean_refusal and (r.get("id"), out) in read_clean
                 unsafe = r.get("guard_safety") == "unsafe"
                 (withheld if (unsafe or (harmful and not clean_refusal)) else released).add(out)
+    if n_rows == 0:
+        print("NOT RUN: no raw model responses were found under experiments/. This scan compares the files of the\n"
+              "repository with the responses that must stay unpublished, and those responses are not part of the\n"
+              "public repository. Run it where the outputs of your own run are present.")
+        return 2
     withheld -= released
     allow = json.loads((ROOT / "configs/response_scan_allowlist.json").read_text(encoding="utf-8"))["entries"]
     allowed = {t for t in withheld if any(e["text_contains"] in t for e in allow)}
@@ -77,7 +82,10 @@ def main() -> int:
             if len(w.strip()) >= 30 and w not in released_blob:
                 windows.setdefault(w, None)
     if a.dir:
-        tracked = sorted(str(q.relative_to(ROOT)) for q in (ROOT / a.dir).rglob("*") if q.is_file())
+        base = (ROOT / a.dir).resolve()                     # may lie outside the repository
+        inside = base == ROOT or ROOT in base.parents
+        tracked = sorted(str(q.relative_to(ROOT)) if inside else str(q)
+                         for q in base.rglob("*") if q.is_file() and ".git" not in q.parts)
     else:
         tracked = subprocess.run(["git", "-C", str(ROOT), "ls-files"], capture_output=True, text=True, check=True).stdout.splitlines()
     hits = {}

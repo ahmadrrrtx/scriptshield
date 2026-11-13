@@ -5,6 +5,7 @@
 kaggle.json
 *secret*
 !src/scriptshield/**/secret_scan.py
+!scripts/scan_secrets.py
 .cache/
 # models / weights / caches
 *.safetensors

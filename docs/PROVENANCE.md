@@ -1,6 +1,6 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `cda2079149c3375e82cf097f5d28bce2a7271365`.
+This public repository is a snapshot of a private working repository at commit `356c20a0f5fa8ba5d73799707d4ea7578f6df540`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
@@ -21,6 +21,7 @@ are not needed to follow the study.
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+356c20a0f5fa8ba5d73799707d4ea7578f6df540  2026-11-13T09:53:09Z  Track the secret scanner, make the Makefile work in a fresh clone, D-036
 cda2079149c3375e82cf097f5d28bce2a7271365  2026-11-13T09:43:23Z  Docs: link the Lexsi toolkits and the models in the README and the write-up
 f97bcbd65d5028d18a836b484db3b3e876114823  2026-11-13T09:38:14Z  Internal: record publication (2026-11-13), submission form values, updated blockers and status board
 c27d92b5ded8fc77762d758f9d3b1b15048b3ae3  2026-11-13T09:31:51Z  Publish script: remove the Hub's template files from a new static Space

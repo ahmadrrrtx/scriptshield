@@ -680,3 +680,32 @@ the choices on condition that they follow the rules.
   the nine sections of the kickoff checklist so that it can also be posted as a Hugging Face Article.
 - **Disclosure.** The article, the cards and the README state that the project was built with an AI
   assistant and what it did.
+
+## D-036 — Publication, and three tooling faults found by cloning the public repository (2026-11-13)
+
+**Published** on 2026-11-13 between 09:30 and 09:36 UTC: the three Hugging Face repositories and the two
+collections (created private, every remote file compared with the local one, then made public) and the
+GitHub repository. Checked afterwards without credentials: all public and un-gated; remote files identical
+to the release folders; a fresh clone passes the unit tests; `recompute_from_public.py --download`
+reproduces the pre-registered analysis from the public logs.
+
+**Found** by working in that fresh clone rather than in the working directory:
+
+1. `scripts/scan_secrets.py` was never tracked. The ignore rule `*secret*`, written to keep credentials out
+   of the repository, also matched the scanner's own file name. The Makefile called it in `validate` and
+   `scan`, so both targets failed in a clone. The scanner had always run locally, which is why nothing
+   showed. Missing from the first two public commits.
+2. `scripts/scan_repo_for_responses.py` printed "clean" in a clone. It compares files with the raw responses
+   that must stay unpublished; a clone has none, so there was nothing to compare and the message was empty
+   of meaning.
+3. `make recompute` expected a local release folder that exists only after packaging.
+
+**Fixed.** The scanner is tracked (explicit exception in `.gitignore`), takes its secret store from
+`SCRIPTSHIELD_SECRET_DIR` or `~/.cache/scriptshield-secrets`, and also recognises GitHub and Kaggle tokens.
+The response scan exits with `NOT RUN` when it has no responses to compare, and accepts a folder outside
+the repository. `make recompute` downloads the public logs when there is no local release.
+`tests/test_repo_tooling.py` checks that every script the Makefile names exists and is tracked, and that
+no source file is hidden by `.gitignore`.
+
+**Not affected:** any result, any published artifact, any credential. The complete private history up to
+commit `cda2079` was searched for the stored token values and for token shapes: 0 hits in 369 blobs.

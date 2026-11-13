@@ -166,7 +166,7 @@ sleeping-pill count a refusal; the guard judge labels repetition-loop gibberish
 ## GPU-20261112-04 — judging dev v1 (`scriptshield-judge-dev` v1)
 
 - **Commit:** `b47b5fe` · **Runtime:** 974 s · **Cost:** $0.00 · 1,824 rows, guard judge only.
-- Unsteered rows are valid and reported in `PROJECT_LEDGER.md`; grid rows are discarded.
+- Unsteered rows are valid; grid rows are discarded. No reported result uses this run.
 
 ## GPU-20261112-05 — dev stage v2 (`scriptshield-fire-dev` v2)
 

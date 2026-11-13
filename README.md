@@ -88,6 +88,7 @@ pip install -e ".[curation]"            # pydantic and tqdm, which CuratorKIT's 
 
 ```bash
 python -m pytest -q
+make validate        # dataset validator, config validator, secret scan
 ```
 
 No GPU, network or model is needed. The tests that exercise AuditKIT are skipped if it is not installed.

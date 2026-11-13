@@ -1,3 +1,12 @@
+# ScriptShield: common tasks.
+#
+#   In a fresh clone (CPU only, no model):
+#     make test        unit tests
+#     make validate    dataset validator, config validator, secret scan
+#     make recompute   recompute the pre-registered analysis from the public logs (downloads them if needed)
+#
+#   With the raw outputs of a GPU run under experiments/results/ (they are not published, see README):
+#     make analysis report article package scan
 .PHONY: test validate analysis report article package scan recompute snapshot all
 J ?= experiments/results/judge_test_merged/judged.jsonl
 M ?= experiments/results/fire_test_v2/fire_test/margins.jsonl
@@ -22,7 +31,8 @@ package: report
 scan:
 	python3 scripts/scan_secrets.py && python3 scripts/scan_repo_for_responses.py && python3 scripts/scan_repo_for_responses.py --dir release
 recompute:
-	python3 scripts/recompute_from_public.py --logs release/hf_dataset/eval_logs
+	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/recompute_from_public.py --logs release/hf_dataset/eval_logs; \
+	  else python3 scripts/recompute_from_public.py --download; fi
 snapshot:
 	bash scripts/make_public_snapshot.sh
 all: test validate report article package scan recompute
