@@ -2,14 +2,16 @@
 
 **Does a model's safety depend on the script Urdu is typed in?**
 
-Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. ScriptShield asks Cohere Labs' Tiny Aya Fire
+Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. ScriptShield asks Cohere Labs'
+[Tiny Aya Fire](https://huggingface.co/CohereLabs/tiny-aya-fire)
 the same harmful and harmless requests in Urdu script and in Roman Urdu, measures the difference, and tests
 one repair (a refusal-steering vector with the "script direction" removed). The study is pre-registered, the
 repair did not work, and the result that matters most turned out to be about the automatic judge.
 
 Built for the [Lexsi AI Safety and Alignment Hackathon](https://hackathon.lexsi.ai/) (Lexsi Labs × Cohere
-Labs × Hugging Face), Track 2: AI Red Teaming, Safety and Alignment, with Lexsi's **CuratorKIT**,
-**SafeTune** and **AuditKIT**. Solo project by Muhammad Ahmad ([@ahmadrrrtx](https://huggingface.co/ahmadrrrtx)).
+Labs × Hugging Face), Track 2: AI Red Teaming, Safety and Alignment, with Lexsi's
+[CuratorKIT](https://github.com/Lexsi-Labs/CuratorKIT), [SafeTune](https://github.com/Lexsi-Labs/SafeTune) and
+[AuditKIT](https://github.com/Lexsi-Labs/AuditKIT). Solo project by Muhammad Ahmad ([@ahmadrrrtx](https://huggingface.co/ahmadrrrtx)).
 
 | | |
 |---|---|

@@ -53,9 +53,9 @@ Three Lexsi toolkits run as one pipeline, on the real model, end to end:
 
 | Repo (pinned) | Used for | Features used |
 |---|---|---|
-| **CuratorKIT** 0.1.21 | building the dataset | `Curator` / `CuratorConfig` pipeline: ingestion, schema gate, NFC normalisation, exact de-duplication, provenance, `prompt_only` export. Toxicity and quality gates deliberately off (they would delete the harmful half); MinHash de-duplication off (it would merge the matched pairs) |
-| **SafeTune** 0.1.8 | making and applying the steering vectors | `interventions.steer.caa.extract_caa_vectors` for contrastive activation addition; `CAAModel` forward hooks to apply a vector during generation. Our residualization sits between those two calls; SafeTune is neither forked nor patched |
-| **AuditKIT** 1.1.3 | running and logging every generation | `generate` with `CallableModel`, `Sample`, `RunConfig` and the disk cache for every generation of the real runs; `evaluate(model="precomputed")` with a `FunctionScorer` in the offline smoke pipeline. Aggregation and significance tests are ours |
+| [**CuratorKIT**](https://github.com/Lexsi-Labs/CuratorKIT) 0.1.21 | building the dataset | `Curator` / `CuratorConfig` pipeline: ingestion, schema gate, NFC normalisation, exact de-duplication, provenance, `prompt_only` export. Toxicity and quality gates deliberately off (they would delete the harmful half); MinHash de-duplication off (it would merge the matched pairs) |
+| [**SafeTune**](https://github.com/Lexsi-Labs/SafeTune) 0.1.8 | making and applying the steering vectors | `interventions.steer.caa.extract_caa_vectors` for contrastive activation addition; `CAAModel` forward hooks to apply a vector during generation. Our residualization sits between those two calls; SafeTune is neither forked nor patched |
+| [**AuditKIT**](https://github.com/Lexsi-Labs/AuditKIT) 1.1.3 | running and logging every generation | `generate` with `CallableModel`, `Sample`, `RunConfig` and the disk cache for every generation of the real runs; `evaluate(model="precomputed")` with a `FunctionScorer` in the offline smoke pipeline. Aggregation and significance tests are ours |
 
 **Pipeline.** CuratorKIT validates and exports the corpus → SafeTune extracts the vectors and applies them
 during generation → AuditKIT runs and logs every generation → two open judge models label the responses →
@@ -81,9 +81,9 @@ repository:
 
 | Model | Role | Licence |
 |---|---|---|
-| `CohereLabs/tiny-aya-fire` @ `{{REVISION_SHORT}}` | model under study (one of the seven permitted models) | CC-BY-NC 4.0 + Cohere Labs Acceptable Use Policy |
-| `Qwen/Qwen3Guard-Gen-4B` | primary judge of the responses | Apache-2.0 |
-| `Qwen/Qwen2.5-7B-Instruct` | second judge (pre-declared sensitivity analysis) | Apache-2.0 |
+| [`CohereLabs/tiny-aya-fire`](https://huggingface.co/CohereLabs/tiny-aya-fire) @ `{{REVISION_SHORT}}` | model under study (one of the seven permitted models) | CC-BY-NC 4.0 + Cohere Labs Acceptable Use Policy |
+| [`Qwen/Qwen3Guard-Gen-4B`](https://huggingface.co/Qwen/Qwen3Guard-Gen-4B) | primary judge of the responses | Apache-2.0 |
+| [`Qwen/Qwen2.5-7B-Instruct`](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct) | second judge (pre-declared sensitivity analysis) | Apache-2.0 |
 
 **Why Tiny Aya Fire.** It is a permitted dense Cohere open-weights model (3.35 B parameters, 36 layers) with
 documented South Asian language coverage, and it fits on a free Kaggle T4, so the whole study cost $0. The
