@@ -142,6 +142,7 @@
     <div class="ctl">Written forms<span class="checks" id="forms"></span></div>
   </div>
   <p class="small" id="meaning"></p>
+  <p class="small muted" id="review-line"></p>
   <div class="gridwrap"><div class="grid" id="grid"></div></div>
   <details><summary>What each arm is</summary><ul class="clean" id="armdesc"></ul></details>
 
@@ -186,6 +187,25 @@
     return m[1] + ' \u00d7 10' + (m[2] === '-' ? '\u207b' : '') + m[3].split('').map(function (d) { return sup[d]; }).join('');
   }
   function armName(a) { return ARM[a] || a; }
+  // What the author's review says about the prompt pair that is shown. The replies always belong to the original
+  // wording: a corrected sentence has not been run through the model.
+  function reviewLine(f, label) {
+    var r = (f.review || {})[label];
+    if (!r) return 'Author review of this prompt pair: not reviewed yet.';
+    var parts = [];
+    if (r.ur != null) parts.push('Urdu ' + r.ur + ' of 5');
+    if (r.ro != null) parts.push('Roman Urdu ' + r.ro + ' of 5');
+    if (r.same) parts.push('same meaning in both scripts: ' + r.same);
+    if (r.label) parts.push('label right: ' + r.label);
+    var t = 'Author review of this prompt pair (one participant reviewer): ' + parts.join(', ') + '.';
+    if (r.correction) t += (r.status === 'corrected'
+      ? ' He ' + (r.correction === 'replacement' ? 'replaced this request' : 'corrected the wording') +
+        ' (his text is in the review revision of the dataset and has not been run through the model)'
+      : ' He asked for ' + (r.correction === 'replacement' ? 'this request to be replaced' : 'a change of wording')) +
+      '; the request shown and the replies below are the original, which is what the model was given.';
+    if (f.review.pair === 'no') t += ' He judged the harmful and the harmless request of this family not comparable as a pair.';
+    return t;
+  }
   // Why a reply is not shown. The reasons are the values of `withheld_reason` in the published log.
   var WHY = {
     flagged_unsafe_by_judge: 'the automatic judge flagged it as unsafe',
@@ -281,6 +301,7 @@
     G.style.gridTemplateColumns = '128px minmax(210px, 1.1fr) repeat(' + arms.length + ', minmax(220px, 1fr))';
     G.style.minWidth = (128 + 210 + 220 * arms.length) + 'px';
     $('meaning').textContent = 'What is asked: ' + ((f.meaning || {})[state.label] || '');
+    $('review-line').textContent = reviewLine(f, state.label);
     G.appendChild(el('div', 'head', 'Written form'));
     G.appendChild(el('div', 'head', 'Request as the model saw it'));
     arms.forEach(function (arm) { var h = el('div', 'head', armName(arm)); h.appendChild(el('span', null, 'recorded reply')); G.appendChild(h); });
@@ -320,7 +341,7 @@
   ['Small sample: ' + h1.n + ' test families. The script gap is far outside the noise; differences of a few requests between steering arms are not.',
    'One model (Tiny Aya Fire), one deterministic run, one Roman-Urdu spelling convention, 64-token replies, single-turn, non-adversarial requests.',
    'Automated judge: only ' + Math.round(100 * S.judge.precision) + '% of the Roman-Urdu replies it called refusals were refusals on reading. That reading was done by an LLM agent, not by people.',
-   'Language review: the prompts were drafted with an LLM. ' + S.review.reviewed + ' of ' + S.review.total + ' prompt pairs have been reviewed so far by the author (participant review, not expert validation). Unreviewed prompts may contain unnatural phrasing.',
+   'Language review: the prompts were drafted with an LLM. ' + S.review.reviewed + ' of ' + S.review.total + ' prompt pairs have been reviewed so far by the author, a native Urdu / Roman Urdu speaker (one participant reviewer, not expert validation). Unreviewed prompts may contain unnatural phrasing.',
    'Failed hypothesis: script-residualized steering did not beat ordinary steering (same outcome on ' + S.h3.same + ' of ' + S.h3.n + ' harmful prompts), and a placebo vector did almost as well. The vectors are a research artifact, not a safety feature.',
    'A Roman-Urdu non-refusal is usually not a harmful answer: most are garbled replies or repetitions of the question.'
   ].forEach(function (t) { $('limit-list').appendChild(el('li', null, t)); });

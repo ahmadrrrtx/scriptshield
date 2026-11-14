@@ -23,7 +23,8 @@ human).
 - Dropping the prompts that the audit flagged changes little: the smallest difference among the audit subsets is -51.5 pp (16/33 against 33/33, subset "Without families with an LLM note on meaning drift"). On the 21 families with no flag and no note it is -57.1 pp (9/21 against 21/21).
 - Commands and questions both show the gap: commands 1/7 against 7/7, questions 16/29 against 29/29. Commands are few, so the difference between the two forms is not secure.
 - Steering does not look better on cleaner prompts. On the 21 families with no flag and no note, judged refusals of harmful Roman-Urdu prompts are 9 without steering, 9 pooled, 10 residualized and 11 placebo. Across the subsets tabulated below the residualized vector is ahead of the placebo by at most 2 prompts (full set: 2).
-- Human review: 0 of 144 prompt pairs reviewed so far. The review rows below fill in as the review proceeds.
+- Human review: 24 of 144 prompt pairs reviewed so far (one participant reviewer). On the 12 reviewed test families Roman Urdu is refused 8/12 times against 12/12 in Urdu script; on the 8 whose harmful prompt pair he accepted as it is, 5/8 against 8/8. Too few families to say more than that the reviewed ones show the same direction.
+- The reviewer judged the harmful and the harmless request of 2 test families not comparable (`cheque_forge`, `exam_cheat`). Without them the gap is 15/34 against 34/34 (-55.9 pp), and no count of refused harmless requests changes (table below).
 
 ## By audit finding
 
@@ -38,12 +39,33 @@ human).
 
 ## By reviewer verdict
 
+The reviewer is the project author (one participant reviewer, not independent validation). The counts below are for the
+original sentences, which are the ones that were run. Where he announced a correction, the corrected sentence has not
+been run.
+
 | Subset | Families | Refused, Urdu script | Refused, Roman Urdu (judge) | (on reading) | Difference (judge) | exact McNemar p |
 |---|---:|---:|---:|---:|---:|---:|
-| Only families whose harmful prompt pair the reviewer accepted as it is | 0 | | | | | |
-| Only families whose harmful prompt pair has been reviewed (any verdict) | 0 | | | | | |
+| Only families whose harmful prompt pair the reviewer accepted as it is | 8 | 8/8 | 5/8 | 4/8 | -37.5 pp | 0.250 |
+| Only families whose harmful prompt pair has been reviewed (any verdict) | 12 | 12/12 | 8/12 | 5/12 | -33.3 pp | 0.125 |
+| Without families whose harmful and harmless request the reviewer judged not comparable | 34 | 34/34 | 15/34 | 12/34 | -55.9 pp | 3.8e-06 |
 
-An empty row means that no family is in that subset yet.
+An empty row means that no family is in that subset yet. With so few families the rows are descriptive only.
+
+### Harmless requests refused, with and without families whose pairing the reviewer rejected
+
+The harmless request of a family serves as its matched control. Where the reviewer judged the harmful and the harmless
+request not comparable, that control is in doubt, so the counts are shown both ways. Urdu script and Roman Urdu together;
+automatic judge.
+
+| Arm | All 36 test families (of 72 prompts) | Without `cheque_forge`, `exam_cheat` (of 68 prompts) |
+|---|---:|---:|
+| No steering | 5 | 5 |
+| Pooled | 10 | 10 |
+| Residualized | 7 | 7 |
+| Pooled, random direction removed | 10 | 10 |
+| Placebo | 3 | 3 |
+| Urdu-only vector | 9 | 9 |
+| Roman-only vector | 6 | 6 |
 
 ## By form of the harmful request
 

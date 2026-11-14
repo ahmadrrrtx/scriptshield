@@ -100,7 +100,16 @@ def main() -> int:
         fam[r["family_id"]][(r["safety_label"], r["form"])] = r
     notes_doc = json.loads((ROOT / f"data/quality/llm_audit_notes_v{VERSION}.json").read_text(encoding="utf-8"))
     status_path = ROOT / "data/reviewer_pack/review_status.json"
-    human = json.loads(status_path.read_text(encoding="utf-8"))["rows"] if status_path.exists() else {}
+    review = json.loads(status_path.read_text(encoding="utf-8")) if status_path.exists() else {}
+    human = review.get("rows", {})
+    pair_verdicts = review.get("pair_verdicts", {})
+
+    def human_detail(row_id: str) -> dict | None:
+        r = human.get(row_id)
+        if not r:
+            return None
+        return {k: r[k] for k in ("ur", "ro", "same", "label", "alt", "correction_kind", "pending_fields", "review_date", "review_batch",
+                                  "maintainer_fields") if k in r}
 
     # ---------------------------------------------------------------- per family
     out: dict = {}
@@ -122,7 +131,9 @@ def main() -> int:
         out[f] = {"family_id": f, "split": g[("harmful", "ur")]["split"], "harm_group": g[("harmful", "ur")]["harm_group"],
                   "speech_act": sa, "pair_form": pair_form(sa["harmful"], sa["benign"]), "automatic_flags": flags,
                   "llm_notes": notes_doc["notes"].get(f, []),
-                  "human_review": {lab: human.get(f"{f}-{lab}", {}).get("status", "unreviewed") for lab in ("harmful", "benign")}}
+                  "human_review": {lab: human.get(f"{f}-{lab}", {}).get("status", "unreviewed") for lab in ("harmful", "benign")},
+                  "human_review_detail": {"harmful": human_detail(f"{f}-harmful"), "benign": human_detail(f"{f}-benign"),
+                                          "pair_comparable": pair_verdicts.get(f)}}
 
     # ---------------------------------------------------------------- corpus level
     sa_counts = {lab: collections.Counter(v["speech_act"][lab]["kind"] for v in out.values()) for lab in ("harmful", "benign")}
@@ -183,8 +194,9 @@ def main() -> int:
     A(f"_[`data/quality/family_audit_v{VERSION}.json`](../data/quality/family_audit_v{VERSION}.json)._")
     A("")
     A("This audit looks at all 72 intent families of the published corpus. It does not change any prompt: the")
-    A("published version stays as it is, and corrections go into a new version only after the human reviewer")
-    A("has approved them ([`data/reviewer_pack/`](../data/reviewer_pack/)).")
+    A("published version stays as it is. What the human reviewer says is recorded in")
+    A("[`data/reviewer_pack/`](../data/reviewer_pack/), and corrected sentences go into a separate review revision")
+    A("([`data/revisions/`](../data/revisions/README.md)) that keeps the original text.")
     A("")
     A("## 1. How to read the findings")
     A("")
@@ -197,8 +209,15 @@ def main() -> int:
     A("| **Needs human review** | Cannot be settled without a speaker of Urdu: naturalness, register, meaning | review pack |")
     A("| **Human-confirmed** | The reviewer checked it | `data/reviewer_pack/review_status.json` |")
     A("")
-    A(f"**Human review so far: {n_rev} of {2 * len(out)} prompt pairs reviewed.** "
-      + ("No finding below is human-confirmed yet." if n_rev == 0 else f"Status counts: {hr}."))
+    reviewed_fams = [f for f, v in out.items() if v["human_review"]["harmful"] != "unreviewed" and v["human_review"]["benign"] != "unreviewed"]
+    words = {"accepted": "accepted as they are", "corrected": "corrected", "correction_pending": "to be corrected (text not yet received)",
+             "rejected": "rejected", "uncertain": "uncertain", "unable_to_judge": "not judged"}
+    A(f"**Human review so far: {n_rev} of {2 * len(out)} prompt pairs reviewed ({len(reviewed_fams)} of {len(out)} families).** "
+      + ("No finding below is human-confirmed yet." if n_rev == 0 else
+         "One reviewer, the project author, a native Urdu / Roman Urdu speaker: a participant review, not an independent expert panel, "
+         "not a professional translation certification, not a consensus of several reviewers. Result: "
+         + ", ".join(f"{hr[k]} {words[k]}" for k in words if hr.get(k)) + ". Details in section 9. "
+         "Everything else in this audit is still not human-confirmed."))
     A("")
     A("## 2. Summary")
     A("")
@@ -223,6 +242,14 @@ def main() -> int:
     A(f"| 8 | English reference and Urdu wording differ slightly | LLM suggestion, needs human review | {summary['llm_note_counts'].get('meaning_drift', 0)} notes | "
       "Not the script gap; touches the English row only |")
     A(f"| 9 | Exact duplicates among the 576 prompt texts | Confirmed (automatic) | {n_duplicates} | No |")
+    pair_no = sorted(f for f in reviewed_fams if out[f]["human_review_detail"]["pair_comparable"] == "no")
+    with_corr = [(f, lab) for f in reviewed_fams for lab in ("harmful", "benign") if (out[f]["human_review_detail"][lab] or {}).get("correction_kind")]
+    if n_rev:
+        A(f"| 10 | The reviewer wants some prompt pairs changed (the wording, or the request itself) | Human-confirmed | {len(with_corr)} of {n_rev} reviewed prompt pairs | "
+          "Not known until the corrected sentences have been run. The reported numbers belong to the original sentences |")
+        A(f"| 11 | The harmful and the harmless request of a family do not fit together as a pair | Human-confirmed | {len(pair_no)} of {len(reviewed_fams)} reviewed families | "
+          "Not the script gap, which compares a harmful request with itself in two scripts. It weakens the harmless request as a matched control; "
+          "see the robustness checks |")
     A("")
     A("## 3. Sentence form: commands and questions")
     A("")
@@ -328,7 +355,109 @@ def main() -> int:
     A("formal Urdu words where a person texting would use the English word. Whether the gap is as large for")
     A("colloquial Roman Urdu is not known.")
     A("")
-    A("## 9. All 72 families")
+    A("## 9. Human review so far")
+    A("")
+    if not n_rev:
+        A("No prompt pair has been reviewed yet.")
+        A("")
+    else:
+        dates = sorted({d["review_date"] for f in reviewed_fams for d in (out[f]["human_review_detail"]["harmful"], out[f]["human_review_detail"]["benign"])
+                        if d and d.get("review_date")})
+        A(f"Reviewed: {n_rev} of {2 * len(out)} prompt pairs, in {len(reviewed_fams)} of {len(out)} families "
+          f"({', '.join(str(sum(1 for f in reviewed_fams if out[f]['split'] == sp)) + ' ' + sp for sp in ('test', 'dev', 'calibration'))}). "
+          + (f"Review date: {', '.join(dates)}. " if dates else "")
+          + "Reviewer: the project author, a native Urdu / Roman Urdu speaker. This is one participant-provided review. It is not an")
+        A("independent expert panel, not a professional translation certification and not a consensus of several reviewers.")
+        A("")
+        A("Ratings are 1 to 5 (5 = completely natural). \"Same\" = the Urdu-script and the Roman-Urdu sentence mean the same. \"Label\" = the")
+        A("harmful or harmless label is right. \"2nd spelling\" = the second Roman-Urdu spelling drafted by rule is also natural. \"Pair\" = the")
+        A("harmful and the harmless request fit together as a pair on the same topic.")
+        A("")
+        A("| Batch | Family | Request | Urdu | Roman Urdu | Same | Label | 2nd spelling | Status | Pair |")
+        A("|---|---|---|---:|---:|---|---|---|---|---|")
+        for f in sorted(reviewed_fams, key=lambda x: (out[x]["human_review_detail"]["harmful"].get("review_batch", ""), reviewed_fams.index(x))):
+            for lab, tag in (("harmful", "H"), ("benign", "B")):
+                d = out[f]["human_review_detail"][lab]
+                A(f"| {d.get('review_batch', '')} | `{f}` | {tag} | {d.get('ur', '')} | {d.get('ro', '')} | {d.get('same', '')} | {d.get('label', '')} | "
+                  f"{d.get('alt', '')} | {words[out[f]['human_review'][lab]]} | {out[f]['human_review_detail']['pair_comparable'] or ''} |")
+        A("")
+        details = [out[f]["human_review_detail"][lab] for f in reviewed_fams for lab in ("harmful", "benign")]
+        urs, ros = [d["ur"] for d in details if isinstance(d.get("ur"), int)], [d["ro"] for d in details if isinstance(d.get("ro"), int)]
+        A("**What the reviewer confirmed.**")
+        A("")
+        A(f"- Same meaning in both scripts: {sum(1 for d in details if d.get('same') == 'yes')} of {len(details)} reviewed prompt pairs. "
+          "This is the property the script comparison rests on.")
+        A(f"- Label right: {sum(1 for d in details if d.get('label') == 'yes')} of {len(details)}.")
+        if urs and ros:
+            A(f"- Naturalness: Urdu script {sum(urs) / len(urs):.1f} on average (lowest {min(urs)}), Roman Urdu {sum(ros) / len(ros):.1f} (lowest {min(ros)}).")
+        alts = [d["alt"] for d in details if "alt" in d]
+        if alts:
+            A(f"- Second Roman-Urdu spelling natural: {sum(1 for x in alts if x == 'yes')} of {len(alts)} that he judged. These spellings belong to the "
+              "original sentences; no result uses them yet.")
+        A("")
+        A("**What the reviewer wants changed.**")
+        A("")
+        if with_corr:
+            waiting = [(f, lab) for f, lab in with_corr if out[f]["human_review_detail"][lab].get("pending_fields")]
+            repl = [(f, lab) for f, lab in with_corr if out[f]["human_review_detail"][lab]["correction_kind"] == "replacement"]
+            A(f"- He asked for changes to {len(with_corr)} prompt pairs: "
+              + ", ".join(f"`{f}` {'H' if lab == 'harmful' else 'B'}" + (" (replacement of the request)" if (f, lab) in repl else "") for f, lab in with_corr) + ".")
+            if waiting:
+                A(f"- The corrected text of {len(waiting)} of them has not been received. Nothing was written in its place: the original sentences stand, "
+                  "and the review revision lists these corrections as waiting.")
+            if len(waiting) < len(with_corr):
+                A(f"- The corrected sentences of {len(with_corr) - len(waiting)} of them are recorded in the review revision, next to the originals. "
+                  "They have not been run through a model.")
+            A("- A replacement changes what is asked. It is recorded as a new request, never as a wording fix.")
+            drafted = [(f, lab) for f, lab in with_corr if out[f]["human_review_detail"][lab].get("maintainer_fields")]
+            if drafted:
+                A("- Every changed Urdu and Roman-Urdu sentence is the reviewer's own, character for character. For "
+                  + ", ".join(f"`{f}` {'H' if lab == 'harmful' else 'B'}" for f, lab in drafted)
+                  + " the English-language description that goes with his replacement ("
+                  + " and ".join({"en": "the English sentence", "meaning": "the one-line intended meaning"}[k]
+                                 for f, lab in drafted for k in out[f]["human_review_detail"][lab]["maintainer_fields"])
+                  + ") was written by the maintainer and is marked so in the revision.")
+            by_label = {lab: [(f, x) for f, x in with_corr if x == lab] for lab in ("harmful", "benign")}
+            low = [(f, lab) for f in reviewed_fams for lab in ("harmful", "benign")
+                   if any(isinstance(out[f]["human_review_detail"][lab].get(k), int) and out[f]["human_review_detail"][lab][k] <= 3 for k in ("ur", "ro"))]
+            A(f"- By kind of request: of {len(reviewed_fams)} reviewed harmful requests he asked for a change in {len(by_label['harmful'])} "
+              f"({sum(1 for x in by_label['harmful'] if x in repl)} of them a replacement); of {len(reviewed_fams)} reviewed harmless requests in "
+              f"{len(by_label['benign'])} ({sum(1 for x in by_label['benign'] if x in repl)} of them a replacement). "
+              + (f"Naturalness of 3 or lower: {len(low)} prompt pairs (" + ", ".join(f"`{f}` {'H' if lab == 'harmful' else 'B'}" for f, lab in low)
+                 + f"), {'all' if all(x in with_corr for x in low) else 'not all'} of which he corrected." if low else "No rating of 3 or lower."))
+            A(f"- These rates come from {len(reviewed_fams)} families. They are the only estimate there is for the {len(out) - len(reviewed_fams)} families "
+              "that have not been reviewed, and a rough one.")
+        else:
+            A("- No correction so far.")
+        if pair_no:
+            A(f"- Pairing not comparable: {', '.join('`' + f + '`' for f in pair_no)}. A family with this verdict is left out of every comparison between harmful and "
+              "harmless requests on revised data, also if its harmless request is replaced, until a comparable replacement has been reviewed separately.")
+        A("")
+        batch_notes = {b: v["reviewer_note"] for b, v in sorted(review.get("batches", {}).items()) if v.get("reviewer_note")}
+        if batch_notes:
+            A("**The reviewer's own summary, by batch.**")
+            A("")
+            for b, text in batch_notes.items():
+                A(f"- Batch {b}: \"{text}\"")
+            A("")
+        A("**How this compares with the automatic checks and the LLM notes** (reviewed prompt pairs only).")
+        A("")
+        noted = [(f, lab) for f in reviewed_fams for lab in ("harmful", "benign") if any(n["label"] == lab for n in out[f]["llm_notes"])]
+        flagged = [(f, lab) for f in reviewed_fams for lab in ("harmful", "benign")
+                   if any(x["label"] == lab and x["type"] == "word_differs_between_scripts" for x in out[f]["automatic_flags"])]
+        A(f"- Prompt pairs with an LLM note: {len(noted)}. The reviewer announced a correction for {sum(1 for x in noted if x in with_corr)} of them"
+          f" and for {sum(1 for x in with_corr if x not in noted)} prompt pair(s) without a note.")
+        A(f"- Prompt pairs where the automatic check found a different function word in the two scripts: {len(flagged)}. "
+          f"The reviewer judged the meaning the same in {sum(1 for f, lab in flagged if out[f]['human_review_detail'][lab].get('same') == 'yes')} of them.")
+        forms = collections.Counter((out[f]["pair_form"], out[f]["human_review_detail"]["pair_comparable"]) for f in reviewed_fams)
+        A("- Sentence form of the pair (automatic) against the reviewer's pair verdict: "
+          + "; ".join(f"form {a}, verdict {b or 'none'}: {n}" for (a, b), n in sorted(forms.items(), key=lambda kv: (kv[0][0], str(kv[0][1])))) + ".")
+        A("")
+        A("**What this does and does not establish.** The reviewed families are " + f"{len(reviewed_fams)} of {len(out)}" + "; the other families are still")
+        A("unreviewed, and one reviewer who is also the author is not independent validation. The reported results were computed")
+        A("on the original sentences and stay with dataset version " + VERSION + ". No corrected sentence has been run through a model.")
+        A("")
+    A("## 10. All 72 families")
     A("")
     A("H = harmful request, B = harmless request. \"Auto\" counts automatic flags, \"LLM\" counts reading notes.")
     A("")
@@ -336,16 +465,16 @@ def main() -> int:
     A("|---|---|---|---|---|---|---|---|---|")
     for f, v in out.items():
         A(f"| `{f}` | {v['split']} | {v['harm_group']} | {v['speech_act']['harmful']['label']} | {v['speech_act']['benign']['label']} | {v['pair_form']} | "
-          f"{len(v['automatic_flags'])} | {len(v['llm_notes'])} | {v['human_review']['harmful']} / {v['human_review']['benign']} |")
+          f"{len(v['automatic_flags'])} | {len(v['llm_notes'])} | {v['human_review']['harmful'].replace('_', ' ')} / {v['human_review']['benign'].replace('_', ' ')} |")
     A("")
-    A("## 10. What this audit did not check")
+    A("## 11. What this audit did not check")
     A("")
-    A("- Whether the Urdu is natural, and whether a speaker would phrase a request this way: needs a human.")
+    A("- Whether the Urdu is natural, and whether a speaker would phrase a request this way: needs a human (section 9 for the families reviewed so far).")
     A("- Whether every content word of the Roman-Urdu version matches the Urdu-script version: only nine function words were compared automatically.")
     A("- The Urdu-script text of the calibration and development families was not read by the LLM agent in this pass.")
     A("- The code-mixed and English versions beyond the sentence-type check.")
     A("")
-    A("## 11. Reproduce")
+    A("## 12. Reproduce")
     A("")
     A("```bash")
     A("python3 scripts/audit_dataset.py            # rewrites this file and the JSON")

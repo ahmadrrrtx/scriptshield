@@ -1,13 +1,13 @@
 # Provenance of this repository
 
-This public repository is a snapshot of a private working repository at commit `6621fcfb6dc492029d1401db48bf497ee8274a97`.
+This public repository is a snapshot of a private working repository at commit `870d286eb1655d2ea88eed9a61ba27e9a43e94d4`.
 It was published without the earlier history for one reason. In early commits, two unit-test files
 used a real model response to a harmful prompt as a fixture. The fixture was replaced by a synthetic
 sentence before publication, but the old text would have stayed readable in the history. Publishing a
 snapshot keeps it out of the public record, in line with the rule that no such response is published
 (`DECISIONS.md`, D-030).
 
-The work was done between 2026-11-03 and 2026-11-13. Every original commit is listed below with its hash, time
+The work was done between 2026-11-03 and 2026-11-14. Every original commit is listed below with its hash, time
 and subject. These are the hashes that the run reports under `experiments/` and the published
 artifacts refer to. The order of events is also recorded outside this repository: by the creation times
 of the Kaggle kernel versions that ran each stage (`EXPERIMENT_LOG.md`) and by the commit times of the
@@ -22,6 +22,18 @@ are not needed to follow the study.
 ## Original commits (newest first: hash, author date, subject)
 
 ```
+870d286eb1655d2ea88eed9a61ba27e9a43e94d4  2026-11-14T08:38:22Z  Release 0.2.3: review revisions marked as published; abstract states the review status and the steering result per arm; evidence plan and decision D-040
+4d9ea77f646060f0dd022e0fb18b155dfa9de666  2026-11-13T17:56:11Z  Ledger: checks and fourth private backup after review batch 02
+40341d66192063c32e80a5c7e0254ea3293d02cf  2026-11-13T17:51:23Z  Ledger, blockers: review batch 02; dataset card: what 0.3.0 waits for
+06c4a3926a11cdb71f8ba17f10984e40d35608ab  2026-11-13T17:49:05Z  Review batch 02: ratings, verdicts and the reviewer's corrected sentences imported; review revision 0.3.0-draft.2 (one revision per return); review ledger; audit, robustness, article, card
+67737acc732cf4a2e6a47b65368618bd4d0f54bf  2026-11-13T16:50:25Z  Article: the threat table says that the corrected text has not arrived; ledger: third private backup
+07b1c4d9a04d6cc90e6689f5449a986a067a1e0e  2026-11-13T16:45:39Z  Ledger and blockers: review batch 01, missing corrected sentences, tokens
+c3d868517eaaa9149a411e9faeec99539d59d3b6  2026-11-13T16:45:01Z  Experiment log: dry run of the correction step
+06a924bc0c6e83f41c6285705caef8ee0a5a418c  2026-11-13T16:44:06Z  Review revision: who wrote what; a replaced request and its code-mixed record; dry run of the correction step
+cad8ebf3e11426dd541d66e33e35728d72aa8e33  2026-11-13T16:34:35Z  Dataset card: the review findings are stated once
+06aba66361efba0ca5e8fc033abfe085f0cd3965  2026-11-13T16:32:43Z  Review batch 01: ratings and verdicts imported, review revision 0.3.0-draft.1, frozen-release guard, audit section 9, robustness rows by reviewer verdict
+6a85fb469172a000475a2894067d6168cac6e984  2026-11-13T12:37:52Z  Ledger: publication of the upgrade, faults found after publishing, second private backup; owner's open items
+03c94f4e4a0e4df80a5a26ef3139804dc77ca95f  2026-11-13T12:35:58Z  Private backup script (not part of the public snapshot)
 6621fcfb6dc492029d1401db48bf497ee8274a97  2026-11-13T12:29:49Z  Version 0.2.2: changelog entry for the explorer reasons and the article checks
 128a14c4dc4753854eff0fdd6663127656549d3d  2026-11-13T12:27:09Z  Explorer: each withheld cell names its reason; borderline readings are marked
 a9ed233778fb72489e0a1136476d8a82e8580694  2026-11-13T12:19:20Z  Article: one title everywhere (the Space header), finding as the first bold line; no HTML tags

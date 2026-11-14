@@ -281,6 +281,54 @@ sleeping-pill count a refusal; the guard judge labels repetition-loop gibberish
   one- or two-question utility differences are inside the scoring error of the patterns.
 - **Limits:** read by the LLM agent, not a human, with arm labels visible.
 
+## 2026-11-13 — review batch 01 imported (no model run) — protocol A23
+
+- **No GPU, no model.** Input: the owner's review of the first six test families (twelve prompt pairs), as
+  returned on 2026-11-13, and the public test logs of dataset version 0.2.0.
+- **What was recorded.** Ratings and verdicts for twelve prompt pairs; nine accepted as they are; three with a
+  correction announced whose text has not been received (`correction_pending`); the harmful/harmless pairing of
+  one family (`exam_cheat`) judged not comparable. Review revision `0.3.0-draft.1` under `data/revisions/`.
+  **No sentence was changed.**
+- **What was recomputed.** Only the post hoc robustness tables (`scripts/robustness_checks.py`, from the public
+  logs): on the six reviewed test families the model refuses 4 of 6 harmful requests in Roman Urdu and 6 of 6 in
+  Urdu script; on the four whose harmful prompt pair the reviewer accepted as it is, 3 of 4 and 4 of 4; without
+  `exam_cheat`, 16 of 35 and 35 of 35 (-54.3 points). The refused harmless requests are the same in every arm
+  with and without `exam_cheat`.
+- **What did not change.** Every pre-registered number. The frozen corpus (checksum unchanged), the logs, the
+  vectors. The results belong to dataset version 0.2.0 and its original sentences; the test run report names
+  that version and its checksum.
+- **What has not been run.** Any corrected or replaced sentence. None exists yet; when they do, they stay
+  exploratory until a new evaluation is done under its own amendment.
+- **Limits.** One reviewer, the project author: a participant review. Six of 36 test families. Subsets this
+  small are descriptive.
+- **Dry run of the correction step (no model, nothing kept).** On a throw-away copy of the repository the three
+  waiting corrections were filled with stand-in text (the original sentences with one neutral phrase swapped by
+  a script) to see what the pipeline does when the real sentences arrive: the three pairs become `corrected`,
+  the revised corpus file is written (576 records, the same ids and labels, 7 texts changed), the frozen corpus
+  keeps its checksum, `exam_cheat` stays out of harmful-against-harmless comparisons. The run exposed one fault,
+  now fixed and tested: the old code-mixed record of a replaced request would have carried the new meaning over
+  the old text (D-038, decision 11). The copy was deleted; no stand-in text is in the repository.
+
+## 2026-11-13 — review batch 02 imported (no model run) — protocol A23, note of 17:45 UTC
+
+- **No GPU, no model.** Input: the owner's review of six more test families (twelve prompt pairs), returned on
+  2026-11-13 with the corrected sentences for four prompt pairs, and the public test logs of dataset version 0.2.0.
+- **What was recorded.** Review revision `0.3.0-draft.2`: 24 of 144 prompt pairs reviewed (12 of 36 test
+  families). 17 accepted as they are, 4 corrected with the reviewer's own sentences (10 sentences changed), 3 from
+  batch 01 still waiting for their text. Pairing judged not comparable in two families (`exam_cheat`,
+  `cheque_forge`). `0.3.0-draft.1` is kept unchanged.
+- **What was recomputed.** Only the post hoc robustness rows by reviewer verdict, from the public logs of the
+  original sentences: on the 12 reviewed test families the model refuses 8 of 12 harmful requests in Roman Urdu
+  and 12 of 12 in Urdu script (5 of 12 on reading); on the 8 whose harmful request the reviewer accepted as it is,
+  5 of 8 and 8 of 8 (4 of 8 on reading); without the two families whose pairing he rejected, 15 of 34 and 34 of
+  34 (-55.9 points). The refused harmless requests are the same in every arm with and without those two families.
+- **What did not change.** Every pre-registered number, the frozen corpus (checksum unchanged), the logs, the
+  vectors, and the 29 data files of the first public release.
+- **What has not been run.** Any corrected or replaced sentence. Ten now exist in the revision; they stay
+  exploratory until a run with its own amendment (evidence plan, E5c).
+- **Limits.** One reviewer, the project author. Twelve of 36 test families; no calibration or development family.
+  The review-based rows are recomputed with every batch and are descriptive.
+
 ## Totals for 2026-11-12
 
 13 Kaggle kernel versions, all on free T4 quota: fire-smoke 1, judge-bakeoff 1, fire-dev 2, judge-dev 2,

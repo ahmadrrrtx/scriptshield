@@ -81,6 +81,59 @@ def robustness_fields() -> dict:
     }
 
 
+def review_fields(links: dict) -> dict:
+    """Sentences about the author's review, from the review status, the review revision and the robustness checks."""
+    sys.path.insert(0, str(ROOT / "src"))
+    from scriptshield.artifacts.public_text import review_summary
+    from scriptshield.data.revision import current_revision
+    status = load("data/reviewer_pack/review_status.json")
+    revision = current_revision(ROOT)
+    rs = review_summary(status, revision)
+    rob = load("data/quality/robustness_checks_v0.2.0.json")
+    by = {r["key"]: r for r in rob["subsets"]}
+    rev, ok, acc = by["review:reviewed"], by["review:pair_ok"], by["review:accepted"]
+    harmless = rob["harmless_refusals"]
+    left = harmless["left_out"]
+    moved = max(harmless["all"]["arms"][a] - harmless["pair_ok"]["arms"][a] for a in harmless["all"]["arms"])
+    rows = status.get("rows", {})
+    same = sum(1 for r in rows.values() if r.get("same") == "yes")
+    n_corr = sum(1 for r in rows.values() if r.get("correction_kind"))
+    s = revision["summary"] if revision else None
+    gh = links["github_repo"]
+    if not rs["done"]:
+        para = "No prompt pair has been reviewed yet."
+        threat = "author review pending"
+        pair_note = "Not reviewed yet"
+        alt_note = "A second spelling has been drafted for the test families and waits for review; no result uses it yet"
+    else:
+        para = (f"**What the review has found so far.** {rs['findings']} "
+                + (f"On the {rev['n']} reviewed test families the model refuses {rev['ro']} of {rev['n']} harmful requests in Roman Urdu and "
+                   f"{rev['ur']} of {rev['n']} in Urdu script"
+                   + (f"; on the {acc['n']} whose harmful request he accepted as it is, {acc['ro']} of {acc['n']} and {acc['ur']} of {acc['n']}"
+                      if acc["n"] and acc["n"] != rev["n"] else "")
+                   + ". These counts are for the original sentences; no corrected sentence has been run, and subsets this small only show "
+                     "that the reviewed families point the same way. "
+                   if rev["n"] else "")
+                + f"The review is recorded per prompt pair in the review revision `v{rs['revision_id']}` of the dataset repository "
+                  f"(original and revised sentence, ratings, reviewer, date, reason) and in section 9 of the "
+                  f"[audit]({gh}/blob/main/docs/DATASET_QUALITY_AUDIT.md).")
+        threat = (f"author review in progress: in the prompt pairs reviewed so far the two scripts mean the same in {same} of {rs['done']}"
+                  + ("" if not n_corr else f"; he asked for changes to {n_corr} of them, "
+                     + ("their corrected text has not been received, and every result is for the original sentences"
+                        if s and s["sentences_changed"] == 0 else "and the changed sentences have not been run")))
+        pairs = status.get("pair_verdicts", {})
+        pair_note = (f"The reviewer rejected the pairing in {len(rs['pairs_not_comparable'])} of {len(pairs)} reviewed families"
+                     + (f". Without {'it' if len(left) == 1 else 'them'} the gap is {ok['ro']} of {ok['n']} against {ok['ur']} of {ok['n']}, and "
+                        + ("no count of refused harmless requests changes" if moved == 0 else f"the counts of refused harmless requests change by at most {moved}")
+                        + f" ([robustness checks]({gh}/blob/main/docs/ROBUSTNESS_CHECKS.md))" if left else "")
+                     + ". The calibration families, from which the vectors are computed, are not reviewed yet")
+        alt_note = (f"A second spelling has been drafted for the test families; the reviewer has judged {s['alt_spelling_judged']} of them and found "
+                    f"{s['alt_spelling_yes']} natural. No result uses it yet")
+    return {"REVIEW_DONE": str(rs["done"]), "REVIEW_STATE": rs["state"], "REVIEW_FAMILIES": str(rs["families_done"]),
+            "REVIEW_PARAGRAPH": para, "REVIEW_THREAT": threat, "PAIR_NOTE": pair_note, "ALT_NOTE": alt_note,
+            "REVISION_ID": rs["revision_id"] or "none yet"}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--author", default=None, help="byline; default: name and Hugging Face handle from configs/public_links.json")
@@ -195,8 +248,6 @@ def main() -> int:
     }
     # ---------------------------------------------------------------- additions for the final article
     audit = load("data/quality/family_audit_v0.2.0.json")["summary"]
-    review = load("data/reviewer_pack/review_status.json")
-    n_rev = review["n_rows_total"] - review["counts"]["unreviewed"]
     fig = load("docs/figures/figure_data.json")
     ur_check = load("experiments/adjudication/ur_harmful_unsteered_check.json")
     corpus = {r["id"]: r["text"] for r in (json.loads(x) for x in (ROOT / man["path"]).read_text(encoding="utf-8").splitlines() if x.strip())}
@@ -242,7 +293,7 @@ def main() -> int:
         "ALIGN_L": f"{align:.2f}", "NULL_L": f"{null95:.2f}", "COS_UR_RO": f"{D[L]['cos_v_ur_v_ro']['value']:.2f}",
         "VERIFY_K": str(sum(x["identical"] for x in verify.values())), "VERIFY_N": str(sum(x["n"] for x in verify.values())),
         **robustness_fields(), **response_check_fields(links),
-        "REVIEW_DONE": str(n_rev), "REVIEW_STATE": "pending" if n_rev == 0 else ("complete" if n_rev == review["n_rows_total"] else "in progress"),
+        **review_fields(links),
         "EXAMPLE_EN": corpus["ss-wifi_crack-en-benign"], "EXAMPLE_UR": corpus["ss-wifi_crack-ur-benign"], "EXAMPLE_RO": corpus["ss-wifi_crack-ro-benign"],
         "AUDIT_CMD_H": str(audit["speech_act_counts"]["harmful"].get("command", 0)), "AUDIT_CMD_B": str(audit["speech_act_counts"]["benign"].get("command", 0)),
         "AUDIT_CTX_H": str(audit["context_sentence_counts"]["harmful"]), "AUDIT_CTX_B": str(audit["context_sentence_counts"]["benign"]),

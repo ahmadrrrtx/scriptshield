@@ -26,6 +26,9 @@ from scriptshield.statistics.inference import exact_mcnemar  # noqa: E402
 
 LOG = "eval_logs/test_judged_public.jsonl"
 ARMS = ("unsteered", "pooled", "residualized", "orthogonal_null")
+ALL_ARMS = ("unsteered", "pooled", "residualized", "random_subspace", "orthogonal_null", "ur_only", "ro_only")
+ARM_TITLES = {"unsteered": "No steering", "pooled": "Pooled", "residualized": "Residualized", "random_subspace": "Pooled, random direction removed",
+              "orthogonal_null": "Placebo", "ur_only": "Urdu-only vector", "ro_only": "Roman-only vector"}
 
 
 def load_rows(download: bool, logs: Path | None) -> list[dict]:
@@ -50,6 +53,21 @@ def table(rows: list[dict]) -> dict:
                 "read": None if r.get("adjudicated") is None else int(r["adjudicated"] == "R")}
         out.setdefault(r["family_id"], {}).setdefault(r["arm"], {})[r["form"]] = cell
     return out
+
+
+def benign_table(rows: list[dict]) -> dict:
+    """family -> arm -> form -> 0/1 (judge says refusal) for harmless test prompts in Urdu script and Roman Urdu."""
+    out: dict = {}
+    for r in rows:
+        if r.get("set") == "test" and r["safety_label"] == "benign" and r["form"] in ("ur", "ro"):
+            out.setdefault(r["family_id"], {}).setdefault(r["arm"], {})[r["form"]] = int(r["judge_label"] == "refusal")
+    return out
+
+
+def harmless_refusals(btab: dict, fams: list[str]) -> dict:
+    """Harmless requests refused per arm on the given families: {'prompts': 2 x families, 'arms': {arm: count}}."""
+    return {"families": len(fams), "prompts": 2 * len(fams),
+            "arms": {a: sum(btab[f][a]["ur"] + btab[f][a]["ro"] for f in fams) for a in ALL_ARMS}}
 
 
 def gap(tab: dict, fams: list[str]) -> dict:
@@ -99,6 +117,7 @@ def subsets(audit: dict, review: dict, test: list[str]) -> list[tuple[str, str, 
     accepted = {k.rsplit("-", 1)[0] for k, v in review.get("rows", {}).items()
                 if k.endswith("-harmful") and v.get("status") == "accepted"}
     reviewed = {k.rsplit("-", 1)[0] for k, v in review.get("rows", {}).items() if k.endswith("-harmful") and v.get("status")}
+    pair_no = {f for f, v in review.get("pair_verdicts", {}).items() if v == "no"}
     out = [("all", "All test families (the pre-registered comparison)", test)]
     for g in sorted({fam[f]["harm_group"] for f in test}):
         out.append((f"group:{g}", f"Harm group: {g}", [f for f in test if fam[f]["harm_group"] == g]))
@@ -114,8 +133,47 @@ def subsets(audit: dict, review: dict, test: list[str]) -> list[tuple[str, str, 
         ("audit:clean", "Only families with no automatic flag and no LLM note on the harmful prompt", [f for f in test if not notes(f) and not flags(f)]),
         ("review:accepted", "Only families whose harmful prompt pair the reviewer accepted as it is", [f for f in test if f in accepted]),
         ("review:reviewed", "Only families whose harmful prompt pair has been reviewed (any verdict)", [f for f in test if f in reviewed]),
+        ("review:pair_ok", "Without families whose harmful and harmless request the reviewer judged not comparable", [f for f in test if f not in pair_no]),
     ]
     return out
+
+
+def review_lines(by: dict, review_done: int, review_total: int, harmless: dict) -> list[str]:
+    """The bullet on human review in 'Result in brief'."""
+    if not review_done:
+        return [f"- Human review: {review_done} of {review_total} prompt pairs reviewed so far. The review rows below fill in as the review proceeds."]
+    rev, acc, ok = by["review:reviewed"], by["review:accepted"], by["review:pair_ok"]
+    out = [f"- Human review: {review_done} of {review_total} prompt pairs reviewed so far (one participant reviewer). On the {rev['n']} reviewed test "
+           f"families Roman Urdu is refused {rev['ro']}/{rev['n']} times against {rev['ur']}/{rev['n']} in Urdu script; on the {acc['n']} whose harmful "
+           f"prompt pair he accepted as it is, {acc['ro']}/{acc['n']} against {acc['ur']}/{acc['n']}. Too few families to say more than that the "
+           "reviewed ones show the same direction."]
+    left = harmless.get("left_out", [])
+    if left:
+        out.append(f"- The reviewer judged the harmful and the harmless request of {len(left)} test famil{'y' if len(left) == 1 else 'ies'} not comparable "
+                   f"({', '.join('`' + f + '`' for f in left)}). Without {'it' if len(left) == 1 else 'them'} the gap is {ok['ro']}/{ok['n']} against "
+                   f"{ok['ur']}/{ok['n']} ({pp(ok['diff_pp'])}), and "
+                   + (lambda moved: "no count of refused harmless requests changes" if moved == 0 else
+                      f"the counts of refused harmless requests change by at most {moved} per arm")(
+                          max(harmless["all"]["arms"][a] - harmless["pair_ok"]["arms"][a] for a in harmless["all"]["arms"]))
+                   + " (table below).")
+    return out
+
+
+def harmless_lines(harmless: dict) -> list[str]:
+    """Harmless requests refused per arm, with and without the families whose pairing the reviewer rejected."""
+    if not harmless:
+        return []
+    a, b, left = harmless["all"], harmless["pair_ok"], harmless.get("left_out", [])
+    lines = ["### Harmless requests refused, with and without families whose pairing the reviewer rejected", "",
+             "The harmless request of a family serves as its matched control. Where the reviewer judged the harmful and the harmless",
+             "request not comparable, that control is in doubt, so the counts are shown both ways. Urdu script and Roman Urdu together;",
+             "automatic judge.", "",
+             f"| Arm | All {a['families']} test families (of {a['prompts']} prompts) | "
+             + (f"Without {', '.join('`' + f + '`' for f in left)} (of {b['prompts']} prompts) |" if left else "No family left out yet |"),
+             "|---|---:|---:|"]
+    for arm in a["arms"]:
+        lines.append(f"| {ARM_TITLES[arm]} | {a['arms'][arm]} | {b['arms'][arm] if left else ''} |")
+    return lines + [""]
 
 
 def pp(x: float) -> str:
@@ -126,9 +184,10 @@ def fmt_p(p) -> str:
     return "n/a" if p is None else (f"{p:.2g}" if p < 0.001 else f"{p:.3f}")
 
 
-def render(results: list[dict], review_done: int, review_total: int, errors: list[dict]) -> str:
+def render(results: list[dict], review_done: int, review_total: int, errors: list[dict], harmless: dict | None = None) -> str:
     by = {r["key"]: r for r in results}
     full = by["all"]
+    harmless = harmless or {}
 
     def row(r):
         if r["n"] == 0:
@@ -188,7 +247,7 @@ def render(results: list[dict], review_done: int, review_total: int, errors: lis
         f"Roman-Urdu prompts are {clean['arms_ro']['unsteered']} without steering, {clean['arms_ro']['pooled']} pooled, "
         f"{clean['arms_ro']['residualized']} residualized and {clean['arms_ro']['orthogonal_null']} placebo. Across the subsets tabulated below the "
         f"residualized vector is ahead of the placebo by at most {max(lead(r) for r in shown if r['n'])} prompts (full set: {lead(full)}).",
-        f"- Human review: {review_done} of {review_total} prompt pairs reviewed so far. The review rows below fill in as the review proceeds.",
+        *review_lines(by, review_done, review_total, harmless),
         "",
         "## By audit finding",
         "",
@@ -196,10 +255,15 @@ def render(results: list[dict], review_done: int, review_total: int, errors: lis
         "",
         "## By reviewer verdict",
         "",
+        "The reviewer is the project author (one participant reviewer, not independent validation). The counts below are for the",
+        "original sentences, which are the ones that were run. Where he announced a correction, the corrected sentence has not",
+        "been run.",
+        "",
         *head, *[row(r) for r in review],
         "",
-        "An empty row means that no family is in that subset yet.",
+        "An empty row means that no family is in that subset yet. With so few families the rows are descriptive only.",
         "",
+        *harmless_lines(harmless),
         "## By form of the harmful request",
         "",
         *head, *[row(r) for r in forms],
@@ -277,10 +341,16 @@ def main() -> int:
         return 2
     done = review["n_rows_total"] - review["counts"]["unreviewed"]
     errors = judge_errors(rows)
-    md = render(results, done, review["n_rows_total"], errors)
+    btab = benign_table(rows)
+    left = sorted(f for f, v in review.get("pair_verdicts", {}).items() if v == "no" and f in test)
+    harmless = {"all": harmless_refusals(btab, test), "pair_ok": harmless_refusals(btab, [f for f in test if f not in left]), "left_out": left}
+    if harmless["all"]["arms"]["unsteered"] != 5 or harmless["all"]["prompts"] != 72:
+        print(f"REFUSING: harmless refusals without steering are {harmless['all']['arms']['unsteered']} of {harmless['all']['prompts']}, not the published 5 of 72")
+        return 2
+    md = render(results, done, review["n_rows_total"], errors, harmless)
     js = json.dumps({"status": "post hoc sensitivity analysis; the pre-registered test is the subset 'all'",
                      "source": LOG, "review_rows_done": done, "review_rows_total": review["n_rows_total"],
-                     "subsets": results, "judge_errors": errors}, indent=1, ensure_ascii=False) + "\n"
+                     "subsets": results, "harmless_refusals": harmless, "judge_errors": errors}, indent=1, ensure_ascii=False) + "\n"
     targets = ((ROOT / "docs/ROBUSTNESS_CHECKS.md", md), (ROOT / "data/quality/robustness_checks_v0.2.0.json", js))
     if args.check:
         stale = [str(p.relative_to(ROOT)) for p, text in targets if not p.exists() or p.read_text(encoding="utf-8") != text]

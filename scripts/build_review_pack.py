@@ -9,6 +9,7 @@ Reads the corpus and the audit (run scripts/audit_dataset.py first). Writes, und
     AHMAD_REVIEW_BATCH_01.md ... 12  six families each, with an answer block to fill in
 The original pack (review_sheet.csv, review_template.jsonl, INSTRUCTIONS.md) is not touched.
 The 36 test families come first, because the main result is measured on them.
+A batch file whose families have all been answered is not rewritten: it is the record of what the reviewer saw.
 """
 from __future__ import annotations
 
@@ -128,7 +129,14 @@ def main() -> int:
         for r in rows:
             w.writerow({c: r.get(c, "") for c in COLUMNS})
 
+    status_path = PACK / "review_status.json"
+    answered = set(json.loads(status_path.read_text(encoding="utf-8")).get("rows", {})) if status_path.exists() else set()
+    kept = []
     for bi, batch in enumerate(batches, 1):
+        target = PACK / f"AHMAD_REVIEW_BATCH_{bi:02d}.md"
+        if target.exists() and all(f"{f}-{lab}" in answered for f in batch for lab in ("harmful", "benign")):
+            kept.append(f"{bi:02d}")
+            continue
         split = fam[batch[0]][("harmful", "ur")]["split"]
         L = [f"# Review batch {bi:02d} of {len(batches)}: {len(batch)} matched sets ({split} families)", "",
              "Please read [`AHMAD_REVIEW_GUIDE.md`](AHMAD_REVIEW_GUIDE.md) first (two minutes). Then, for each request below, judge the",
@@ -159,13 +167,20 @@ def main() -> int:
         for f in batch:
             alt = "  alt=" if audit[f]["split"] == "test" else ""
             L += [f"{f} H  ur=  ro=  same=  label={alt}", f"{f} B  ur=  ro=  same=  label={alt}", f"{f} pair="]
-        L += ["```", "", "If a sentence should be changed, add a line for it (examples):", "", "```",
+        L += ["```", "", "If a sentence should be changed, add a line for it **in the same message** (examples). Please write the",
+              "sentence itself: a correction without its text cannot be applied, and nothing is ever written in its place.", "", "```",
               f"fix {batch[0]} H ro: <your Roman Urdu sentence>", f"fix {batch[0]} B ur: <your Urdu sentence>",
               f"fix {batch[0]} H alt: <your spelling>", f"note {batch[0]}: <anything you want to say about this set>", "```", "",
+              "If the harmless request does not fit the harmful one (`pair=n`), you can propose another harmless request. Give it",
+              "in English, Urdu and Roman Urdu. It is recorded as a replacement, and the set stays out of comparisons between",
+              "harmful and harmless requests until the replacement has been reviewed on its own:", "", "```",
+              f"fix {batch[0]} B en: <the new harmless request in English>", f"fix {batch[0]} B ur: <the same in Urdu>",
+              f"fix {batch[0]} B ro: <the same in Roman Urdu>", "```", "",
               f"If a whole set is fine in every respect, you can write one line instead: `{batch[0]}: all good`.", ""]
-        (PACK / f"AHMAD_REVIEW_BATCH_{bi:02d}.md").write_text("\n".join(L), encoding="utf-8")
+        target.write_text("\n".join(L), encoding="utf-8")
     print(f"review pack: {len(rows)} rows, {len(batches)} batches of {BATCH_SIZE} families; "
-          f"batch 01 = {', '.join(batches[0])}; test families are batches 01-{sum(1 for b in batches if audit[b[0]]['split'] == 'test'):02d}")
+          f"batch 01 = {', '.join(batches[0])}; test families are batches 01-{sum(1 for b in batches if audit[b[0]]['split'] == 'test'):02d}"
+          + (f"; answered batches left as they are: {', '.join(kept)}" if kept else ""))
     return 0
 
 

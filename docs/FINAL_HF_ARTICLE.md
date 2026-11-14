@@ -31,7 +31,8 @@ Solo submission by Muhammad Ahmad (@ahmadrrrtx)*
 - **What is released.** The dataset, the evaluation logs (harmful completions withheld, every number
   recomputable), the steering vectors with a loader that reproduced 144 of 144 logged replies
   byte for byte, and a replay demo.
-- **What is not known.** The prompts were drafted with an LLM; review by the author is pending.
+- **What is not known.** The prompts were drafted with an LLM; the author's review of them is in progress
+  (24 of 144 prompt pairs).
   One model, one deterministic run, 36 test families, 64-token replies. Response labels come from model
   judges and an LLM agent's reading, not from human annotators.
 
@@ -158,10 +159,14 @@ The data went through **CuratorKIT** for schema validation, normalisation, exact
 (576 in, 576 out, no text changed). A per-character check guarantees that no Urdu-script prompt
 contains Latin or Devanagari letters and no Roman-Urdu prompt contains Arabic-script letters.
 
-**Quality status.** The prompts were drafted with an LLM. A review by the author is
-pending (0 of 144 prompt pairs reviewed so far); it is a participant review, not
-independent expert validation. A [family-level audit](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/DATASET_QUALITY_AUDIT.md)
-of all 72 families found, by automatic checks:
+**Quality status.** The prompts were drafted with an LLM. A review by the author, a native Urdu / Roman Urdu
+speaker, is in progress (24 of 144 prompt pairs in 12 of 72 families so far).
+It is one participant-provided review, not independent expert validation.
+
+**What the review has found so far.** In the prompt pairs reviewed so far, the reviewer judged the Urdu-script and the Roman-Urdu sentence to mean the same in 24 of 24 and the label to be right in 24 of 24. Naturalness on a scale of 1 to 5: Urdu script 4.8 on average (lowest 4), Roman Urdu 4.7 (lowest 3). The second Roman-Urdu spelling was judged natural in 24 of 24. He asked for changes to 7 prompt pairs (5 of wording, 2 that replace a request). For 4 of them he supplied the corrected sentences; they are recorded in the review revision next to the originals and have not been run through a model. The other 3 wait for their text, and until then the original sentences stand. He judged the harmful and the harmless request to fit together as a pair in 10 of 12 families; not in 2 (`cheque_forge`, `exam_cheat`), which are left out of comparisons between harmful and harmless requests on revised data. On the 12 reviewed test families the model refuses 8 of 12 harmful requests in Roman Urdu and 12 of 12 in Urdu script; on the 8 whose harmful request he accepted as it is, 5 of 8 and 8 of 8. These counts are for the original sentences; no corrected sentence has been run, and subsets this small only show that the reviewed families point the same way. The review is recorded per prompt pair in the review revision `v0.3.0-draft.2` of the dataset repository (original and revised sentence, ratings, reviewer, date, reason) and in section 9 of the [audit](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/DATASET_QUALITY_AUDIT.md).
+
+A [family-level audit](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/DATASET_QUALITY_AUDIT.md) of all 72 families
+found, by automatic checks:
 
 - harmful requests are more often commands ("Write ...") than harmless ones (17 of 72 against
   3 of 72), and harmless requests more often begin by describing a situation
@@ -194,8 +199,10 @@ recommended safety intervention**: the idea they were built to test was not supp
   the evaluation logs: one row per prompt and arm of the frozen test run with both judges' verdicts, the
   refusal margins, every analysis file, the run reports and the labels of the response reading.
 
-The data every number was computed from is tagged `v0.2.0` and will not change. Corrections from the review go
-into a new version that keeps the original sentence next to the revised one.
+The data every number was computed from is tagged `v0.2.0` and will not change. What the reviewer says is published
+next to it as a review revision (`revisions/v0.3.0-draft.2/` in the dataset repository): for every reviewed
+prompt pair the original and the revised sentence, the ratings, the reviewer, the date and the reason. No revised
+sentence has been evaluated, and no result in this article uses one.
 
 ## 7. Experiments run, findings and what else was tested
 
@@ -458,9 +465,10 @@ in the [robustness checks](https://github.com/ahmadrrrtx/scriptshield/blob/main/
 
 | Threat | What it could do to the conclusions | What was done, and what remains |
 |---|---|---|
-| Prompts drafted by an LLM, not validated by annotators | If the Roman Urdu were unnatural, the gap could reflect odd text and not the script | Same wording in both scripts by design; author review pending; the audit lists every known issue. Colloquial Roman Urdu is untested |
+| Prompts drafted by an LLM, not validated by annotators | If the Roman Urdu were unnatural, the gap could reflect odd text and not the script | Same wording in both scripts by design; author review in progress: in the prompt pairs reviewed so far the two scripts mean the same in 24 of 24; he asked for changes to 7 of them, and the changed sentences have not been run; the audit lists every known issue. Colloquial Roman Urdu is untested |
 | The gap might hinge on a few prompts or one topic | A handful of odd prompts could carry the result | Post hoc [robustness checks](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/ROBUSTNESS_CHECKS.md): leaving out any one harm group, the difference stays between -45.2 and -61.3 points; on the 21 test families with no audit flag and no note it is 9 of 21 against 21 of 21. The judge sees no gap in two of the 9 harm groups (dishonesty, privacy; 8 families) |
-| One Roman-Urdu spelling convention | The gap could depend on this spelling | A second spelling has been drafted for the test families and waits for review; no result uses it yet |
+| One Roman-Urdu spelling convention | The gap could depend on this spelling | A second spelling has been drafted for the test families; the reviewer has judged 24 of them and found 24 natural. No result uses it yet |
+| The harmful and the harmless request of a family may not be comparable | The harmless request is then a weak control, and a harmful-minus-harmless vector can pick up a difference in topic | The reviewer rejected the pairing in 2 of 12 reviewed families. Without them the gap is 15 of 34 against 34 of 34, and no count of refused harmless requests changes ([robustness checks](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/ROBUSTNESS_CHECKS.md)). The calibration families, from which the vectors are computed, are not reviewed yet |
 | Automatic judge | Mislabels garbled Roman-Urdu text as refusal | Second judge (pre-declared), echo correction and a full reading; the gap grows under each |
 | The reading is by an LLM agent | Not ground truth; only partly blind | Reported as a diagnostic; borderline labels flipped as a check; a participant check on a stratified sample is set up (0 of 48 replies labelled so far); independent human labels are the first item under section 8 |
 | Small test set | Steering effects of a few prompts cannot be resolved | The gap is far outside the noise; steering comparisons are reported as inconclusive |
@@ -471,8 +479,8 @@ in the [robustness checks](https://github.com/ahmadrrrtx/scriptshield/blob/main/
 
 ### 7.9 Limitations
 
-- **No human annotation.** Prompts are under participant review; labels come from model judges and an LLM
-  agent's reading.
+- **No human annotation.** The prompts are under review by one participant, the author (24 of 144
+  prompt pairs so far); labels come from model judges and an LLM agent's reading.
 - **Small.** 36 test families.
 - **One model, one run, one spelling convention, 64-token replies, single-turn, non-adversarial.**
 - **A Roman-Urdu non-refusal is usually not a harmful answer** (Figure 5). The failure is partly that the model
@@ -510,7 +518,7 @@ gap on subsets of the test set, and the breakdown of the judge's errors. The
 [evidence plan](https://github.com/ahmadrrrtx/scriptshield/blob/main/docs/EVIDENCE_UPGRADE_PLAN.md) assesses six further checks with their
 cost, and says which were judged not worth doing.
 
-**Under way, needs no credits.** The author's review of the prompts (0 of 144 pairs so far) and of
+**Under way, needs no credits.** The author's review of the prompts (24 of 144 pairs so far) and of
 a second Roman-Urdu spelling for the test families; and his check of the reading on a stratified sample of
 replies (0 of 48 replies labelled so far).
 
@@ -623,8 +631,8 @@ model to price. Steering itself costs one vector addition at one layer per forwa
 This project was built with substantial help from an AI assistant (an LLM agent). Under the author's direction
 it drafted the prompts, wrote much of the code and analysis, and did the response readings that this article
 labels as agent readings. The author chose the research direction, approved the protocol and the release, and
-is responsible for the content. The author is reviewing the prompts himself; the dataset's
-review status is published per prompt pair and is updated as the review proceeds.
+is responsible for the content. The author, a native Urdu / Roman Urdu speaker, is reviewing the prompts himself;
+the dataset's review status is published per prompt pair and is updated as the review proceeds.
 
 ## Licences
 

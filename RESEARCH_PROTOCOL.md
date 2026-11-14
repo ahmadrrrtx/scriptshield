@@ -396,3 +396,42 @@ agreement figures. Partial labelling is reported as partial.
 results: a participant check, **not** independent annotation. With 48 items, agreement is
 uncertain by roughly ten to fifteen points. No result table of the study is replaced by
 these labels. As of this amendment no label has been returned.
+
+**A23 (2026-11-13 ~16:30 UTC) — POST HOC, descriptive. Written after unblinding and after
+the first review batch had been received.** *Review results, revised sentences and the
+reviewer's verdict on the harmful/harmless pairing.*
+
+*What stays as it is.* H1, H3, their tests and their numbers. They were computed on
+dataset version 0.2.0 with the original sentences, and they stay attached to that version.
+No sentence of version 0.2.0 is edited.
+
+*Review-based subsets.* A21 already lists "the reviewer's verdict as it arrives" among the
+subset definitions. Now that verdicts exist, three subsets are tabulated in
+`docs/ROBUSTNESS_CHECKS.md`: families whose harmful prompt pair has been reviewed; families
+whose harmful prompt pair the reviewer accepted as it is; and all test families without
+those whose harmful and harmless request the reviewer judged not comparable. For the last
+definition the refused harmless requests are tabulated per arm as well, with and without
+those families, because the pairing concerns the harmless request as a matched control and
+not the script comparison. The counts are for the original sentences.
+
+*Revised sentences.* A corrected or replaced sentence is recorded in a review revision next
+to the frozen data (`data/revisions/`). It has not been run through any model. If revised
+sentences are ever run, that is a new run with its own amendment written before it; its
+results are reported next to the results of version 0.2.0 and never in their place; and a
+family whose pairing the reviewer rejected is left out of every comparison between harmful
+and harmless requests in it, also if its harmless request has been replaced, until a
+comparable replacement has been reviewed separately.
+
+**Status of this analysis:** chosen after the test results and after the verdicts of the
+first batch were known. One reviewer, who is the project author (a participant review, not
+independent validation). Six of 36 test families are reviewed, so the review-based rows are
+descriptive and cannot add confidence beyond H1. As of this amendment three corrections
+have been announced without their text, and no sentence has been changed.
+
+**A23, note of 2026-11-13 ~17:45 UTC (review batch 02).** The same three subsets were
+recomputed after the second batch of verdicts arrived; no subset was added and no definition
+changed. Twelve of 36 test families are now reviewed. Every count is still for the original
+sentences. The reviewer has supplied corrected sentences for four prompt pairs; none has
+been run, and the rule above for revised sentences applies to them. Each new batch of
+verdicts recomputes these rows again, so they are looked at repeatedly; they stay
+descriptive for that reason too.

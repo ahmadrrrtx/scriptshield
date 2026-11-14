@@ -10,7 +10,7 @@ ROOT=$(git rev-parse --show-toplevel)
 OUT=${1:-$ROOT/release/code_snapshot}
 if [ -n "$(git -C "$ROOT" status --porcelain)" ]; then echo "REFUSING: working tree is dirty"; exit 2; fi
 # Generated documents must be what their generators produce now, otherwise a stale text would be published.
-( cd "$ROOT" && python3 scripts/audit_dataset.py --check && python3 scripts/robustness_checks.py --check \
+( cd "$ROOT" && python3 scripts/audit_dataset.py --check && python3 scripts/build_dataset_revision.py --check && python3 scripts/robustness_checks.py --check \
   && python3 scripts/make_article.py --check ) || { echo "REFUSING: a generated document is stale (see above)"; exit 5; }
 rm -rf "$OUT"; mkdir -p "$OUT"
 git -C "$ROOT" archive HEAD | tar -x -C "$OUT"

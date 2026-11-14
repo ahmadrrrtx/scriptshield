@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScriptShield prompt record of a revised corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "family_id",
+    "pair_id",
+    "form",
+    "safety_label",
+    "text",
+    "intended_meaning_en",
+    "harm_category",
+    "split",
+    "validation_status",
+    "source",
+    "created",
+    "text_unchanged_since_v0_2_0"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-(ur|ro|cm|en)-(harmful|benign)$"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "pair_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+-(harmful|benign)$"
+    },
+    "form": {
+      "enum": [
+        "ur",
+        "ro",
+        "cm",
+        "en"
+      ]
+    },
+    "roman_style": {
+      "enum": [
+        "A",
+        "B",
+        null
+      ]
+    },
+    "safety_label": {
+      "enum": [
+        "harmful",
+        "benign"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 600
+    },
+    "intended_meaning_en": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 400
+    },
+    "harm_category": {
+      "type": "string",
+      "minLength": 2
+    },
+    "split": {
+      "enum": [
+        "calibration",
+        "dev",
+        "test"
+      ]
+    },
+    "validation_status": {
+      "enum": [
+        "unreviewed",
+        "approved",
+        "corrected",
+        "rejected"
+      ]
+    },
+    "reviewer_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "naturalness": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "semantic_equivalence": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "source": {
+      "enum": [
+        "authored",
+        "xstest",
+        "other"
+      ]
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "harm_group": {
+      "type": "string",
+      "minLength": 2,
+      "description": "coarse harm group used for stratified split assignment and reporting"
+    },
+    "same_meaning": {
+      "enum": [
+        "yes",
+        "no",
+        "uncertain",
+        "unable"
+      ],
+      "description": "the reviewer's answer to: do the Urdu-script and the Roman-Urdu sentence mean the same?"
+    },
+    "text_unchanged_since_v0_2_0": {
+      "type": "boolean",
+      "description": "true: this is the text that was evaluated in v0.2.0. false: revised text, not evaluated"
+    },
+    "text_v0_2_0": {
+      "type": "string",
+      "minLength": 5,
+      "description": "the original text, present when the text was changed"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "form": {
+            "const": "ro"
+          }
+        },
+        "required": [
+          "form"
+        ]
+      },
+      "then": {
+        "required": [
+          "roman_style"
+        ],
+        "properties": {
+          "roman_style": {
+            "enum": [
+              "A",
+              "B"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation_status": {
+            "enum": [
+              "approved",
+              "corrected"
+            ]
+          }
+        },
+        "required": [
+          "validation_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "reviewer_id"
+        ],
+        "properties": {
+          "reviewer_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "text_unchanged_since_v0_2_0": {
+            "const": false
+          }
+        },
+        "required": [
+          "text_unchanged_since_v0_2_0"
+        ]
+      },
+      "then": {
+        "required": [
+          "text_v0_2_0"
+        ]
+      }
+    }
+  ],
+  "description": "The record format of the frozen corpus (prompt.schema.json) with three differences. (1) A reviewed record needs the reviewer; a naturalness rating is kept only if it was given for exactly this text, and the yes/no answer on equal meaning is stored as same_meaning instead of a 1-to-5 score that the review did not collect. (2) text_unchanged_since_v0_2_0 says whether the text is the one that was evaluated. (3) A changed text carries the original next to it."
+}

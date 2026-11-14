@@ -31,7 +31,8 @@ Solo submission by {{AUTHOR}}*
 - **What is released.** The dataset, the evaluation logs (harmful completions withheld, every number
   recomputable), the steering vectors with a loader that reproduced {{VERIFY_K}} of {{VERIFY_N}} logged replies
   byte for byte, and a replay demo.
-- **What is not known.** The prompts were drafted with an LLM; review by the author is {{REVIEW_STATE}}.
+- **What is not known.** The prompts were drafted with an LLM; the author's review of them is {{REVIEW_STATE}}
+  ({{REVIEW_DONE}} of 144 prompt pairs).
   One model, one deterministic run, {{H1_N}} test families, 64-token replies. Response labels come from model
   judges and an LLM agent's reading, not from human annotators.
 
@@ -158,10 +159,14 @@ The data went through **CuratorKIT** for schema validation, normalisation, exact
 ({{DATA_N}} in, {{DATA_N}} out, no text changed). A per-character check guarantees that no Urdu-script prompt
 contains Latin or Devanagari letters and no Roman-Urdu prompt contains Arabic-script letters.
 
-**Quality status.** The prompts were drafted with an LLM. A review by the author is
-{{REVIEW_STATE}} ({{REVIEW_DONE}} of 144 prompt pairs reviewed so far); it is a participant review, not
-independent expert validation. A [family-level audit]({{URL_GITHUB}}/blob/main/docs/DATASET_QUALITY_AUDIT.md)
-of all {{DATA_FAMILIES}} families found, by automatic checks:
+**Quality status.** The prompts were drafted with an LLM. A review by the author, a native Urdu / Roman Urdu
+speaker, is {{REVIEW_STATE}} ({{REVIEW_DONE}} of 144 prompt pairs in {{REVIEW_FAMILIES}} of 72 families so far).
+It is one participant-provided review, not independent expert validation.
+
+{{REVIEW_PARAGRAPH}}
+
+A [family-level audit]({{URL_GITHUB}}/blob/main/docs/DATASET_QUALITY_AUDIT.md) of all {{DATA_FAMILIES}} families
+found, by automatic checks:
 
 - harmful requests are more often commands ("Write ...") than harmless ones ({{AUDIT_CMD_H}} of 72 against
   {{AUDIT_CMD_B}} of 72), and harmless requests more often begin by describing a situation
@@ -194,8 +199,10 @@ recommended safety intervention**: the idea they were built to test was not supp
   the evaluation logs: one row per prompt and arm of the frozen test run with both judges' verdicts, the
   refusal margins, every analysis file, the run reports and the labels of the response reading.
 
-The data every number was computed from is tagged `v0.2.0` and will not change. Corrections from the review go
-into a new version that keeps the original sentence next to the revised one.
+The data every number was computed from is tagged `v0.2.0` and will not change. What the reviewer says is published
+next to it as a review revision (`revisions/v{{REVISION_ID}}/` in the dataset repository): for every reviewed
+prompt pair the original and the revised sentence, the ratings, the reviewer, the date and the reason. No revised
+sentence has been evaluated, and no result in this article uses one.
 
 ## 7. Experiments run, findings and what else was tested
 
@@ -338,9 +345,10 @@ in the [robustness checks]({{URL_GITHUB}}/blob/main/docs/ROBUSTNESS_CHECKS.md).
 
 | Threat | What it could do to the conclusions | What was done, and what remains |
 |---|---|---|
-| Prompts drafted by an LLM, not validated by annotators | If the Roman Urdu were unnatural, the gap could reflect odd text and not the script | Same wording in both scripts by design; author review {{REVIEW_STATE}}; the audit lists every known issue. Colloquial Roman Urdu is untested |
+| Prompts drafted by an LLM, not validated by annotators | If the Roman Urdu were unnatural, the gap could reflect odd text and not the script | Same wording in both scripts by design; {{REVIEW_THREAT}}; the audit lists every known issue. Colloquial Roman Urdu is untested |
 | The gap might hinge on a few prompts or one topic | A handful of odd prompts could carry the result | Post hoc [robustness checks]({{URL_GITHUB}}/blob/main/docs/ROBUSTNESS_CHECKS.md): leaving out any one harm group, the difference stays between {{ROB_LO}} and {{ROB_HI}} points; on the {{ROB_CLEAN_N}} test families with no audit flag and no note it is {{ROB_CLEAN_RO}} of {{ROB_CLEAN_N}} against {{ROB_CLEAN_UR}} of {{ROB_CLEAN_N}}. The judge sees no gap in {{ROB_NOGAP}} |
-| One Roman-Urdu spelling convention | The gap could depend on this spelling | A second spelling has been drafted for the test families and waits for review; no result uses it yet |
+| One Roman-Urdu spelling convention | The gap could depend on this spelling | {{ALT_NOTE}} |
+| The harmful and the harmless request of a family may not be comparable | The harmless request is then a weak control, and a harmful-minus-harmless vector can pick up a difference in topic | {{PAIR_NOTE}} |
 | Automatic judge | Mislabels garbled Roman-Urdu text as refusal | Second judge (pre-declared), echo correction and a full reading; the gap grows under each |
 | The reading is by an LLM agent | Not ground truth; only partly blind | Reported as a diagnostic; borderline labels flipped as a check; a participant check on a stratified sample is set up ({{RESPONSE_CHECK_SHORT}}); independent human labels are the first item under section 8 |
 | Small test set | Steering effects of a few prompts cannot be resolved | The gap is far outside the noise; steering comparisons are reported as inconclusive |
@@ -351,8 +359,8 @@ in the [robustness checks]({{URL_GITHUB}}/blob/main/docs/ROBUSTNESS_CHECKS.md).
 
 ### 7.9 Limitations
 
-- **No human annotation.** Prompts are under participant review; labels come from model judges and an LLM
-  agent's reading.
+- **No human annotation.** The prompts are under review by one participant, the author ({{REVIEW_DONE}} of 144
+  prompt pairs so far); labels come from model judges and an LLM agent's reading.
 - **Small.** {{H1_N}} test families.
 - **One model, one run, one spelling convention, 64-token replies, single-turn, non-adversarial.**
 - **A Roman-Urdu non-refusal is usually not a harmful answer** (Figure 5). The failure is partly that the model
@@ -493,8 +501,8 @@ model to price. Steering itself costs one vector addition at one layer per forwa
 This project was built with substantial help from an AI assistant (an LLM agent). Under the author's direction
 it drafted the prompts, wrote much of the code and analysis, and did the response readings that this article
 labels as agent readings. The author chose the research direction, approved the protocol and the release, and
-is responsible for the content. The author is reviewing the prompts himself; the dataset's
-review status is published per prompt pair and is updated as the review proceeds.
+is responsible for the content. The author, a native Urdu / Roman Urdu speaker, is reviewing the prompts himself;
+the dataset's review status is published per prompt pair and is updated as the review proceeds.
 
 ## Licences
 

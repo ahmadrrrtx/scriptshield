@@ -8,7 +8,7 @@ A pre-registered study of script-dependent refusal in Cohere Labs' Tiny Aya Fire
 [![space](https://img.shields.io/badge/%F0%9F%A4%97%20Space-recorded%20experiment%20explorer-f5a623)](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay)
 [![code licence](https://img.shields.io/badge/code-MIT-2f6feb)](LICENSE)
 [![data licence](https://img.shields.io/badge/data%20and%20vectors-CC%20BY--NC%204.0-2f6feb)](LICENSE-DATA.md)
-[![release](https://img.shields.io/badge/code%20release-v0.2.2-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/tags)
+[![release](https://img.shields.io/badge/code%20release-v0.2.3-2f6feb)](https://github.com/ahmadrrrtx/scriptshield/tags)
 
 Most Urdu typed on phones is Roman Urdu: Urdu in Latin letters. Safety evaluations usually treat "Urdu" as one
 language. ScriptShield gives Cohere Labs' [Tiny Aya Fire](https://huggingface.co/CohereLabs/tiny-aya-fire) the
@@ -76,7 +76,8 @@ judge models label the replies, and the statistics are computed locally from the
 | Steering vectors and loader (not a fine-tuned model) | [`ahmadrrrtx/scriptshield-tiny-aya-fire-steering`](https://huggingface.co/ahmadrrrtx/scriptshield-tiny-aya-fire-steering) |
 | Dataset and evaluation logs | [`ahmadrrrtx/scriptshield-urdu-roman`](https://huggingface.co/datasets/ahmadrrrtx/scriptshield-urdu-roman) |
 | Explorer of the recorded outputs | [`ahmadrrrtx/scriptshield-replay`](https://huggingface.co/spaces/ahmadrrrtx/scriptshield-replay) |
-| Dataset quality audit and review status | [`docs/DATASET_QUALITY_AUDIT.md`](docs/DATASET_QUALITY_AUDIT.md), [`data/reviewer_pack/`](data/reviewer_pack/) |
+| Dataset quality audit and review status | [`docs/DATASET_QUALITY_AUDIT.md`](docs/DATASET_QUALITY_AUDIT.md), [review ledger](data/reviewer_pack/REVIEW_LEDGER.md), [`data/reviewer_pack/`](data/reviewer_pack/) |
+| Review revisions and dataset changelog | [`data/revisions/`](data/revisions/README.md), [`data/DATASET_CHANGELOG.md`](data/DATASET_CHANGELOG.md) |
 
 **Versions.** The data and vectors that every reported number comes from are tagged `v0.2.0` on Hugging Face
 and do not change. In this repository, `v0.1.0` is the first public state (the checksums of everything that was
@@ -128,10 +129,13 @@ python scripts/robustness_checks.py --download         # the gap on subsets, and
 
 ## Limitations
 
-- **The prompts were drafted with an LLM.** A review by the author (participant review, not independent
-  expert validation) is tracked per prompt pair in [`data/reviewer_pack/`](data/reviewer_pack/). The
-  [audit](docs/DATASET_QUALITY_AUDIT.md) lists the known issues, for example that harmful requests are more
-  often commands than harmless ones.
+- **The prompts were drafted with an LLM.** A review by the author, a native Urdu / Roman Urdu speaker, is in
+  progress and tracked per prompt pair in [`data/reviewer_pack/`](data/reviewer_pack/). It is one
+  participant-provided review, not independent expert validation, and it covers part of the prompts only;
+  what it found so far is in section 9 of the [audit](docs/DATASET_QUALITY_AUDIT.md). Reviewed and corrected
+  sentences are kept apart from the evaluated data, in [review revisions](data/revisions/README.md) that have
+  not been evaluated. The audit also lists the known issues found automatically, for example that harmful
+  requests are more often commands than harmless ones.
 - **Labels are not human labels.** They come from model judges and from an LLM agent's reading.
 - **Small and narrow.** 36 test families, one model, one deterministic run, one Roman-Urdu spelling convention,
   64-token replies, single-turn, non-adversarial.
@@ -229,7 +233,7 @@ python scripts/build_kaggle_kernel.py --name fire_test --slug <slug> --title <ti
 | `docs/baselines/`, `docs/PROVENANCE.md` | checksums of the first public release; where this snapshot comes from |
 | `src/scriptshield/` | library: runtime (templating, hooks, generation), steering math, labels, statistics, release rules |
 | `scripts/` | run drivers, analysis, report, figures, audit, review import, packaging, recomputation, Kaggle tooling |
-| `data/` | corpus v0.2.0, family drafts, utility probe, review pack, quality audit data, schema |
+| `data/` | corpus v0.2.0 (frozen), family drafts, utility probe, review pack, review revisions, quality audit data, schemas, dataset changelog |
 | `configs/` | pinned model and toolkits, grid, `frozen_selection.json`, public links |
 | `experiments/` | run reports, analysis JSON, reading labels (no response text) |
 | `artifacts/steering_package/`, `demo/` | loader, compatibility check and card template for the vector package; explorer page |
@@ -250,7 +254,8 @@ This project was built with substantial help from an AI assistant (an LLM agent)
 direction it drafted the prompts, wrote much of the code and analysis, and did the response readings that
 the documents label as agent readings. The author chose the research direction, approved the protocol and
 the release, and is responsible for the content. Nothing here has been labelled by human annotators; the
-author is reviewing the prompts himself, and that review is published per prompt pair.
+author, a native Urdu / Roman Urdu speaker, is reviewing the prompts himself, and that review is published per
+prompt pair.
 
 ## Licences
 

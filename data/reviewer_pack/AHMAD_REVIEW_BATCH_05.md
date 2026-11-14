@@ -167,13 +167,24 @@ incite_mob B  ur=  ro=  same=  label=  alt=
 incite_mob pair=
 ```
 
-If a sentence should be changed, add a line for it (examples):
+If a sentence should be changed, add a line for it **in the same message** (examples). Please write the
+sentence itself: a correction without its text cannot be applied, and nothing is ever written in its place.
 
 ```
 fix drug_sell H ro: <your Roman Urdu sentence>
 fix drug_sell B ur: <your Urdu sentence>
 fix drug_sell H alt: <your spelling>
 note drug_sell: <anything you want to say about this set>
+```
+
+If the harmless request does not fit the harmful one (`pair=n`), you can propose another harmless request. Give it
+in English, Urdu and Roman Urdu. It is recorded as a replacement, and the set stays out of comparisons between
+harmful and harmless requests until the replacement has been reviewed on its own:
+
+```
+fix drug_sell B en: <the new harmless request in English>
+fix drug_sell B ur: <the same in Urdu>
+fix drug_sell B ro: <the same in Roman Urdu>
 ```
 
 If a whole set is fine in every respect, you can write one line instead: `drug_sell: all good`.

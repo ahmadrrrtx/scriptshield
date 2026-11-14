@@ -254,7 +254,10 @@
    }
   },
   "human_review_counts": {
-   "unreviewed": 144
+   "correction_pending": 3,
+   "accepted": 17,
+   "unreviewed": 120,
+   "corrected": 4
   },
   "llm_note_counts": {
    "meaning_drift": 5,
@@ -299,8 +302,34 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "correction_pending",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 4,
+     "ro": 4,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "wording",
+     "pending_fields": [
+      "ur",
+      "ro"
+     ],
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "yes"
    }
   },
   "ransomware": {
@@ -325,8 +354,29 @@
    "automatic_flags": [],
    "llm_notes": [],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "pair_comparable": "yes"
    }
   },
   "whatsapp_hijack": {
@@ -364,6 +414,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "wifi_crack": {
@@ -390,6 +445,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "exam_cheat": {
@@ -426,8 +486,37 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "correction_pending"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 4,
+     "ro": 4,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "replacement",
+     "pending_fields": [
+      "ur",
+      "ro",
+      "alt",
+      "en",
+      "meaning"
+     ],
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "no"
    }
   },
   "plagiarism": {
@@ -463,8 +552,30 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "corrected",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 4,
+     "ro": 3,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "wording",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 4,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "pair_comparable": "yes"
    }
   },
   "proxy_test": {
@@ -497,6 +608,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "card_skimming": {
@@ -527,8 +643,34 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "correction_pending",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "wording",
+     "pending_fields": [
+      "ur",
+      "ro"
+     ],
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "yes"
    }
   },
   "cheque_forge": {
@@ -559,8 +701,34 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "corrected",
+    "benign": "corrected"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 4,
+     "ro": 3,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "wording",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "replacement",
+     "review_date": "2026-11-13",
+     "review_batch": "02",
+     "maintainer_fields": [
+      "meaning"
+     ]
+    },
+    "pair_comparable": "no"
    }
   },
   "fake_charity": {
@@ -593,6 +761,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_job_visa": {
@@ -619,6 +792,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "insurance_fraud": {
@@ -645,6 +823,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "pyramid_scheme": {
@@ -677,6 +860,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "blackmail": {
@@ -701,8 +889,29 @@
    "automatic_flags": [],
    "llm_notes": [],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "yes"
    }
   },
   "defamation": {
@@ -735,6 +944,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "hate_speech": {
@@ -778,6 +992,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "incite_mob": {
@@ -804,6 +1023,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "deepfake": {
@@ -828,8 +1052,29 @@
    "automatic_flags": [],
    "llm_notes": [],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "yes"
    }
   },
   "election_misinfo": {
@@ -862,6 +1107,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_reviews": {
@@ -888,6 +1138,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "burglary": {
@@ -912,8 +1167,29 @@
    "automatic_flags": [],
    "llm_notes": [],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "01"
+    },
+    "pair_comparable": "yes"
    }
   },
   "fake_license": {
@@ -946,6 +1222,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "shoplift": {
@@ -972,6 +1253,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "animal_cruelty": {
@@ -1007,8 +1293,30 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "corrected"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 4,
+     "ro": 4,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "correction_kind": "wording",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "pair_comparable": "yes"
    }
   },
   "brake_tamper": {
@@ -1035,6 +1343,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "drug_sell": {
@@ -1061,6 +1374,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "sedative_spike": {
@@ -1093,6 +1411,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "vandalism": {
@@ -1119,6 +1442,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "call_records": {
@@ -1143,8 +1471,29 @@
    "automatic_flags": [],
    "llm_notes": [],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "pair_comparable": "yes"
    }
   },
   "doxxing": {
@@ -1171,6 +1520,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_profile": {
@@ -1197,6 +1551,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "privacy_rec": {
@@ -1229,6 +1588,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "spy_app": {
@@ -1261,6 +1625,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "electricity_theft": {
@@ -1291,8 +1660,29 @@
     }
    ],
    "human_review": {
-    "harmful": "unreviewed",
-    "benign": "unreviewed"
+    "harmful": "accepted",
+    "benign": "accepted"
+   },
+   "human_review_detail": {
+    "harmful": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "benign": {
+     "ur": 5,
+     "ro": 5,
+     "same": "yes",
+     "label": "yes",
+     "alt": "yes",
+     "review_date": "2026-11-13",
+     "review_batch": "02"
+    },
+    "pair_comparable": "yes"
    }
   },
   "smuggle_goods": {
@@ -1319,6 +1709,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "wildlife_trade": {
@@ -1356,6 +1751,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "sim_swap": {
@@ -1382,6 +1782,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "docs_forge": {
@@ -1414,6 +1819,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_experience": {
@@ -1451,6 +1861,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_cnic": {
@@ -1477,6 +1892,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "harassment": {
@@ -1509,6 +1929,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "threat_msg": {
@@ -1535,6 +1960,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_news": {
@@ -1561,6 +1991,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "drug_make": {
@@ -1587,6 +2022,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "explosive_home": {
@@ -1624,6 +2064,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "weapon": {
@@ -1662,6 +2107,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "stalking_ex": {
@@ -1688,6 +2138,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "property_forge": {
@@ -1720,6 +2175,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "acct_access": {
@@ -1758,6 +2218,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "cctv_hack": {
@@ -1784,6 +2249,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "malware": {
@@ -1810,6 +2280,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "social_takeover": {
@@ -1842,6 +2317,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "paper_leak": {
@@ -1874,6 +2354,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "counterfeit_money": {
@@ -1900,6 +2385,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fin_fraud": {
@@ -1926,6 +2416,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "phish_msg": {
@@ -1952,6 +2447,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "tax_evasion": {
@@ -1989,6 +2489,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "wallet_scam": {
@@ -2015,6 +2520,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "cyberbully": {
@@ -2041,6 +2551,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "sectarian_hate": {
@@ -2073,6 +2588,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "health_misinfo": {
@@ -2099,6 +2619,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "impersonate_official": {
@@ -2125,6 +2650,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "gambling_rig": {
@@ -2151,6 +2681,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "fake_medicine": {
@@ -2177,6 +2712,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "illegal_gun": {
@@ -2203,6 +2743,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "medicine": {
@@ -2240,6 +2785,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "poison_person": {
@@ -2277,6 +2827,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "hidden_camera": {
@@ -2303,6 +2858,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "loc_tracking": {
@@ -2335,6 +2895,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "private_photos": {
@@ -2361,6 +2926,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "bribery": {
@@ -2387,6 +2957,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   },
   "human_smuggling": {
@@ -2413,6 +2988,11 @@
    "human_review": {
     "harmful": "unreviewed",
     "benign": "unreviewed"
+   },
+   "human_review_detail": {
+    "harmful": null,
+    "benign": null,
+    "pair_comparable": null
    }
   }
  }

@@ -29,6 +29,7 @@ from scriptshield.artifacts.release import (ARM_DESCRIPTIONS, WITHHELD, assert_n
                                             public_row, repack_vectors, save_npz_deterministic, sha256_array,
                                             sha256_file, sha256_text, write_jsonl, write_sums)
 from scriptshield.artifacts.public_text import alt_arms, alt_gap, placebo_did_almost_as_well, review_summary  # noqa: E402
+from scriptshield.data.revision import all_revisions, current_revision  # noqa: E402
 from scriptshield.config import load_yaml  # noqa: E402
 from scriptshield.data.schema import load_corpus  # noqa: E402
 from scriptshield.evaluation.analysis import label_rows  # noqa: E402
@@ -234,6 +235,15 @@ def main() -> int:
     # (they carry unreviewed spelling candidates) and proposed corrections. Unapproved text does not enter the dataset.
     shutil.copytree(ROOT / "data/reviewer_pack", d / "reviewer_pack", ignore=shutil.ignore_patterns(
         "returns", "AHMAD_REVIEW.csv", "AHMAD_REVIEW_BATCH_*.md", "proposed_revisions.jsonl"))
+    # Review revisions: what the reviewer said about prompt pairs, next to the frozen data and never in its place.
+    # They carry reviewed text only: sentences the reviewer accepted or supplied, and second spellings he judged.
+    stale_rev = subprocess.run([sys.executable, str(ROOT / "scripts/build_dataset_revision.py"), "--check"], capture_output=True, text=True)
+    if stale_rev.returncode != 0:
+        print("REFUSING: the review revision is not what scripts/build_dataset_revision.py produces now:", stale_rev.stdout.strip()[-300:])
+        return 2
+    shutil.copytree(ROOT / "data/revisions", d / "revisions")
+    shutil.copytree(ROOT / "data/schemas", d / "schemas")
+    shutil.copyfile(ROOT / "data/DATASET_CHANGELOG.md", d / "CHANGELOG.md")
     (d / "figures").mkdir()
     for f in sorted((ROOT / "docs/figures").glob("*")):
         shutil.copyfile(f, d / "figures" / f.name)
@@ -244,6 +254,7 @@ def main() -> int:
     # differently, so their relative links are rewritten and a line says where the named scripts and paths live.
     ds_url = links["hf_dataset"]["url"]
     relink = {"](../data/quality/": f"]({ds_url}/blob/main/quality/",
+              "](../data/revisions/": f"]({ds_url}/blob/main/revisions/",
               "](../data/reviewer_pack/)": f"]({ds_url}/tree/main/reviewer_pack)",
               "](../data/reviewer_pack/": f"]({ds_url}/blob/main/reviewer_pack/"}
     for name in ("DATASET_QUALITY_AUDIT.md", "ROBUSTNESS_CHECKS.md"):
@@ -309,7 +320,10 @@ def main() -> int:
     adj_doc = json.loads((ROOT / "experiments/adjudication/test_ro_adjudication.json").read_text(encoding="utf-8"))
     mech = json.loads((ROOT / "experiments/results/fire_dev_v2/fire_dev/run_report.json").read_text(encoding="utf-8"))[
         "sections"]["mechanism_diagnostics"]["by_layer"][str(L)]
-    review = review_summary(json.loads((ROOT / "data/reviewer_pack/review_status.json").read_text(encoding="utf-8")))
+    revision = current_revision(ROOT)
+    review_status = json.loads((ROOT / "data/reviewer_pack/review_status.json").read_text(encoding="utf-8"))
+    review_rows = review_status.get("rows", {})
+    review = review_summary(review_status, revision)
     va_ = (verify or {}).get("verify", {}).get("arms", {})
     gaps = {arm: v["cells"]["ur/harmful"]["refusal"] - v["cells"]["ro/harmful"]["refusal"] for arm, v in analysis["arms"].items()}
     ru = adj_doc["arms"]["unsteered"]["harmful"]
@@ -326,13 +340,20 @@ def main() -> int:
         "judge": {"precision": adj_doc["judge_vs_adjudication"]["guard_pre_registered"]["precision"]},
         "mechanism": {"norm_ratio": mech["norm_ratio_ro_over_ur"]["value"], "abs_cos": mech["h2_script_alignment"]["in_sample_abs_cosine"]},
         "rows": len(pub), "withheld": int(sum(r["withheld"] for r in pub)),
-        "review": {"reviewed": review["done"], "total": review["total"]},
+        "review": {"reviewed": review["done"], "total": review["total"],
+                   "reviewed_test_pairs": sum(1 for k in review_rows if k.rsplit("-", 1)[0] in set(fams))},
         "verify": {"k": sum(v["identical"] for v in va_.values()), "n": sum(v["n"] for v in va_.values())},
         "corpus": {"families": len({r["family_id"] for r in recs}), "records": len(recs),
                    "split": " / ".join(str(len({r["family_id"] for r in recs if r["split"] == sp})) for sp in ("calibration", "dev", "test"))},
     }
     for fam in fams:
         entry = {"family_id": fam, "harm_group": None, "prompts": {}, "meaning": {}, "responses": {}}
+        reviewed = {lab: review_rows[f"{fam}-{lab}"] for lab in ("harmful", "benign") if f"{fam}-{lab}" in review_rows}
+        if reviewed:
+            entry["review"] = {lab: {"ur": r["ur"] if isinstance(r.get("ur"), int) else None, "ro": r["ro"] if isinstance(r.get("ro"), int) else None,
+                                     "same": r.get("same"), "label": r.get("label"), "status": r["status"],
+                                     "correction": r.get("correction_kind")} for lab, r in reviewed.items()}
+            entry["review"]["pair"] = review_status.get("pair_verdicts", {}).get(fam)
         for r in recs:
             if r["family_id"] != fam:
                 continue
@@ -426,7 +447,20 @@ def main() -> int:
     extra_fields = {
         "{{FIG}}": links["figures_base"], "{{URL_AUDIT}}": links["audit_in_repo"], "{{BUILD_DATE}}": build_date,
         "{{ALT_GAP}}": alt_gap(analysis, ru["R"]), "{{ALT_ARMS}}": alt_arms(analysis),
-        "{{REVIEW_BLOCK}}": review["block"], "{{REVIEW_LINE}}": review["line"],
+        "{{REVIEW_BLOCK}}": review["block"], "{{REVIEW_LINE}}": review["line"], "{{REVIEW_FINDINGS}}": review["findings"],
+        "{{REVISION_ID}}": revision["revision_id"], "{{REVISION_DATE}}": revision["created"],
+        "{{REVISION_PAIRS}}": str(revision["summary"]["prompt_pairs_reviewed"]), "{{REVISION_FAMILIES}}": str(revision["summary"]["families_reviewed"]),
+        "{{REVISION_CHANGED}}": str(revision["summary"]["sentences_changed"]),
+        "{{REVISION_SPLITS}}": ", ".join(f"{n} from the {sp} split" for sp, n in revision["summary"]["reviewed_families_by_split"].items() if n),
+        "{{REVISION_WAITING}}": str(revision["summary"]["corrections"]["text_not_received"]),
+        "{{REVISION_ROWS}}": "\n".join(
+            f"| review revision {m['revision_id']} | {m['created']} | review batch{'es' if len(m['review']['batches']) > 1 else ''} "
+            f"{', '.join(sorted(m['review']['batches']))}: {m['summary']['prompt_pairs_reviewed']} prompt pairs reviewed by the author; sentences changed: "
+            f"{m['summary']['sentences_changed']}; corrections waiting for their text: {m['summary']['corrections']['text_not_received']}. "
+            f"Separate files under `revisions/`; **not evaluated**; no file of v{corpus['dataset_version']} changed |"
+            for m in all_revisions(ROOT)),
+        "{{REVISION_LEFT_OUT}}": ", ".join(f"`{f}`" for f in revision["summary"]["excluded_from_matched_pair_analysis"]) or "none",
+        "{{ALT_N}}": str(revision["summary"]["alt_spelling_judged"]), "{{ALT_YES}}": str(revision["summary"]["alt_spelling_yes"]),
         "{{AUDIT_CMD_H}}": str(audit["speech_act_counts"]["harmful"].get("command", 0)),
         "{{AUDIT_CMD_B}}": str(audit["speech_act_counts"]["benign"].get("command", 0)),
         "{{AUDIT_CTX_H}}": str(audit["context_sentence_counts"]["harmful"]), "{{AUDIT_CTX_B}}": str(audit["context_sentence_counts"]["benign"]),
@@ -480,6 +514,14 @@ def main() -> int:
         if left:
             print(f"REFUSING: unfilled placeholders in {f}: {left[:5]}")
             return 2
+
+    # ----------------------------------------------------------- the first public release of the data is frozen
+    frozen_release = json.loads((ROOT / "data/manifests/frozen_public_release_v0.2.0.json").read_text(encoding="utf-8"))["files"]
+    changed = [name for name, want in frozen_release.items() if not (d / name).is_file() or sha256_file(d / name) != want]
+    if changed:
+        print(f"REFUSING: files of the published dataset v0.2.0 would change or disappear: {changed[:6]}. "
+              "The evaluated data is frozen; review results go under revisions/.")
+        return 5
 
     # ----------------------------------------------------------- relative links resolve inside each release folder
     for sub in ("hf_model", "hf_dataset", "hf_space"):

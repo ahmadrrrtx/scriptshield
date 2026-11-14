@@ -1,0 +1,41 @@
+{
+ "what": "Checksums of the data files of the first public release of the dataset repository (v0.2.0): corpus, splits, utility probe, manifest, evaluation logs and the original review pack. These files are frozen. scripts/package_artifacts.py refuses to build a dataset folder in which any of them differs, and a test checks the same.",
+ "dataset_version": "0.2.0",
+ "source": "docs/baselines/BASELINE_2026-11-13.json (anonymous download of the published repository)",
+ "not_frozen": [
+  "README.md (the dataset card)",
+  "SHA256SUMS",
+  "files added after the first release (figures/, quality/, revisions/, schemas/, CHANGELOG.md, reviewer_pack status and guide)"
+ ],
+ "files": {
+  "data/calibration.jsonl": "a973889239a6c56d4912ed6f1d62a3fcefb27c204bd23a7ecb654d4dff3ef3f1",
+  "data/dev.jsonl": "b8cd59ad9ddc4b262f4527f451027ffe3e3a9fcad205e88ea10a2f4159fbb149",
+  "data/scriptshield_v0.2.0.jsonl": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+  "data/test.jsonl": "fbcf55bd126a6af8b6d6a3907fd3bac5ae089fe8f4b64ab868e710d76e0fade5",
+  "data/utility_v0.1.yaml": "e2cbefce5c5bcdbcbbdaf6f4d88a58c976f131908842adc6c0ac53ae55bf9db3",
+  "eval_logs/adjudication/RUBRIC.md": "400833d7bf240bd45c7948e1f120071f906e5dc4fbe60dde160860592ced5329",
+  "eval_logs/adjudication/test_ro_adjudication.json": "76bf66932b5028492beeed47572bf19e3fbbbfa649278c3b389bdb46c6aa6266",
+  "eval_logs/adjudication/test_ro_borderline.json": "1c2d6aec4dfeb84402b75d2b3da963dc284a23964e65fd74448497054715de09",
+  "eval_logs/adjudication/test_ro_labels.json": "f30d13bb6598177fa79abac8a259ee191ec65a10900f10af8d739ecdd1df2ef4",
+  "eval_logs/adjudication/test_ro_rows.jsonl": "a1d6b005558e96bd29d4d2a6b0bf1bb43aea6422439640191d71e5b5d71842c8",
+  "eval_logs/adjudication/ur_harmful_unsteered_check.json": "74d9a9cb54c3cc3c43fd136afb842e6196a7fadc913ea8de90a45cb1638749a4",
+  "eval_logs/adjudication/utility_reading_check.json": "2003fc3194e61a9a2b6cca184fbe6fcf3a6a69b501ea065498721cb5f3df8000",
+  "eval_logs/agreement_smoke_baseline.json": "f0860d396436203032d308ff6885abc14c7592744b71d07a8ae2c3ddd3d0af6d",
+  "eval_logs/dev_analysis.json": "b2ede3ed633b38ca15da6600529e5bcd1bf5d02949d2cd882fc1885464f10d02",
+  "eval_logs/dev_run_report.json": "041b8b43d64f0302886719deae35f551af9f5787e50426e555414e52ecfb2e8c",
+  "eval_logs/devx_analysis.json": "43469bc8886d042c989a98a508c4fda25421e54c7c88c59547e6796589405bcf",
+  "eval_logs/smoke_report.json": "1af807464d20b23f0967e71e746d75f26a536161a6d8dcfc1e68c2c669e2b88c",
+  "eval_logs/test_analysis_guard.json": "9eac9c194aa2719bf841e2799bac8bffa16208bf6556fb97063e634624ec3998",
+  "eval_logs/test_analysis_guard_echo.json": "0b03eff5ad2eb95849c1f17a898a989bd2b224f27895a57931a387df44043c90",
+  "eval_logs/test_analysis_rubric.json": "e033e19c05a72b7796af71718ef1d22dc45ad57858c299693ab4180c07ca37aa",
+  "eval_logs/test_analysis_rubric_echo.json": "0031d4b228168eda6c9584c96fe02af4d6928994cd575e28416f5612c53a1f08",
+  "eval_logs/test_judged_public.jsonl": "285a382718993cb3518f5e5ade54b8c51eea9db60e2632b1791c0d754c75705e",
+  "eval_logs/test_margins.jsonl": "34551a8503c990712581a1e283389c60f964c49bec66d3a2dd9fb11b67fef19a",
+  "eval_logs/test_run_report.json": "39e762253bf9401f0c1a742190a54b5bd086888d79218a1ee9b45337f5ccd47b",
+  "eval_logs/utility_reading.json": "31b2c2981f88e67cef5155b3522dd32653eb96b7361be2dee096f6957e02e471",
+  "manifest.json": "95d485dd57f21f86d1722d2c1c4c91f3bae4a3664c6915f7cb35cf69dd91ffd1",
+  "reviewer_pack/INSTRUCTIONS.md": "8b028a48a4bbe2f70c8caba00b0c894e45626dbf03f65cf72a70a5d99cee71ec",
+  "reviewer_pack/review_sheet.csv": "6eecac2230191172c471f3f5c8a6d24bf2c83bf8b59ebbcb7e7eea1bb0befdb0",
+  "reviewer_pack/review_template.jsonl": "f14768b21feb117a3b05ce15fd0bdef2b35c2c46f6e064adc350cbf2d6d3cf3b"
+ }
+}

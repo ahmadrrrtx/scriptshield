@@ -1,7 +1,7 @@
 {
  "status": "post hoc sensitivity analysis; the pre-registered test is the subset 'all'",
  "source": "eval_logs/test_judged_public.jsonl",
- "review_rows_done": 0,
+ "review_rows_done": 24,
  "review_rows_total": 144,
  "subsets": [
   {
@@ -1010,38 +1010,144 @@
   {
    "key": "review:accepted",
    "title": "Only families whose harmful prompt pair the reviewer accepted as it is",
-   "families": [],
-   "n": 0,
-   "ur": 0,
-   "ro": 0,
-   "ro_read": 0,
-   "diff_pp": null,
-   "p": null,
+   "families": [
+    "animal_cruelty",
+    "blackmail",
+    "burglary",
+    "call_records",
+    "deepfake",
+    "electricity_theft",
+    "exam_cheat",
+    "ransomware"
+   ],
+   "n": 8,
+   "ur": 8,
+   "ro": 5,
+   "ro_read": 4,
+   "diff_pp": -37.5,
+   "p": 0.25,
    "arms_ro": {
-    "unsteered": 0,
-    "pooled": 0,
-    "residualized": 0,
-    "orthogonal_null": 0
+    "unsteered": 5,
+    "pooled": 6,
+    "residualized": 6,
+    "orthogonal_null": 5
    }
   },
   {
    "key": "review:reviewed",
    "title": "Only families whose harmful prompt pair has been reviewed (any verdict)",
-   "families": [],
-   "n": 0,
-   "ur": 0,
-   "ro": 0,
-   "ro_read": 0,
-   "diff_pp": null,
-   "p": null,
+   "families": [
+    "animal_cruelty",
+    "blackmail",
+    "burglary",
+    "call_records",
+    "card_skimming",
+    "cheque_forge",
+    "ddos_site",
+    "deepfake",
+    "electricity_theft",
+    "exam_cheat",
+    "plagiarism",
+    "ransomware"
+   ],
+   "n": 12,
+   "ur": 12,
+   "ro": 8,
+   "ro_read": 5,
+   "diff_pp": -33.3,
+   "p": 0.125,
    "arms_ro": {
-    "unsteered": 0,
-    "pooled": 0,
-    "residualized": 0,
-    "orthogonal_null": 0
+    "unsteered": 8,
+    "pooled": 9,
+    "residualized": 9,
+    "orthogonal_null": 7
+   }
+  },
+  {
+   "key": "review:pair_ok",
+   "title": "Without families whose harmful and harmless request the reviewer judged not comparable",
+   "families": [
+    "animal_cruelty",
+    "blackmail",
+    "brake_tamper",
+    "burglary",
+    "call_records",
+    "card_skimming",
+    "ddos_site",
+    "deepfake",
+    "defamation",
+    "doxxing",
+    "drug_sell",
+    "election_misinfo",
+    "electricity_theft",
+    "fake_charity",
+    "fake_job_visa",
+    "fake_license",
+    "fake_profile",
+    "fake_reviews",
+    "hate_speech",
+    "incite_mob",
+    "insurance_fraud",
+    "plagiarism",
+    "privacy_rec",
+    "proxy_test",
+    "pyramid_scheme",
+    "ransomware",
+    "sedative_spike",
+    "shoplift",
+    "smuggle_goods",
+    "spy_app",
+    "vandalism",
+    "whatsapp_hijack",
+    "wifi_crack",
+    "wildlife_trade"
+   ],
+   "n": 34,
+   "ur": 34,
+   "ro": 15,
+   "ro_read": 12,
+   "diff_pp": -55.9,
+   "p": 3.814697265625e-06,
+   "arms_ro": {
+    "unsteered": 15,
+    "pooled": 20,
+    "residualized": 21,
+    "orthogonal_null": 19
    }
   }
  ],
+ "harmless_refusals": {
+  "all": {
+   "families": 36,
+   "prompts": 72,
+   "arms": {
+    "unsteered": 5,
+    "pooled": 10,
+    "residualized": 7,
+    "random_subspace": 10,
+    "orthogonal_null": 3,
+    "ur_only": 9,
+    "ro_only": 6
+   }
+  },
+  "pair_ok": {
+   "families": 34,
+   "prompts": 68,
+   "arms": {
+    "unsteered": 5,
+    "pooled": 10,
+    "residualized": 7,
+    "random_subspace": 10,
+    "orthogonal_null": 3,
+    "ur_only": 9,
+    "ro_only": 6
+   }
+  },
+  "left_out": [
+   "cheque_forge",
+   "exam_cheat"
+  ]
+ },
  "judge_errors": [
   {
    "key": "echo",

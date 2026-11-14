@@ -101,6 +101,38 @@ check('a borderline refusal reading is shown as such and explains the withholdin
 check('an unread Roman-Urdu reply says it was not read',
   !!unreadCase && /it was not read, and a Roman-Urdu reply/.test(showOnly(unreadCase)), JSON.stringify(unreadCase));
 check('the old catch-all reason is gone from the grid', !/not a clean refusal of a harmful request/.test(text(grid)));
+
+// what the author's review says about the pair that is shown; replies always belong to the original wording
+const reviewText = (i, label) => {
+  byId.family.value = String(i); byId.family.listeners.change();
+  byId.label.children[label === 'harmful' ? 0 : 1].listeners.click();
+  return text(byId['review-line']);
+};
+const reviewedFam = D.families.findIndex(f => f.review), unreviewedFam = D.families.findIndex(f => !f.review);
+let reviewedPairs = 0, changeAsked = null, pairNo = null, corrected = null, waiting = null;
+D.families.forEach((f, i) => ['harmful', 'benign'].forEach(label => {
+  const r = (f.review || {})[label];
+  if (!r) return;
+  reviewedPairs++;
+  if (r.correction && !changeAsked) changeAsked = { i, label };
+  if (r.correction && r.status === 'corrected' && !corrected) corrected = { i, label };
+  if (r.correction && r.status === 'correction_pending' && !waiting) waiting = { i, label };
+  if (f.review.pair === 'no' && !pairNo) pairNo = { i, label };
+}));
+check('review counts on the page match the embedded data', reviewedPairs === D.stats.review.reviewed_test_pairs && D.stats.review.reviewed >= reviewedPairs,
+  `pairs with a review line ${reviewedPairs}, reviewed in total ${D.stats.review.reviewed}`);
+check('an unreviewed prompt pair says so', unreviewedFam < 0 || /not reviewed yet/.test(reviewText(unreviewedFam, 'harmful')));
+check('a reviewed prompt pair shows the ratings and names one participant reviewer',
+  reviewedFam < 0 || (/one participant reviewer/.test(reviewText(reviewedFam, 'harmful')) && /of 5/.test(text(byId['review-line']))));
+check('where a change was asked for, the page says the replies belong to the original wording',
+  !changeAsked || /the request shown and the replies below are the original/.test(reviewText(changeAsked.i, changeAsked.label)), JSON.stringify(changeAsked));
+check('a corrected prompt pair says that the corrected text has not been run and that the page shows the original',
+  !corrected || (/has not been run through the model/.test(reviewText(corrected.i, corrected.label)) &&
+                 /the request shown and the replies below are the original/.test(text(byId['review-line']))), JSON.stringify(corrected));
+check('a correction that waits for its text is not described as made',
+  !waiting || (/He asked for/.test(reviewText(waiting.i, waiting.label)) && !/He corrected|He replaced/.test(text(byId['review-line']))), JSON.stringify(waiting));
+check('a rejected pairing is stated on the family', !pairNo || /not comparable as a pair/.test(reviewText(pairNo.i, pairNo.label)), JSON.stringify(pairNo));
+byId.label.children[0].listeners.click();
 check('links: article, GitHub, dataset, model, both collections', all(byId.links, e => e.tag === 'a').length >= 6
   && ['github.com', '/datasets/', '/collections/'].every(s => all(byId.links, e => e.tag === 'a').some(a => String(a.attrs.href).includes(s))));
 const limits = text(byId['limit-list']);

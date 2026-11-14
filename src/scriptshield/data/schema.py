@@ -66,8 +66,9 @@ def load_corpus(root: str | Path) -> tuple[list[dict], dict]:
     return load_records(path), {**spec, "path": str(path)}
 
 
-def validate_record(rec: dict) -> list[str]:
-    v = jsonschema.Draft202012Validator(_schema())
+def validate_record(rec: dict, schema: dict | None = None) -> list[str]:
+    """Schema errors of one record. ``schema`` defaults to the schema of the frozen corpus."""
+    v = jsonschema.Draft202012Validator(schema or _schema())
     return [f"{'.'.join(str(x) for x in e.absolute_path) or '<root>'}: {e.message}"
             for e in v.iter_errors(rec)]
 
@@ -167,7 +168,9 @@ class CorpusReport:
         return "\n".join(lines)
 
 
-def validate_corpus(records: list[dict], strict_pairs: bool = True) -> CorpusReport:
+def validate_corpus(records: list[dict], strict_pairs: bool = True, schema: dict | None = None) -> CorpusReport:
+    """Schema and integrity checks of a corpus. ``schema`` defaults to the schema of the frozen corpus; a revised
+    corpus is checked against data/schemas/revised_prompt.schema.json with the same integrity rules."""
     rep = CorpusReport(n_records=len(records))
     seen_ids: set[str] = set()
     fam_splits: dict[str, set[str]] = defaultdict(set)
@@ -175,7 +178,7 @@ def validate_corpus(records: list[dict], strict_pairs: bool = True) -> CorpusRep
     text_index: dict[str, list[str]] = defaultdict(list)
 
     for rec in records:
-        errs = validate_record(rec)
+        errs = validate_record(rec, schema)
         rep.errors.extend(errs)
         if errs:
             continue

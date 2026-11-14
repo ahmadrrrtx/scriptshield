@@ -1,0 +1,25 @@
+{
+ "evaluated_version": "0.2.0",
+ "evaluated_corpus_sha256": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+ "current": "0.3.0-draft.2",
+ "revisions": [
+  {
+   "id": "0.3.0-draft.1",
+   "created": "2026-11-13",
+   "published": true,
+   "files": {
+    "REVISION.json": "f23e831d242ecb8f025697b4b15207bfed9fd1fadb033a5b6eb3bc89378c82ba",
+    "reviewed_records.jsonl": "2af06034774eeecc7e79c72cb2c2930bf69641714b251e02ac13a1b84450c41a"
+   }
+  },
+  {
+   "id": "0.3.0-draft.2",
+   "created": "2026-11-13",
+   "published": true,
+   "files": {
+    "REVISION.json": "b0c1ce8d1be61ed3dc3b691a852e86b75facb4a4db17d4ea7715b6f19651cf06",
+    "reviewed_records.jsonl": "373effd4f42c92828440cb47e7d72a21be33c419108aaf64894de84aaf31dff0"
+   }
+  }
+ ]
+}

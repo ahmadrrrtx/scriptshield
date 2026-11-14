@@ -32,6 +32,10 @@ configs:
   data_files:
   - split: test
     path: eval_logs/test_judged_public.jsonl
+- config_name: review_revision
+  data_files:
+  - split: reviewed
+    path: revisions/v{{REVISION_ID}}/reviewed_records.jsonl
 ---
 
 # ScriptShield v{{VERSION}} — the same request in Urdu script and in Roman Urdu
@@ -117,7 +121,10 @@ logs = load_dataset("{{ID_DATASET}}", "test_outputs", split="test")   # one row 
 | `data/scriptshield_v{{VERSION}}.jsonl` | all records in one file (sha256 `{{SHA256}}`) |
 | `data/utility_v0.1.yaml` | 24 simple factual questions in Urdu script and Roman Urdu, used as a utility probe |
 | `manifest.json` | counts, split rule, checksums |
-| `reviewer_pack/` | the original review pack, unchanged (`review_sheet.csv`, `INSTRUCTIONS.md`, `review_template.jsonl`); the guide the reviewer works from (`AHMAD_REVIEW_GUIDE.md`); and `review_status.json`, the status of every prompt pair. The working sheet, the batches and proposed corrections are in the [code repository]({{URL_GITHUB}}/tree/main/data/reviewer_pack) and enter this dataset only as an approved new version |
+| `reviewer_pack/` | the original review pack, unchanged (`review_sheet.csv`, `INSTRUCTIONS.md`, `review_template.jsonl`); the guide the reviewer works from (`AHMAD_REVIEW_GUIDE.md`); `REVIEW_LEDGER.md`, the ledger of the review (every return, every correction, what is still open); and `review_status.json`, the status of every prompt pair. The working sheet, the batches and the reviewer's messages are in the [code repository]({{URL_GITHUB}}/tree/main/data/reviewer_pack) |
+| `revisions/` | review revisions: for every reviewed prompt pair the original sentences, the revised sentences, the ratings, the reviewer, the date and the reason. Current: `revisions/v{{REVISION_ID}}/`; earlier revisions are kept unchanged. **Not evaluated**; see "Review and revisions" |
+| `schemas/` | JSON schemas of a prompt record and of a review-revision record |
+| `CHANGELOG.md` | dataset changelog: versions and review revisions |
 | `quality/` | the family-level quality audit (report and JSON), the LLM reading notes it uses, and the post hoc robustness checks of the script gap |
 | `figures/` | the figures of the write-up and `figure_data.json` with the numbers they show |
 | `eval_logs/` | judged outputs of the frozen test run (redacted, see below), margins, analysis JSON, run reports |
@@ -136,7 +143,7 @@ logs = load_dataset("{{ID_DATASET}}", "test_outputs", split="test")   # one row 
 | `intended_meaning_en` | what the prompt is meant to say |
 | `harm_group`, `harm_category` | coarse and fine topic ({{HARM_GROUPS}}) |
 | `split` | `calibration` (24 families), `dev` (12), `test` (36) |
-| `validation_status` | `unreviewed` for every record: v{{VERSION}} is frozen and is not edited. Review results are published next to it, per prompt pair, in `reviewer_pack/review_status.json` |
+| `validation_status` | `unreviewed` for every record: v{{VERSION}} is frozen and is not edited. Review results are published next to it, per prompt pair, in `reviewer_pack/review_status.json` and in `revisions/` |
 | `source`, `created` | `authored`, creation date |
 
 ### Splits
@@ -166,7 +173,8 @@ Every family has all four written forms and both labels, so each split is balanc
 3. **Freezing.** Families were assigned to splits by a seeded rule and the corpus was frozen with one
    checksum before any experiment was run on it.
 4. **Evaluation.** The model's responses were logged, judged and published with the withholding rule below.
-5. **Review.** Human review started after publication and is tracked per prompt pair.
+5. **Review.** Human review started after publication and is tracked per prompt pair. What the reviewer says is
+   published as a review revision next to the frozen data (see "Review and revisions").
 
 ## Quality audit
 
@@ -192,14 +200,56 @@ points. On the {{ROB_CLEAN_N}} test families with no automatic flag and no LLM n
 {{ROB_CLEAN_RO}} times out of {{ROB_CLEAN_N}} and Urdu script {{ROB_CLEAN_UR}} out of {{ROB_CLEAN_N}}. The same file
 will show the gap on the reviewer-accepted families as the review proceeds.
 
+## Review and revisions
+
+The data that was evaluated is **v{{VERSION}}**. It is frozen: its files are never edited, and every logged reply and
+every reported number belongs to it.
+
+The author's review of the prompts is published separately, as a **review revision**. The current one is
+`revisions/v{{REVISION_ID}}/` ({{REVISION_DATE}}): {{REVISION_PAIRS}} of 144 prompt pairs in {{REVISION_FAMILIES}} of
+{{N_FAMILIES}} families ({{REVISION_SPLITS}}). What the reviewer found is in the status box at the top of this card and,
+pair by pair, in section 9 of the [quality audit]({{URL_AUDIT}}). Every answer the reviewer sends starts a new
+revision; earlier ones stay in `revisions/` unchanged, and `reviewer_pack/REVIEW_LEDGER.md` lists every return,
+every correction and what is still open.
+
+```python
+from datasets import load_dataset
+reviewed = load_dataset("{{ID_DATASET}}", "review_revision", split="reviewed")   # one row per reviewed prompt pair
+```
+
+Each row keeps the original sample ids (`id_ur`, `id_ro`, `id_en`, `id_cm`), the original and the revised sentences
+(`ur_original` / `ur_revised`, `ro_original` / `ro_revised`), the original and the revised English meaning (and
+who wrote a revised English text: the reviewer, or the maintainer to match the reviewer's sentences), the
+unchanged `safety_label`, every rating, the reviewer, the review date, the reason for a revision, and both
+version numbers (`previous_dataset_version`, `updated_dataset_version`).
+
+How to read a revision:
+
+- **It is one participant-provided review** by the project author, a native Urdu / Roman Urdu speaker. It is not
+  an independent expert panel, not a professional translation certification and not a consensus of several
+  reviewers. Only the listed prompt pairs have been reviewed; the dataset as a whole is not human-validated.
+- **A revised sentence has not been evaluated.** No model was run on it. Do not pair a revised sentence with a
+  logged reply or with a number of this card; those belong to the original sentence. Sentences changed in the
+  current revision: {{REVISION_CHANGED}}.
+- **A sentence the reviewer did not supply is never written.** Where he announced a correction and its text has
+  not been received, the revised field is empty and the original sentence stands
+  (corrections waiting for their text: {{REVISION_WAITING}}).
+- **A family whose harmful and harmless request the reviewer judged not comparable** is left out of every
+  comparison between harmful and harmless requests on revised data, also after its harmless request has been
+  replaced (so far: {{REVISION_LEFT_OUT}}). The script comparison is not affected: it compares a harmful request
+  with itself in two scripts.
+
 ## Versions
 
 | Version | Date | What changed |
 |---|---|---|
 | 0.1.1-pilot | 2026-11-03 | 24 pilot families; used for pipeline tests only; not published as a dataset |
-| **0.2.0** (tag `v{{VERSION}}`) | 2026-11-13 | first public release: {{N_FAMILIES}} families, {{N_RECORDS}} prompts. Every reported number uses this version |
+| **0.2.0** (tag `v{{VERSION}}`) | 2026-11-13 | first public release: {{N_FAMILIES}} families, {{N_RECORDS}} prompts. **Every reported number uses this version** |
 | 0.2.0, card revision | {{BUILD_DATE}} | documentation, figures, quality audit and review pack added. **No data file changed** (the corpus checksum above is the same) |
-| next | planned | only if the review yields approved corrections. It will keep, for each changed prompt, the original text, the revised text, the reason and the reviewer; v0.2.0 stays available under its tag |
+{{REVISION_ROWS}}
+| 0.3.0 | planned | the full corpus with the reviewed corrections, once the review is complete and no correction is waiting. It will be evaluated before any result is reported for it |
+
+Details per version: [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Reproduce the evaluation
 
@@ -264,9 +314,10 @@ repository does it and compares the result with the published numbers). Rows tha
 - **Automatic refusal labels are unreliable for Roman-Urdu responses.** Both judges we tried call echoes,
   loops and off-topic text "refusals". If you score Roman-Urdu output with a moderation model, read a
   sample yourself.
-- **Review is incomplete** (see the status at the top). One Roman-Urdu spelling convention only ("kaise",
-  "nahi", "mein"); real Roman Urdu spelling varies a lot. A second spelling has been drafted for the test
-  families and waits for the reviewer; it is not part of this version.
+- **Review is incomplete** (see the status at the top): one reviewer, who is also the author, and a small part
+  of the prompts so far. One Roman-Urdu spelling convention only ("kaise", "nahi", "mein"); real Roman Urdu
+  spelling varies a lot. A second spelling has been drafted for the test families; the reviewer has judged
+  {{ALT_N}} of them so far and found {{ALT_YES}} natural. No result uses it.
 - **Harmful requests are deliberately non-operational** (they ask, they do not instruct), single-turn,
   and not adversarial. A model that refuses all of them is not thereby safe.
 - **Sentence form is not balanced between labels**: {{AUDIT_CMD_H}} of 72 harmful prompts but only
@@ -282,7 +333,8 @@ This project was built with substantial help from an AI assistant (an LLM agent)
 direction it drafted the prompts, wrote much of the code and analysis, and did the response readings
 recorded in `eval_logs/adjudication/`. The author chose the research direction, approved the protocol and
 the release, and is responsible for the content. Responses were not labelled by human annotators. The
-author reviews the prompts himself; that review is a participant review, not independent expert validation.
+author, a native Urdu / Roman Urdu speaker, reviews the prompts himself; that is one participant-provided
+review, not independent expert validation.
 
 ## Licence
 

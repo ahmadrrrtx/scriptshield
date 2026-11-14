@@ -6,8 +6,8 @@ authors:
   - family-names: "Ahmad"
     given-names: "Muhammad"
     alias: "ahmadrrrtx"
-version: 0.2.2
-date-released: 2026-11-13
+version: 0.2.3
+date-released: 2026-11-14
 license: MIT
 url: "https://github.com/ahmadrrrtx/scriptshield"
 repository-code: "https://github.com/ahmadrrrtx/scriptshield"

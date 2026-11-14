@@ -1,0 +1,138 @@
+{
+ "revision_id": "0.3.0-draft.1",
+ "created": "2026-11-13",
+ "status": "draft. Review annotations for 12 prompt pairs. 3 correction(s) were announced by the reviewer without their text; no sentence has been changed.",
+ "previous_dataset_version": "0.2.0",
+ "previous_dataset_sha256": "fd7a5b7b4aa6eb03a889fbbe68117af63ac8652e667aa48ac5c245d4a3df8763",
+ "previous_dataset_file": "data/corpus/scriptshield_v0.2.0.jsonl",
+ "what_this_is": "A record of the author's review next to the frozen corpus. It is not a validated dataset: 12 of 144 prompt pairs (6 of 72 families) have been reviewed, by one person.",
+ "review": {
+  "reviewer": {
+   "name": "Muhammad Ahmad",
+   "handle": "ahmadrrrtx",
+   "role": "project author; participant review, not independent expert validation",
+   "review_type": "participant-provided native Urdu / Roman Urdu linguistic review",
+   "language_background": "native Urdu / Roman Urdu speaker (as stated by the reviewer)",
+   "n_reviewers": 1,
+   "independent": false,
+   "professional_translation_certification": false,
+   "multi_reviewer_consensus": false
+  },
+  "batches": {
+   "01": {
+    "received": "2026-11-13",
+    "source_files": [
+     "batch_01.txt"
+    ],
+    "families": [
+     "blackmail",
+     "burglary",
+     "card_skimming",
+     "ddos_site",
+     "deepfake",
+     "exam_cheat"
+    ]
+   }
+  },
+  "source_files": [
+   "batch_01.txt"
+  ]
+ },
+ "summary": {
+  "prompt_pairs_reviewed": 12,
+  "prompt_pairs_total": 144,
+  "families_reviewed": 6,
+  "families_with_any_review": 6,
+  "families_total": 72,
+  "reviewed_families_by_split": {
+   "test": 6,
+   "dev": 0,
+   "calibration": 0
+  },
+  "review_status": {
+   "accepted": 9,
+   "correction_pending": 3
+  },
+  "naturalness": {
+   "urdu_script": {
+    "rated": 12,
+    "min": 4,
+    "mean": 4.83
+   },
+   "roman_urdu": {
+    "rated": 12,
+    "min": 4,
+    "mean": 4.83
+   }
+  },
+  "same_meaning_yes": 12,
+  "label_plausible_yes": 12,
+  "alt_spelling_judged": 12,
+  "alt_spelling_yes": 12,
+  "pair_verdicts": {
+   "no": 1,
+   "yes": 5
+  },
+  "excluded_from_matched_pair_analysis": [
+   "exam_cheat"
+  ],
+  "corrections": {
+   "prompt_pairs_with_a_correction": 3,
+   "applied": 0,
+   "text_not_received": 3,
+   "not_approved": 0,
+   "english_written_by_maintainer": [],
+   "not_applied": 0,
+   "replacements": [
+    "exam_cheat-benign"
+   ],
+   "flagged": []
+  },
+  "sentences_changed": 0
+ },
+ "corrections_waiting_for_text": [
+  {
+   "row_id": "card_skimming-harmful",
+   "fields": [
+    "ur",
+    "ro"
+   ]
+  },
+  {
+   "row_id": "ddos_site-harmful",
+   "fields": [
+    "ur",
+    "ro"
+   ]
+  },
+  {
+   "row_id": "exam_cheat-benign",
+   "fields": [
+    "ur",
+    "ro",
+    "alt",
+    "en",
+    "meaning"
+   ]
+  }
+ ],
+ "evaluation": {
+  "evaluated": false,
+  "results_belong_to_dataset_version": "0.2.0",
+  "note": "Every result of this project was computed on the frozen corpus v0.2.0, with the original sentences. No model has been run on a revised sentence. A revised sentence must not be paired with a logged reply or a reported number.",
+  "families_to_leave_out_of_harmful_against_harmless_comparisons": [
+   "exam_cheat"
+  ]
+ },
+ "revised_corpus": {
+  "file": null,
+  "reason": "corrections are waiting for their text"
+ },
+ "files": {
+  "reviewed_records.jsonl": {
+   "sha256": "2af06034774eeecc7e79c72cb2c2930bf69641714b251e02ac13a1b84450c41a",
+   "rows": 12
+  }
+ },
+ "generated_by": "scripts/build_dataset_revision.py"
+}

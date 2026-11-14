@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ScriptShield review revision record",
+  "description": "One reviewed prompt pair: original text, revised text, ratings, reviewer, date, reason. Written by scripts/build_dataset_revision.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pair_id",
+    "family_id",
+    "safety_label",
+    "split",
+    "harm_group",
+    "harm_category",
+    "id_ur",
+    "id_ro",
+    "id_en",
+    "id_cm",
+    "ur_original",
+    "ur_revised",
+    "ur_changed",
+    "ro_original",
+    "ro_revised",
+    "ro_changed",
+    "en_original",
+    "en_revised",
+    "en_changed",
+    "en_revised_written_by",
+    "intended_meaning_en_original",
+    "intended_meaning_en_revised",
+    "intended_meaning_en_changed",
+    "intended_meaning_en_revised_written_by",
+    "ro_alt_candidate",
+    "ro_alt_revised",
+    "cm_original",
+    "cm_status",
+    "review_status",
+    "ur_naturalness",
+    "ro_naturalness",
+    "naturalness_note",
+    "same_meaning",
+    "label_plausible",
+    "alt_spelling_ok",
+    "pair_comparable",
+    "matched_pair_analysis",
+    "comments",
+    "correction_kind",
+    "correction_state",
+    "correction_pending_fields",
+    "correction_approved_by_owner",
+    "correction_date",
+    "correction_flags",
+    "revision_reason",
+    "reviewer_name",
+    "reviewer_handle",
+    "reviewer_role",
+    "review_type",
+    "review_date",
+    "review_batch",
+    "review_source_file",
+    "previous_dataset_version",
+    "updated_dataset_version",
+    "original_text_used_in_v0_2_0_as",
+    "revised_text_differs_from_original",
+    "revised_text_used_in_any_result"
+  ],
+  "properties": {
+    "pair_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+-(harmful|benign)$",
+      "description": "the prompt pair: one request in Urdu script and in Roman Urdu; same value as pair_id in the corpus"
+    },
+    "family_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "safety_label": {
+      "enum": [
+        "harmful",
+        "benign"
+      ],
+      "description": "the label of the frozen corpus; a revision never changes it"
+    },
+    "split": {
+      "enum": [
+        "calibration",
+        "dev",
+        "test"
+      ]
+    },
+    "harm_group": {
+      "type": "string",
+      "minLength": 2
+    },
+    "harm_category": {
+      "type": "string",
+      "minLength": 2
+    },
+    "id_ur": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-ur-(harmful|benign)$"
+    },
+    "id_ro": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-ro-(harmful|benign)$"
+    },
+    "id_en": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-en-(harmful|benign)$"
+    },
+    "id_cm": {
+      "type": "string",
+      "pattern": "^ss-[a-z0-9_]+-cm-(harmful|benign)$"
+    },
+    "ur_original": {
+      "type": "string",
+      "minLength": 5
+    },
+    "ur_revised": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "null while a correction of this field is announced and its text has not been received"
+    },
+    "ur_changed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "ro_original": {
+      "type": "string",
+      "minLength": 5
+    },
+    "ro_revised": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "ro_changed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "en_original": {
+      "type": "string",
+      "minLength": 5
+    },
+    "en_revised": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "en_changed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "en_revised_written_by": {
+      "enum": [
+        "reviewer",
+        "maintainer",
+        null
+      ],
+      "description": "Who wrote the revised English text. null: it was not changed. 'maintainer': written to match a request the reviewer replaced in Urdu and Roman Urdu; not the reviewer's wording."
+    },
+    "intended_meaning_en_original": {
+      "type": "string",
+      "minLength": 5
+    },
+    "intended_meaning_en_revised": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "intended_meaning_en_changed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "intended_meaning_en_revised_written_by": {
+      "enum": [
+        "reviewer",
+        "maintainer",
+        null
+      ],
+      "description": "Who wrote the revised English text. null: it was not changed. 'maintainer': written to match a request the reviewer replaced in Urdu and Roman Urdu; not the reviewer's wording."
+    },
+    "ro_alt_candidate": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "second Roman-Urdu spelling of the original sentence, drafted by a word list and shown to the reviewer (test families only)"
+    },
+    "ro_alt_revised": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "the second spelling that belongs to the revised sentence; null if none has been reviewed for it"
+    },
+    "cm_original": {
+      "type": "string",
+      "minLength": 5
+    },
+    "cm_status": {
+      "type": "string"
+    },
+    "review_status": {
+      "enum": [
+        "accepted",
+        "corrected",
+        "correction_pending",
+        "rejected",
+        "uncertain",
+        "unable_to_judge"
+      ]
+    },
+    "ur_naturalness": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "ro_naturalness": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1,
+      "maximum": 5
+    },
+    "naturalness_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "same_meaning": {
+      "enum": [
+        "yes",
+        "no",
+        "uncertain",
+        "unable",
+        null
+      ]
+    },
+    "label_plausible": {
+      "enum": [
+        "yes",
+        "no",
+        "uncertain",
+        "unable",
+        null
+      ]
+    },
+    "alt_spelling_ok": {
+      "enum": [
+        "yes",
+        "no",
+        "uncertain",
+        "unable",
+        null
+      ]
+    },
+    "pair_comparable": {
+      "enum": [
+        "yes",
+        "no",
+        "uncertain",
+        "unable",
+        null
+      ]
+    },
+    "matched_pair_analysis": {
+      "type": "string",
+      "pattern": "^(included|not settled|excluded: .+)$"
+    },
+    "comments": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "correction_kind": {
+      "enum": [
+        "wording",
+        "replacement",
+        null
+      ]
+    },
+    "correction_state": {
+      "enum": [
+        "applied",
+        "applied in part",
+        "not applied",
+        "text not received",
+        "proposed, not approved by the project owner",
+        null
+      ]
+    },
+    "correction_pending_fields": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "correction_approved_by_owner": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "correction_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "correction_flags": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "revision_reason": {
+      "type": "string",
+      "minLength": 5
+    },
+    "reviewer_name": {
+      "type": "string",
+      "minLength": 2
+    },
+    "reviewer_handle": {
+      "type": "string",
+      "minLength": 2
+    },
+    "reviewer_role": {
+      "type": "string",
+      "pattern": "participant"
+    },
+    "review_type": {
+      "type": "string",
+      "pattern": "participant"
+    },
+    "review_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "review_batch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "review_source_file": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "previous_dataset_version": {
+      "const": "0.2.0"
+    },
+    "updated_dataset_version": {
+      "type": "string",
+      "pattern": "^0\\.[0-9]+\\.[0-9]+(-draft\\.[0-9]+)?$"
+    },
+    "original_text_used_in_v0_2_0_as": {
+      "type": "string"
+    },
+    "revised_text_differs_from_original": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "null while the revised text is not final"
+    },
+    "revised_text_used_in_any_result": {
+      "const": false,
+      "description": "no result of this project was computed on revised text"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "correction_state": {
+            "const": "text not received"
+          }
+        },
+        "required": [
+          "correction_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "correction_pending_fields": {
+            "type": "string",
+            "minLength": 2
+          },
+          "review_status": {
+            "const": "correction_pending"
+          },
+          "revised_text_differs_from_original": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "correction_kind": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "correction_kind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ur_changed": {
+            "const": false
+          },
+          "ro_changed": {
+            "const": false
+          },
+          "en_changed": {
+            "const": false
+          },
+          "intended_meaning_en_changed": {
+            "const": false
+          },
+          "correction_state": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pair_comparable": {
+            "const": "no"
+          }
+        },
+        "required": [
+          "pair_comparable"
+        ]
+      },
+      "then": {
+        "properties": {
+          "matched_pair_analysis": {
+            "pattern": "^excluded: "
+          }
+        }
+      }
+    }
+  ]
+}

@@ -6,14 +6,16 @@
 #     make recompute   recompute the pre-registered analysis from the public logs (downloads them if needed)
 #     make audit       rewrite the dataset quality audit from the corpus
 #     make robustness  the script gap on subsets of the test set, from the public logs
-#     make review      import the reviewer's answers, then refresh the audit and the robustness checks
+#     make review      import the reviewer's answers, rebuild the review revision, then refresh the audit and the
+#                      robustness checks
+#     make revision    rebuild the review revision only (data/revisions/, data/DATASET_CHANGELOG.md)
 #     make figures     redraw the figures (needs matplotlib: pip install -e ".[figures]")
-#     make docs-check  the committed audit and robustness documents are what the scripts produce
+#     make docs-check  the committed audit, review revision and robustness documents are what the scripts produce
 #                      (with a local release folder it also checks the article)
 #
 #   With the raw outputs of a GPU run under experiments/results/ (they are not published, see README):
 #     make analysis report article package scan
-.PHONY: test validate analysis report article package scan recompute snapshot all audit robustness review figures demo-check docs-check
+.PHONY: test validate analysis report article package scan recompute snapshot all audit robustness review revision figures demo-check docs-check
 J ?= experiments/results/judge_test_merged/judged.jsonl
 M ?= experiments/results/fire_test_v2/fire_test/margins.jsonl
 V ?= experiments/results/verify_release_v1/verify_release/verify_report.json
@@ -45,8 +47,10 @@ robustness:
 	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/robustness_checks.py; \
 	  else python3 scripts/robustness_checks.py --download; fi
 review:
-	python3 scripts/import_review.py && python3 scripts/import_response_labels.py && python3 scripts/audit_dataset.py
+	python3 scripts/import_review.py && python3 scripts/build_dataset_revision.py && python3 scripts/import_response_labels.py && python3 scripts/audit_dataset.py
 	$(MAKE) robustness
+revision:
+	python3 scripts/build_dataset_revision.py
 figures:
 	python3 scripts/make_figures.py
 demo-check:
@@ -54,6 +58,7 @@ demo-check:
 # the committed generated documents are what the scripts produce (works in a fresh clone)
 docs-check:
 	python3 scripts/audit_dataset.py --check
+	python3 scripts/build_dataset_revision.py --check
 	@if [ -d release/hf_dataset/eval_logs ]; then python3 scripts/robustness_checks.py --check && python3 scripts/make_article.py --check; \
 	  else python3 scripts/robustness_checks.py --download --check; fi
 snapshot:

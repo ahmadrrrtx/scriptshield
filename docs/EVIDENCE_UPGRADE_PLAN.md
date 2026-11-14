@@ -80,7 +80,7 @@ The six candidates below are judged by how much they repair these weak points.
 | Compute | Kaggle free tier, 2 x T4: an estimated 40 to 60 minutes including the judge. $0. For scale: the whole study used 3.1 GPU hours. |
 | Time | About 2 hours of agent work (kernel, run, analysis, documents). |
 | Limits | Still one model. The judge problem grows with longer text. The test set is looked at again; this is not tuning, since nothing is chosen on it, but it must be declared. Needs the owner's Kaggle token, which is not in the workspace. |
-| Decision | **Worth doing if the owner provides the Kaggle token and the review loop leaves time. Not required for submission.** The only GPU experiment recommended. Go or no-go by the evening of 14 November (PKT). |
+| Decision | **Not run before the submission.** It was the only GPU experiment judged worth its cost, and it was not required. On 14 November the owner chose to submit without it for lack of time. It stays the first item of future work, together with E5b and E5c. |
 
 ### E5. More matched-family robustness checks
 
@@ -91,9 +91,10 @@ The six candidates below are judged by how much they repair these weak points.
 | Why it would change the submission | The audit found imperfections; a reader will ask whether they carry the result. "One spelling" is the largest untested threat to the headline. |
 | Design, part a | Repeat the pre-registered comparison on subsets defined without reference to any model output: by harm group, leaving one group out, by form of request, without audit-flagged families, and by reviewer verdict as the review arrives. No GPU. |
 | Design, part b | Run the unsteered model on the 36 test families in a second Roman-Urdu spelling (72 prompts). Only the spellings the reviewer confirms as natural are used. Reported apart from the primary comparison. |
-| Compute | Part a: none. Part b: 5 to 10 GPU minutes on the Kaggle free tier, in the same session as E4. |
-| Limits | Part a: subsets chosen after the results were known; small subsets are noisy. Part b: needs the reviewed spelling candidates (review batches 01 to 06) and the Kaggle token. |
-| Decision | **Part a done**: `docs/ROBUSTNESS_CHECKS.md`. Leaving out any one harm group the difference stays between -45.2 and -61.3 points; on the 21 test families with no audit flag and no note it is 9 of 21 against 21 of 21. Two harm groups (dishonesty, privacy; 8 families) show no gap by the judge, which is reported. **Part b: after the test batches are reviewed, together with E4.** |
+| Design, part c | Added on 2026-11-13, after review batch 02. Run the unsteered model on the reviewer's corrected sentences: every reviewed test family whose harmful request he corrected, in Urdu script and Roman Urdu, next to the original sentences in the same run. Descriptive only: it shows whether the reviewed wording is refused like the original. It does not replace the pre-registered comparison, and no steering arm is run on corrected text (the vectors were computed from the original calibration prompts). Needs its own protocol amendment before the run. |
+| Compute | Part a: none. Part b: 5 to 10 GPU minutes on the Kaggle free tier, in the same session as E4. Part c: a few GPU minutes in that session. |
+| Limits | Part a: subsets chosen after the results were known; small subsets are noisy. Part b: needs the reviewed spelling candidates (review batches 01 to 06) and the Kaggle token. Part c: only as many prompts as the reviewer has corrected (after batch 02: two harmful requests with text, two more waiting for it), so it can show a direction and nothing more; it grows with every reviewed batch. |
+| Decision | **Part a done**: `docs/ROBUSTNESS_CHECKS.md`. Leaving out any one harm group the difference stays between -45.2 and -61.3 points; on the 21 test families with no audit flag and no note it is 9 of 21 against 21 of 21. Two harm groups (dishonesty, privacy; 8 families) show no gap by the judge, which is reported. **Parts b and c: not run before the submission** (no GPU session, see E4; 12 of the 36 test families were reviewed by then). Future work. |
 
 ### E6. More statistics
 
@@ -110,7 +111,7 @@ The six candidates below are judged by how much they repair these weak points.
 | 1 | E5a robustness on subsets | done | nothing |
 | 2 | E3 judge errors by kind of reply | done | nothing |
 | 3 | E1 human check of the reading | pack ready | 30 to 40 minutes of the owner's time |
-| 4 | E5b second spelling, E4 second configuration (one GPU session) | planned, not started | reviewed spelling candidates; Kaggle token; go-ahead |
+| 4 | E5b second spelling, E5c corrected sentences, E4 second configuration (one GPU session) | not run before the submission; future work | reviewed spelling candidates and corrected sentences; a GPU session |
 | 5 | E2 independent reader | future work | a second person |
 | 6 | E6 more statistics | not done, by decision | |
 

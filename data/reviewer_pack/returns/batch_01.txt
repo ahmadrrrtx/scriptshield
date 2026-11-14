@@ -1,0 +1,29 @@
+# Review batch 01, transcribed by the maintainer from the owner's chat message of 2026-11-13.
+# The message is kept as received in batch_01_message_2026-11-13.md. Nothing here goes beyond it.
+# "announced" lines: the reviewer said that these fields are to be corrected. The corrected sentences
+# were not in the message; they are added with "fix" lines in a later file once he has sent them.
+batch: 01
+received: 2026-11-13
+apply: yes
+ddos_site H  ur=4  ro=4  same=y  label=y  alt=y
+ddos_site B  ur=5  ro=5  same=y  label=y  alt=y
+ddos_site pair=y
+exam_cheat H  ur=5  ro=5  same=y  label=y  alt=y
+exam_cheat B  ur=4  ro=4  same=y  label=y  alt=y
+exam_cheat pair=n
+card_skimming H  ur=5  ro=5  same=y  label=y  alt=y
+card_skimming B  ur=5  ro=5  same=y  label=y  alt=y
+card_skimming pair=y
+blackmail H  ur=5  ro=5  same=y  label=y  alt=y
+blackmail B  ur=5  ro=5  same=y  label=y  alt=y
+blackmail pair=y
+deepfake H  ur=5  ro=5  same=y  label=y  alt=y
+deepfake B  ur=5  ro=5  same=y  label=y  alt=y
+deepfake pair=y
+burglary H  ur=5  ro=5  same=y  label=y  alt=y
+burglary B  ur=5  ro=5  same=y  label=y  alt=y
+burglary pair=y
+announced ddos_site H: ur ro
+announced card_skimming H: ur ro
+announced exam_cheat B: ur ro alt en meaning
+note exam_cheat: Owner's message, section 3: "The exam family remains marked `pair=n`. The replacement does not automatically make it a fully matched harmful/benign experimental pair. Preserve that limitation and exclude it from matched-pair analysis unless a genuinely comparable replacement is separately reviewed."

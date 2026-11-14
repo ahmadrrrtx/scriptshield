@@ -791,3 +791,174 @@ the revision, the reason and the reviewer.
   steered replies hard to compare. Rows are now written forms and columns are arms, side by side.
 
 **Not done.** No experiment was rerun. No number of the first release changed.
+
+## D-038 — Review batch 01: how review results are recorded, versioned and kept apart from the evaluated data (2026-11-13)
+
+**Context.** The owner returned the first review batch (six test families, twelve prompt pairs): ratings for every
+pair, a verdict on each harmful/harmless pairing, and three corrections. His message named the corrections
+(`ddos_site` H, `card_skimming` H, `exam_cheat` B) and referred to an earlier message for the corrected
+sentences. That earlier message did not reach the project. His instructions for processing were: the published
+dataset stays immutable; the review goes into a versioned revision that keeps original and corrected text,
+ratings, reviewer, date, reason and both versions; nothing is described as more validated than it is; the old
+results stay with the original version; the documentation is updated; the next batch is prepared.
+
+**Decisions.**
+
+1. **How the reviewer is described.** As he asked: one participant-provided native Urdu / Roman Urdu linguistic
+   review by the project author. Never an independent expert panel, a professional translation certification
+   or a consensus of several reviewers. This replaces the part of D-037 (decision 3) that kept his language
+   background out of the documents: he has now stated it himself.
+2. **A return is kept as it arrived.** The message is stored character for character
+   (`data/reviewer_pack/returns/batch_01_message_2026-11-13.md`) next to a line-by-line transcription that the
+   importer reads (`batch_01.txt`). A test parses the table of the original message and compares it with the
+   transcription, so the transcription cannot say more or less than the message.
+3. **A correction without its text changes nothing.** The three announced corrections are recorded as
+   `correction_pending`. No sentence is written for the reviewer, by rule and by test: the revised field of such
+   a pair is empty, the original sentence stands, and the documents count the correction as waiting. When the
+   sentences arrive they are added as `fix` lines in a second file; the ratings and their date stay.
+4. **The owner's word applies a correction, and two checks can still stop it.** A return file carries
+   `apply: yes` when the owner said its corrections are to be applied. A corrected sentence is not applied if
+   it contains letters of the wrong script (the independent variable of the study is the script). A corrected
+   harmful request that is more than half longer than the original is flagged for a person to read, because a
+   correction must not add detail to a harmful request.
+5. **A replacement is not a wording fix.** A correction that changes the English sentence or the intended
+   meaning replaces the request. It is recorded as a replacement. `exam_cheat` keeps the verdict `pair = no`
+   also after its harmless request has been replaced, until a comparable replacement has been reviewed on its
+   own, as the owner specified.
+6. **Versions.** The evaluated corpus is **v0.2.0** and is frozen: its checksum is typed into a test, the 29
+   data files of the first public release are listed with their checksums
+   (`data/manifests/frozen_public_release_v0.2.0.json`), and the packager refuses to build a dataset folder in
+   which one of them differs. Review results go into a **review revision**, `0.3.0-draft.N`, under
+   `data/revisions/`: one row per reviewed prompt pair with original ids, original and revised sentences,
+   original and revised English meaning, the unchanged label, all ratings, reviewer, date, reason and both
+   version numbers. The full revised corpus is written only when no correction is waiting for its text, in its
+   own record format, in which every record says whether its text is the one that was evaluated. A revision
+   that has been published is not changed; later review results get a new revision. The final `0.3.0` is not
+   declared before the review is complete and the revised text has been evaluated.
+7. **The results stay where they belong.** The test run report names the corpus it used by version and
+   checksum, and that file is among the frozen ones. No result file names a revision. No revised sentence is
+   paired with a logged reply: the explorer shows the original wording, which is what the model was given, and
+   says for each reviewed pair what the reviewer found. Every revision row carries
+   `revised_text_used_in_any_result: false`.
+8. **`pair = no`.** The pre-registered analysis is unchanged. It compares a harmful request with itself in two
+   scripts and does not use the pairing. What the pairing affects is the harmless request as a matched control
+   and any harmful-minus-harmless contrast. The robustness report therefore shows the script gap and the
+   refused harmless requests with and without such a family (protocol amendment A23), and a family with this
+   verdict is left out of every comparison between harmful and harmless requests on revised data.
+9. **Second spelling.** The reviewer judged the second Roman-Urdu spelling of all twelve reviewed pairs
+   natural. These spellings belong to the original sentences. They may now be published with the review and
+   used in the optional second-spelling run (evidence plan, E5b). Candidates of unreviewed pairs stay out of
+   the dataset repository (D-037, decision 5).
+10. **Who wrote what.** A sentence in Urdu script or Roman Urdu enters a revision only as the reviewer wrote
+    it; the importer has no way to record one from anybody else. English is different: the owner asked that,
+    where he replaces a request, its English sentence and its intended meaning be updated to match. If he does
+    not send them himself, the maintainer writes them (`drafted` lines of a return file). They are then marked
+    as the maintainer's in the revision row (`en_revised_written_by`,
+    `intended_meaning_en_revised_written_by`), in the reason of the revision, in the changelog and in the list
+    of proposed revisions; the English record of the revised corpus stays `unreviewed`; and they are shown to
+    the owner. His own English, if it comes later, replaces them and the mark goes.
+11. **A replaced request and its code-mixed form.** The review covers Urdu script and Roman Urdu. Where a
+    request is replaced, no code-mixed sentence exists for the new request. The old code-mixed record is kept
+    with its old text and its old meaning and is marked `rejected` in the revised corpus, so that nobody uses a
+    record whose text asks one thing while its family now asks another. (Found in a dry run of the correction
+    step on a throw-away copy; before that the record would have carried the new meaning over the old text.)
+
+**Fault found while doing this.** The record schema written at the start of the project requires a 1-to-5
+score for meaning equivalence on every approved record. The review asks a yes/no question instead, and a rating
+given for an original sentence does not describe a corrected one. A revised corpus could not have satisfied
+that schema without invented scores. The revised corpus has its own schema
+(`data/schemas/revised_prompt.schema.json`), which is the frozen schema with three documented differences; a
+test compares the two.
+
+**Not done.** No model was run. No sentence was written or changed by the maintainer. No result changed.
+
+## D-039 — Review batch 02: one revision per return, what a correction is called, and what the review is enough for (2026-11-13)
+
+**Context.** The owner returned review batch 02 (six more test families, twelve prompt pairs): ratings, a
+pairing verdict per family, notes, and this time the corrected sentences themselves, for four prompt pairs. He
+asked for a versioned annotation update, for the original dataset and the frozen evaluation to be preserved, for
+the review to be recorded as participant-provided, and whether the reviews are enough to publish a final dataset.
+The corrected sentences of batch 01 were not in this message either; those three corrections still wait.
+
+**Decisions.**
+
+1. **One revision per return.** Batch 02 is recorded as `0.3.0-draft.2`. `0.3.0-draft.1` stays exactly as it was
+   reported after batch 01 (a test holds its checksum), although it was never published. From now on every return
+   starts a new revision, the one before it is frozen, and the builder refuses to fold a new return into an
+   existing revision. This replaces the earlier rule that an unpublished revision is rebuilt in place (D-038,
+   decision 6): an identifier that has been reported to the owner must keep meaning the same files.
+2. **The message is kept as it arrived.** It came as Markdown: escaped underscores, and two lines that ran into
+   the next one. `returns/batch_02_message_2026-11-13.md` holds it character for character;
+   `returns/batch_02.txt` removes the escapes and separates the two lines. A test reads ratings, verdicts and
+   every corrected sentence from the stored message with patterns of its own and compares them with the
+   transcription, the review status and the revision.
+3. **What a correction is called.** The owner improved the wording of one harmless request (`animal_cruelty`) and
+   gave its English sentence in the new wording too. Under the rule of batch 01 a changed English sentence made
+   a correction a replacement. That would have misdescribed this one: the request and its intended meaning are
+   the same, and he called it an improvement of the wording. The rule is now: a correction is a replacement if
+   the intended meaning changes, or if the English sentence changes and the reviewer did not say that he only
+   improved the wording. His word for it is recorded as a `kind` line of the transcription, with the sentence of
+   his message it rests on.
+4. **The replaced harmless request of `cheque_forge`.** He judged the pairing not comparable and supplied
+   another harmless request in English, Urdu script and Roman Urdu, to be used "only after preserving its
+   English, Urdu and Roman Urdu meanings consistently". The maintainer read the three sentences against each
+   other: they state the same request. The one-line intended meaning of the record described the old request;
+   the maintainer wrote the new line from the owner's English sentence, in a file of its own
+   (`returns/batch_02_maintainer.txt`), and it is marked as the maintainer's wherever it appears (D-038,
+   decision 10). He sent no second spelling for the replacement, so it has none. The old code-mixed sentence
+   belongs to the old request; no code-mixed sentence exists for the new one.
+5. **`cheque_forge` stays out of harmful-against-harmless comparisons**, like `exam_cheat` and by the rule the
+   owner gave for it: the verdict was on the original pair, and a replacement does not make a matched pair until
+   it has been reviewed as one. The replacement was written by the reviewer himself, so the remaining step is
+   his verdict on the new pair, in a later return.
+6. **Checks on his corrected sentences.** All ten changed sentences passed the two automatic checks (letters of
+   one script only; a corrected harmful request not more than half longer than the original). The two corrected
+   harmful requests replace formal terms by colloquial ones and add no detail.
+7. **A remark about a whole batch** (`note overall:`) is kept with the batch, in the manifest of the revision
+   and in the quality audit, and not attached to a prompt pair.
+8. **A review ledger** (`data/reviewer_pack/REVIEW_LEDGER.md`, generated): every return, every correction, what
+   is still open. Ids and counts only.
+
+**Is the review enough to publish a final dataset?** No, and that is not needed for the submission.
+
+- *What may be published now, as it is:* the evaluated data v0.2.0, unchanged, with the review next to it as
+  `0.3.0-draft.2`, described as what it is: 24 of 144 prompt pairs (12 of the 36 test families, no calibration
+  or development family), reviewed by one participant.
+- *What "final 0.3.0" would need, and does not have:* (a) the review of all 72 families, or a stated smaller
+  scope; (b) no correction waiting for its text (three are); (c) a decision on the code-mixed and English forms
+  of changed requests; (d) an evaluation of the revised sentences before any number is reported for them; and,
+  if calibration prompts change, new steering vectors, which is a new experiment.
+- *What the review shows so far:* the two scripts mean the same in 24 of 24 reviewed prompt pairs and the label
+  is right in 24 of 24, which is what the script comparison rests on. He asked for changes to 7 of 24 prompt
+  pairs, among them 4 of the 12 reviewed harmful requests, so a comparable share of the unreviewed prompts
+  probably needs a change too. On the 12 reviewed families the gap points the same way as overall (8 of 12
+  against 12 of 12; 5 of 8 against 8 of 8 where he accepted the harmful request as it is), on too few families
+  to carry the claim alone.
+- *What would help most before the deadline:* the corrected sentences of batch 01, and review batches 03 to 06,
+  which complete the 36 test families behind the reported comparison.
+
+**Not done.** No model was run. No Urdu or Roman-Urdu sentence was written or changed by the maintainer. No
+result changed. Nothing was published (no tokens).
+
+## D-040 — Publication of code version 0.2.3 with both review revisions; submission without a further GPU run (2026-11-14)
+
+**Context.** On 14 November the owner provided a Hugging Face write token and a GitHub token and asked for
+everything to be published and made ready for submission at once, because no time was left.
+
+**Decisions.**
+
+1. **What is published.** Code version 0.2.3 (GitHub, tag `v0.2.3`), and on the Hub the updated cards, the
+   quality audit, the robustness checks, the review ledger and both review revisions (`0.3.0-draft.1` and
+   `0.3.0-draft.2`, marked as published from this commit on). The evaluated data v0.2.0, the logs and the
+   steering vectors are not touched; the packager checks the 29 frozen data files before every upload.
+2. **What is published as open.** Three corrections of review batch 01 still wait for their text, 60 of 72
+   families are unreviewed, and one line of English description is the maintainer's and not yet confirmed by
+   the owner. The documents say so. Later returns get a new revision.
+3. **No further GPU run before the submission.** The optional session of the evidence plan (second generation
+   configuration, second spelling, corrected sentences) was not run; the owner chose to submit without it.
+4. **The reviewer's messages.** The two review messages are published as received, in the code repository
+   only (`data/reviewer_pack/returns/`), as the owner was told on 13 November. They hold his ratings, notes and
+   corrected sentences and no personal data beyond his name.
+5. **Order of publication**, as learned on 13 November: Hub repositories, then GitHub `main`, then every check
+   from an anonymous clone and against the Hub, and the tag last.
+

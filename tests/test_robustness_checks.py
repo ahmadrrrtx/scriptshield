@@ -12,7 +12,7 @@ DOC = json.loads((ROOT / "data/quality/robustness_checks_v0.2.0.json").read_text
 
 
 def test_report_is_rendered_from_the_committed_json():
-    md = rc.render(DOC["subsets"], DOC["review_rows_done"], DOC["review_rows_total"], DOC["judge_errors"])
+    md = rc.render(DOC["subsets"], DOC["review_rows_done"], DOC["review_rows_total"], DOC["judge_errors"], DOC["harmless_refusals"])
     assert md == (ROOT / "docs/ROBUSTNESS_CHECKS.md").read_text(encoding="utf-8")
 
 
@@ -68,6 +68,42 @@ def test_subsets_follow_flags_notes_and_review():
     g = rc.gap(tab, subs["all"])
     assert (g["n"], g["ur"], g["ro"], g["ro_read"]) == (3, 3, 1, 0) and g["diff_pp"] == -66.7
     assert rc.gap(tab, [])["n"] == 0
+
+
+def test_review_subsets_match_the_review_status():
+    """The rows 'by reviewer verdict' are the families the status file names, and only test families."""
+    status = json.loads((ROOT / "data/reviewer_pack/review_status.json").read_text(encoding="utf-8"))
+    by = {s["key"]: s for s in DOC["subsets"]}
+    test = set(by["all"]["families"])
+    harmful = {k[:-len("-harmful")]: v for k, v in status["rows"].items() if k.endswith("-harmful")}
+    assert set(by["review:reviewed"]["families"]) == set(harmful) & test
+    assert set(by["review:accepted"]["families"]) == {f for f, v in harmful.items() if v["status"] == "accepted"} & test
+    left = set(status.get("excluded_from_matched_pair_analysis", [])) & test
+    assert set(by["review:pair_ok"]["families"]) == test - left
+    assert DOC["harmless_refusals"]["left_out"] == sorted(left)
+    assert DOC["harmless_refusals"]["pair_ok"]["prompts"] == 2 * (36 - len(left))
+
+
+def test_harmless_refusals_of_the_full_set_are_the_published_ones():
+    """The first column of the harmless table is the pre-registered analysis; leaving families out can only lower a count."""
+    full, part = DOC["harmless_refusals"]["all"], DOC["harmless_refusals"]["pair_ok"]
+    analysis = json.loads((ROOT / "experiments/results/test_analysis/test_analysis_guard.json").read_text(encoding="utf-8"))
+    for arm, n in full["arms"].items():
+        cells = analysis["arms"][arm]["cells"]
+        assert n == cells["ur/benign"]["refusal"] + cells["ro/benign"]["refusal"], arm
+        assert 0 <= part["arms"][arm] <= n
+    assert full["prompts"] == 72 and full["arms"]["unsteered"] == 5
+
+
+def test_pair_verdict_defines_a_subset_and_nothing_else():
+    audit, tab = _toy()
+    review = {"rows": {"a-harmful": {"status": "accepted"}}, "pair_verdicts": {"a": "no", "b": "yes"}}
+    subs = {key: fams for key, _, fams in rc.subsets(audit, review, ["a", "b", "c"])}
+    assert subs["review:pair_ok"] == ["b", "c"] and subs["all"] == ["a", "b", "c"]
+    assert subs["review:accepted"] == ["a"], "a rejected pairing does not un-accept the harmful prompt pair itself"
+    btab = {f: {arm: {"ur": 0, "ro": int(f == "a")} for arm in rc.ALL_ARMS} for f in "abc"}
+    assert rc.harmless_refusals(btab, ["a", "b", "c"])["arms"]["pooled"] == 1
+    assert rc.harmless_refusals(btab, subs["review:pair_ok"]) == {"families": 2, "prompts": 4, "arms": {arm: 0 for arm in rc.ALL_ARMS}}
 
 
 def test_script_states_that_it_is_post_hoc():

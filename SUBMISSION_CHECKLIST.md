@@ -61,11 +61,16 @@ Safety and Alignment: problem 4 (multilingual and code-mixed safety) is the main
 - After the first release, without a GPU: a family-level dataset audit, post hoc robustness checks of the gap
   on subsets of the test set, and a breakdown of the judge's errors (`docs/DATASET_QUALITY_AUDIT.md`,
   `docs/ROBUSTNESS_CHECKS.md`). Further checks and their cost are assessed in `docs/EVIDENCE_UPGRADE_PLAN.md`.
+- The author's review of the prompts, batch by batch, imported without a model run (`EXPERIMENT_LOG.md`,
+  `data/DATASET_CHANGELOG.md`).
 
 ## What is not done, and is not claimed anywhere
 
 - Independent human review of the prompts and independent human annotation of the responses. The author's
-  own review of the prompts and his check of a sample of replies are participant checks; their current state
-  is in `data/reviewer_pack/review_status.json` and `docs/HUMAN_RESPONSE_CHECK.md`.
+  own review of the prompts and his check of a sample of replies are participant checks by one person; their
+  current state is in section 9 of `docs/DATASET_QUALITY_AUDIT.md`, in `data/reviewer_pack/review_status.json`
+  and in `docs/HUMAN_RESPONSE_CHECK.md`. Only part of the prompts has been reviewed.
+- An evaluation of corrected sentences. What the review changes is kept in review revisions
+  (`data/revisions/`), apart from the evaluated data; no reported number uses a revised sentence.
 - Any second model, second seed, longer responses, adversarial or multi-turn prompts.
 - A safety gain from steering.

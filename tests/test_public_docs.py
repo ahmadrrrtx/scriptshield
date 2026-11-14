@@ -90,8 +90,36 @@ def test_public_links_are_used_consistently():
 
 
 def test_abstract_is_under_500_words():
-    body = (ROOT / "docs/ABSTRACT.md").read_text(encoding="utf-8").split("\n", 2)[2]
+    """Under 500 by any usual way of counting: split at blanks, at hyphens too, or as runs of letters and digits."""
+    body = (ROOT / "docs/ABSTRACT.md").read_text(encoding="utf-8").split("\n", 2)[2].replace("**", "")
     assert len(body.split()) < 500
+    assert len(re.findall(r"[^\s\-]+", body)) < 500
+    assert len(re.findall(r"\w+", body)) < 500
+
+
+def test_abstract_review_and_steering_numbers_are_the_current_ones():
+    """The abstract quotes the state of the review. It must be rewritten when a new batch is imported."""
+    text = re.sub(r"\s+", " ", (ROOT / "docs/ABSTRACT.md").read_text(encoding="utf-8"))
+    status = json.loads((ROOT / "data/reviewer_pack/review_status.json").read_text(encoding="utf-8"))
+    rows = status["rows"]
+    split = {}
+    for line in (ROOT / "data/corpus/scriptshield_v0.2.0.jsonl").read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            r = json.loads(line)
+            split[r["family_id"]] = r["split"]
+    n_test = sum(1 for v in split.values() if v == "test")
+    reviewed_test = [f for f in status["families_fully_reviewed"] if split[f] == "test"]
+    assert len(reviewed_test) == len(status["families_fully_reviewed"]), "the abstract says the reviewed families are test families"
+    same = sum(1 for r in rows.values() if r.get("same") == "yes")
+    assert same == len(rows), "the abstract says both scripts meant the same in all reviewed pairs"
+    for phrase in (f"reviewed {len(rows)} of {status['n_rows_total']} prompt pairs", f"({len(reviewed_test)} of {n_test} test families)",
+                   f"the same in all {same}", f"changes to {sum(1 for r in rows.values() if r.get('correction_kind'))}.",
+                   "one participant's review, not independent validation", "have not been evaluated"):
+        assert phrase in text, phrase
+    rate = lambda arm: ANALYSIS["arms"][arm]["cells"]["ro/harmful"]["refusal_rate"]  # noqa: E731
+    best = max(rate(a) for a in ANALYSIS["arms"] if a not in ("unsteered", "orthogonal_null"))
+    assert f"from {pct(rate('unsteered'))} to at most {pct(best)}" in text
+    assert f"a placebo vector reached {pct(rate('orthogonal_null'))}" in text
 
 
 def test_differences_names_the_path_and_ignores_float_noise():

@@ -5,4 +5,4 @@ The package imports cleanly WITHOUT torch. Heavy model code lives in
 imported lazily so that the local 2 GB environment can run schema validation,
 linear algebra and statistics.
 """
-__version__ = "0.2.2"
+__version__ = "0.2.3"
